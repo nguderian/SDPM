@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import currentUser from './storeConfig/reducers';
 import * as serviceWorker from './serviceWorker';
+import routes from './Routes'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // checks to see if there's data in local storage (browser)
@@ -31,7 +32,12 @@ store.subscribe(() => {
     localStorage['redux-store'] = state
 })
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+    <Provider store={store}>
+        {routes}
+    </Provider>
+    , document.getElementById('root')
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

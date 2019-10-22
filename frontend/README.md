@@ -16,6 +16,7 @@ After node is installed, when you download the repository, make sure you do `npm
 * reactstrap - this requires multiple installs
   * installing reactstrap `npm install --save reactstrap react react-dom`
   * installing bootstrap `npm install --save bootstrap`
+* routing `npm install react-router-dom`
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
