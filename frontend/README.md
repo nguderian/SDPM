@@ -7,7 +7,7 @@ This also makes sure that you ahve the most up to date version of node.
 
 After node is installed, when you download the repository, make sure you do `npm install` so that you will have all dependencies downloaded to your machine.  The gitconfig file is set up to ignore the /node_modules folder so you don't have worry about that. 
 
-## Required Packages0
+## Required Packages
 
 * redux
 * react-redux
