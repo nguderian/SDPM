@@ -2,7 +2,33 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import currentUser from './storeConfig/reducers';
 import * as serviceWorker from './serviceWorker';
+
+// checks to see if there's data in local storage (browser)
+// if there is it loads it to the store as initial state
+// this makes it so that if you logged in and then refreshed the page
+// you dont get logged out, later on as the store gets more complex
+// we can add more to local storage but for now its just
+// user_id,loggedIn boolean, token, and type
+const initialState =  (localStorage['redux-store']) ? JSON.parse(localStorage['redux-store']) : ({
+    user_id:'',
+    token:'',
+    loggedIn:false,
+    userType:'',
+    ip_address:'10.171.204.179'
+})
+
+const store = createStore(currentUser, initialState)
+
+console.log(store.getState())
+
+store.subscribe(() => {
+    const state = JSON.stringify(store.getState())
+    localStorage['redux-store'] = state
+})
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

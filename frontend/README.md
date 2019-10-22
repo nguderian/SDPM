@@ -1,8 +1,18 @@
 # Senior Design Project Manager Frontend
+
 All work for the frontend portion will be contained within this subfolder.
 
-# Required Packages
-* node
+Make sure you install Node first by going to https://nodejs.org/en/download/
+This also makes sure that you ahve the most up to date version of node. 
+
+After node is installed, when you download the repository, make sure you do `npm install` so that you will have all dependencies downloaded to your machine.  The gitconfig file is set up to ignore the /node_modules folder so you don't have worry about that. 
+
+## Required Packages0
+
+* redux
+* react-redux
+* redux-think
+  * these can be done all in one line with `npm install redux react-redux redux-thunk --save`
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
