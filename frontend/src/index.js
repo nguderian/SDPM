@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import currentUser from './storeConfig/reducers';
 import * as serviceWorker from './serviceWorker';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 // checks to see if there's data in local storage (browser)
 // if there is it loads it to the store as initial state

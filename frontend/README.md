@@ -13,6 +13,9 @@ After node is installed, when you download the repository, make sure you do `npm
 * react-redux
 * redux-think
   * these can be done all in one line with `npm install redux react-redux redux-thunk --save`
+* reactstrap - this requires multiple installs
+  * installing reactstrap `npm install --save reactstrap react react-dom`
+  * installing bootstrap `npm install --save bootstrap`
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
