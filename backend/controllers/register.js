@@ -7,8 +7,9 @@ class register {
         const { username, password, type, first_name, last_name, email } = req.body;
 
         // Generate a salt and then hash the password
-        const salt = await bcrypt.genSalt(saltRounds);
+        const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
+        
 
         let new_user_id;
         // insert the new user.
@@ -21,7 +22,7 @@ class register {
             if(error.parent.code === 'ER_DUP_ENTRY')
                 res.send({ err : "Duplicate" });
             else
-                res.send({ status : "Unkonw error" });
+                res.send({ status : "Unknown Error" });
         }
 
         // Based on user type, insert into respected table.
@@ -39,7 +40,7 @@ class register {
             const { sd1_term, sd1_year, sd2_term, sd2_year } = req.body;
             try{
                 await sequelize.query('CALL insert_student(?,?,?,?,?,?,?)',
-                {replacements : [1, sd1_term, sd1_year, sd2_term, sd2_year, null, new_user_id],
+                {replacements : [1, sd1_term, sd1_year, sd2_term, sd2_year, 1, new_user_id],
                 type : sequelize.QueryTypes.CALL});
             }catch(error){
                 res.send({ status: "Insert error" });

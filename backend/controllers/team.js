@@ -29,21 +29,25 @@ class teamInfo {
         const { user_id, project_name, description, sd1_semester, sd1_year, sd2_semester, sd2_year } = req.body;
         let user_type;
 
-        // Check to see if user_id is type coordinator/
+        // Check to see if user_id is type coordinator
         try{
             user_type = await sequelize.query('CALL get_user_type(?)',
             { replacements : [user_id],
             type : sequelize.QueryTypes.CALL});
         }catch(error){
             console.log("Get User Type Failed");
-            next;
+            
+            //next;
         }
 
         console.log("Get User Type Success");
+        console.log(user_type);
+
 
         // If user is not coordinator, return to frontend.
-        if(user_type !== 'coordinator'){
-            res.send({status : "User is not Coordinator"});
+
+        if (user_type[0].type != "coordinator") {
+            res.send({ status: "User is not Coordinator" });
         }
 
         let newTeamID;
