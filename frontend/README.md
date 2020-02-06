@@ -13,9 +13,11 @@ After node is installed, when you download the repository, make sure you do `npm
 * react-redux
 * redux-think
   * these can be done all in one line with `npm install redux react-redux redux-thunk --save`
-* reactstrap - this requires multiple installs
-  * installing reactstrap `npm install --save reactstrap react react-dom`
-  * installing bootstrap `npm install --save bootstrap`
+* material UI
+  * base instructions can be found here https://material-ui.com/getting-started/installation/
+  * npm install @material-ui/core
+  * npm install @material-ui/icons
+  * npm install typeface-roboto --save
 * routing `npm install react-router-dom`
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
