@@ -7,7 +7,8 @@ import { createStore } from 'redux';
 import currentUser from './storeConfig/reducers';
 import * as serviceWorker from './serviceWorker';
 import routes from './Routes'
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+import Navbar from './components/NavBar';
 
 // checks to see if there's data in local storage (browser)
 // if there is it loads it to the store as initial state
@@ -34,6 +35,7 @@ store.subscribe(() => {
 
 ReactDOM.render(
     <Provider store={store}>
+        <Navbar/>
         {routes}
     </Provider>
     , document.getElementById('root')
