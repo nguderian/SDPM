@@ -37,10 +37,10 @@ const NavBar = () => {
                     <IconButton edge="start" className={classes.menuButton} color="black" aria-label="menu">
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" className={classes.title}>
+                    <Typography variant="h4" className={classes.title}>
                         News
                     </Typography>
-                    <Button color="black">Login</Button>
+                    <Button color="black">Logout</Button>
                 </Toolbar>
             </StyledNav> 
         </Fragment>
