@@ -38,7 +38,7 @@ const StyledNav = withStyles({
   }
 })(AppBar);
 
-const NavBar = () => {
+const NavBar = ({ user_id, userType, token, loggedIn }) => {
     const classes = useStyles();
     
     const [state, setState] = useState({
@@ -54,13 +54,14 @@ const NavBar = () => {
     };
 
     const sideList = side => (
-        <div
+        <Fragment
           className={classes.list}
           role="presentation"
           onClick={toggleDrawer(side, false)}
           onKeyDown={toggleDrawer(side, false)}
         >
           <List>
+          {if(userType === 'student')}
             {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
@@ -68,20 +69,21 @@ const NavBar = () => {
               </ListItem>
             ))}
           </List>
-          <Divider />
-          <List>
+          {/* <Divider /> */}
+          {/* <List>
             {['All mail', 'Trash', 'Spam'].map((text, index) => (
               <ListItem button key={text}>
                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                 <ListItemText primary={text} />
               </ListItem>
             ))}
-          </List>
-        </div>
+          </List> */}
+        </Fragment>
     );
 
     return (
         <Fragment>
+            
             <StyledNav position="static" classname={classes.root}>
                 <Toolbar>
                     <IconButton edge="start" className={classes.menuButton} color="black" aria-label="menu" onClick={toggleDrawer('left', true)}>
