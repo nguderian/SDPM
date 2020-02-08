@@ -42,7 +42,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
     const classes = useStyles();
     const logged = loggedIn;
 
-    console.log(user_id, loggedIn);
+    console.log(user_id, loggedIn, userType);
 
 
     const [state, setState] = useState({
@@ -57,34 +57,47 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
       setState({ ...state, [side]: open });
     };
 
-    const sideList = side => (
-
-      <Fragment
-          className={classes.list}
-          role="presentation"
-          onClick={toggleDrawer(side, false)}
-          onKeyDown={toggleDrawer(side, false)}
-      >
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        {/* <Divider /> */}
-        {/* <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List> */}
-      </Fragment>
-    );
-
+    const sideList = side => {
+      if(logged && userType === 'student') {
+        return (
+          <Fragment
+            className={classes.list}
+            role="presentation"
+            onClick={toggleDrawer(side, false)}
+            onKeyDown={toggleDrawer(side, false)}
+          >
+            <List>
+              {['Inbox', 'Starred', 'Send email'].map((text, index) => (
+                <ListItem button key={text}>
+                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItem>
+              ))}
+            </List>
+          </Fragment>
+        )
+      }
+      else {
+        return (
+          <Fragment
+            className={classes.list}
+            role="presentation"
+            onClick={toggleDrawer(side, false)}
+            onKeyDown={toggleDrawer(side, false)}
+          >
+            <List>
+              {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+                <ListItem button key={text}>
+                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItem>
+              ))}
+            </List>
+          </Fragment>
+        )
+      }
+    }
+ 
     return (
       <Fragment>
           <StyledNav position="static" classname={classes.root}>
