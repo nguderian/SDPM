@@ -1,14 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import currentUser from './storeConfig/reducers';
 import * as serviceWorker from './serviceWorker';
 import routes from './Routes'
-// import 'bootstrap/dist/css/bootstrap.min.css';
-import Navbar from './components/NavBar';
+import NavBarContainer from './components/containers/NavBarContainer';
 
 // checks to see if there's data in local storage (browser)
 // if there is it loads it to the store as initial state
@@ -17,10 +15,10 @@ import Navbar from './components/NavBar';
 // we can add more to local storage but for now its just
 // user_id,loggedIn boolean, token, and type
 const initialState =  (localStorage['redux-store']) ? JSON.parse(localStorage['redux-store']) : ({
-    user_id:'',
+    user_id:'ta840968',
     token:'',
-    loggedIn:false,
-    userType:'',
+    loggedIn:true,
+    userType:'student',
     ip_address:'10.171.204.179'
 })
 
@@ -35,7 +33,7 @@ store.subscribe(() => {
 
 ReactDOM.render(
     <Provider store={store}>
-        <Navbar/>
+        <NavBarContainer/>
         {routes}
     </Provider>
     , document.getElementById('root')

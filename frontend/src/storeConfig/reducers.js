@@ -7,9 +7,9 @@ import { ON_LOGIN,
 // initial state
 
 const initialState = {
-user_id:'',
+user_id:'ta840968',
 token:'',
-loggedIn:false,
+loggedIn:true,
 userType:'',
 ip_address:'10.171.204.179'
 }

@@ -1,4 +1,4 @@
-import NavBar from '../containers/NavBarContainer';
+import NavBar from '../NavBar';
 import {onLogin} from '..//../storeConfig/actions';
 import {connect} from 'react-redux';
 
@@ -12,16 +12,16 @@ const mapStateToProps = state =>{
     }
 }
 
-const mapDispatchToProps = dispatch => {
-    return{
-        onLogin(payload){
-            dispatch(
-                onLogin(payload)
-            )
-        }
-    }
-}
+// const mapDispatchToProps = dispatch => {
+//     return{
+//         onLogin(payload){
+//             dispatch(
+//                 onLogin(payload)
+//             )
+//         }
+//     }
+// }
 
-const NavBarContainer =  connect(mapStateToProps, mapDispatchToProps)(NavBar);
+const NavBarContainer =  connect(mapStateToProps)(NavBar);
 
 export default NavBarContainer;
