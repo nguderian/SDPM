@@ -12,6 +12,10 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import HomeIcon from '@material-ui/icons/Home';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import ClassIcon from '@material-ui/icons/Class';
+import SettingsIcon from '@material-ui/icons/Settings';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 
@@ -42,7 +46,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
     const classes = useStyles();
     const logged = loggedIn;
 
-    console.log(user_id, loggedIn, userType);
+    // console.log(user_id, loggedIn, userType);
 
 
     const [state, setState] = useState({
@@ -57,6 +61,21 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
       setState({ ...state, [side]: open });
     };
 
+    const getIcon = text => {
+      if(text === 'Home'){
+        return <HomeIcon/>
+      }
+      if(text === 'Class'){
+        return <ClassIcon/>
+      }
+      if(text === 'Assignments'){
+        return <AssignmentIcon/>
+      }
+      if(text === 'Settings'){
+        return <SettingsIcon/>
+      }
+    };
+
     const sideList = side => {
       if(logged && userType === 'student') {
         return (
@@ -67,12 +86,30 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
             onKeyDown={toggleDrawer(side, false)}
           >
             <List>
-              {['Inbox', 'Starred', 'Send email'].map((text, index) => (
-                <ListItem button key={text}>
-                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))}
+              <ListItem button>
+                <ListItemIcon>
+                  <HomeIcon/>
+                  <ListItemText primary={'Home'}/>
+                </ListItemIcon>
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <ClassIcon/>
+                  <ListItemText primary={'Class'}/>
+                </ListItemIcon>
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <AssignmentIcon/>
+                  <ListItemText primary={'Assignments'}/>
+                </ListItemIcon>
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <SettingsIcon/>
+                  <ListItemText primary={'Settings'}/>
+                </ListItemIcon>
+              </ListItem>
             </List>
           </Fragment>
         )
@@ -88,7 +125,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
             <List>
               {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
                 <ListItem button key={text}>
-                  <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                  <ListItemIcon>{getIcon(text)}</ListItemIcon>
                   <ListItemText primary={text} />
                 </ListItem>
               ))}
