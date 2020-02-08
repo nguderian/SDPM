@@ -5,7 +5,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
 
+import NewQuestion from './NewQuestion';
 
 const useStyles = makeStyles(theme => ({
     formTitle: {
@@ -17,29 +19,44 @@ const useStyles = makeStyles(theme => ({
     },
     selectEmpty: {
         marginTop: theme.spacing(2),
-    }
+    },
+    createButton: {
+        margin: theme.spacing(1),
+        textAlign: 'center',
+    },
 }));
 
 const NewForm = () => {
     const classes = useStyles();
-    const [questionType, setQuestionType] = useState('')
+    const [questionType, setQuestionType] = useState('');
 
     const inputLabel = useRef(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
-    
-    React.useEffect(() => {
-        setLabelWidth(inputLabel.current.offsetWidth);
-    }, []);
+    const [addQuestionOpen, setAddQuestionOpen] = useState(false);
+    // React.useEffect(() => {
+    //     setLabelWidth(inputLabel.current.offsetWidth);
+    // }, []);
 
-    const handleChange = event => {
-        setQuestionType(event.target.value);
+    // const handleChange = event => {
+    //     setQuestionType(event.target.value);
+    // };
+
+    const handleClickOpen = () => {
+        setAddQuestionOpen(true);
+        // console.log(open);
     };
+
     return (
         <Fragment>
             <form className={classes.formTitle} noValidate autoComplete="off">
                 <TextField id="outlined-basic" label="Form Name" variant="outlined" fullWidth={true}/>
             </form>
-            <FormControl variant="outlined" className={classes.formControl}>
+            <Button className={classes.createButton} variant="contained" color="primary" onClick={handleClickOpen}>
+                Add Question 
+            </Button>
+            {addQuestionOpen && <NewQuestion open={addQuestionOpen} onClose={() => setAddQuestionOpen(false)}/>}
+            {/* <NewQuestion open={open} onClose={handleClose} aria-labelledby="form-dialog-title"/> */}
+            {/* <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel ref={inputLabel} id="Question Type">
                     Question Type
                 </InputLabel>
@@ -57,7 +74,7 @@ const NewForm = () => {
                 <MenuItem value={'Multiple Choice'}>Multiple Choice</MenuItem>
                 <MenuItem value={'Likert Scale'}>Likert Scale</MenuItem>
                 </Select>
-            </FormControl>
+            </FormControl> */}
         </Fragment>
     );
 }

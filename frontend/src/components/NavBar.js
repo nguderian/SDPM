@@ -115,7 +115,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
  
     return (
       <Fragment>
-          <StyledNav position="static" classname={classes.root}>
+          <StyledNav position="static" className={classes.root}>
               <Toolbar>
                   <IconButton edge="start" className={classes.menuButton} color="black" aria-label="menu" onClick={toggleDrawer('left', true)}>
                       <MenuIcon />
