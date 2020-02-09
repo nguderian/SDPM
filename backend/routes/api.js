@@ -60,10 +60,9 @@ router.post('/setNewPassword', requireAuth, registerController.setNewPassword);
 
 // Get a student's information
 router.post('/getAllStudents', requireAuth, studentController.getAllStudents);
-router.post('/insertStudent', requireAuth, studentController.insertStudent);
 router.post('/updateStudent', requireAuth, studentController.updateStudent);
 router.post('/getStudentName', requireAuth, studentController.getStudentName);
-
+router.post('/updateStudentWithTeam', requireAuth, studentController.updateStudentWithTeam);
 
 // Taking survey routes.
  router.post('/getSurvey', requireAuth, surveyController.getSurvey);

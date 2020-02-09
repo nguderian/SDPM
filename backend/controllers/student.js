@@ -42,24 +42,6 @@ class studentInfo {
             }
         }          
     }  
-    
-    // Students will be inactive and not verified.
-    // Will return the new student id if inserted.
-    static async insertStudent(req, res, next){
-        const { degree_id, sd1_term, sd1_year, sd2_term, sd2_year, team_id, user_id } = req.body;
-
-        let lastInsertID;
-
-        try{
-            lastInsertID = await sequelize.query('CALL insert_student(?,?,?,?,?,?,?)',
-            { replacements : [degree_id, sd1_term, sd1_year, sd2_term, sd2_year, team_id, user_id],
-            type: sequelize.QueryTypes.CALL});
-        }catch(error){
-            console.log("insert student failed");
-            res.send({status : "insert student failed"});
-        }
-        res.send({status : "insert student success", newStudentID : lastInsertID});
-    }
 
     static async updateStudent(req, res, next){
         
@@ -68,6 +50,22 @@ class studentInfo {
         try{
             await sequelize.query('CALL update_student(?,?,?,?,?,?,?)',
             { replacements: [degree_id, sd1_term, sd1_year, sd2_term, sd2_year, team_id, user_id],
+            types: sequelize.QueryTypes.CALL});
+        }catch(error){
+            console.log("update student failed");
+            res.send({status : "update student failed"});
+        }
+        res.send({status : "update student success"});
+    }
+
+    //Just handles team assignment.
+    static async updateStudentWithTeam(req, res, next){
+        
+        const { student_id, team_id } = req.body;
+
+        try{
+            await sequelize.query('CALL update_student_with_team(?,?)',
+            { replacements: [student_id, team_id],
             types: sequelize.QueryTypes.CALL});
         }catch(error){
             console.log("update student failed");
