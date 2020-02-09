@@ -1,21 +1,26 @@
 import React, { useState, Fragment, useRef } from 'react';
+import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { makeStyles } from '@material-ui/core';
-import OutlinedInput from "@material-ui/core/OutlinedInput";
+import NewFreeResponse from './NewFreeResponse';
+import NewLikert from './NewLikert';
+import NewMultipleChoice from './NewMultipleChoice';
+
 const useStyles = makeStyles(theme => ({
     formControl: {
         margin: theme.spacing(1),
         minWidth: 200,
+    },
+    questionInput: {
+        maring: theme.spacing(1)
     }
 }));
 
@@ -25,15 +30,8 @@ const NewQuestion = ({ open, onClose }) => {
     const [openModal, setOpenModal] = React.useState(open);
     const [questionType, setQuestionType] = useState('');
 
-    //const inputLabel = useRef(null);
     const inputLabel = React.useRef(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
-    // componentDidMount() {(
-    //     setLabelWidth(ReactDOM.findDOMNode(inputLabel.current.offsetWidth))
-    // )};
-    React.useEffect(() => {
-    // setLabelWidth(inputLabel.current.offsetWidth);
-    }, []);
 
     const handleChange = event => {
         setQuestionType(event.target.value);
@@ -43,8 +41,6 @@ const NewQuestion = ({ open, onClose }) => {
         setOpenModal(false);
         onClose();
     };
-
-    
 
     return (
         <Fragment>
@@ -62,29 +58,36 @@ const NewQuestion = ({ open, onClose }) => {
                             onChange={handleChange}
                             labelWidth={labelWidth}
                         >
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={'Free Response'}>Free Response</MenuItem>
-                        <MenuItem value={'Multiple Choice'}>Multiple Choice</MenuItem>
-                        <MenuItem value={'Likert Scale'}>Likert Scale</MenuItem>
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={'Free Response'}>Free Response</MenuItem>
+                            <MenuItem value={'Multiple Choice'}>Multiple Choice</MenuItem>
+                            <MenuItem value={'Likert Scale'}>Likert Scale</MenuItem>
                         </Select>
                     </FormControl>
                     <TextField
+                        className={classes.questionInput}
                         autoFocus
-                        margin="dense"
                         id="name"
-                        label="Email Address"
+                        label="Enter Question Text"
                         type="email"
                         fullWidth
                     />
+
+                    {questionType === 'Free Response' && <NewFreeResponse />}
+                    {questionType === 'Multiple Choice' && <NewMultipleChoice />}
+                    {questionType === 'Likert Scale' && <NewLikert/>}
+                    
                 </DialogContent>
+
+
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Cancel
                     </Button>
                     <Button onClick={handleClose} color="primary">
-                        Subscribe
+                        Confirm
                     </Button>
                 </DialogActions>
             </Dialog>
