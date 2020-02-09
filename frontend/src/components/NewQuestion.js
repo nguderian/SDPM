@@ -11,7 +11,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/core';
-
+import OutlinedInput from "@material-ui/core/OutlinedInput";
 const useStyles = makeStyles(theme => ({
     formControl: {
         margin: theme.spacing(1),
@@ -25,15 +25,14 @@ const NewQuestion = ({ open, onClose }) => {
     const [openModal, setOpenModal] = React.useState(open);
     const [questionType, setQuestionType] = useState('');
 
-    // const inputLabel = useRef(null);
-    const inputLabel = React.createRef();
+    //const inputLabel = useRef(null);
+    const inputLabel = React.useRef(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
-
     // componentDidMount() {(
     //     setLabelWidth(ReactDOM.findDOMNode(inputLabel.current.offsetWidth))
     // )};
     React.useEffect(() => {
-        setLabelWidth(inputLabel.current.offsetWidth);
+    // setLabelWidth(inputLabel.current.offsetWidth);
     }, []);
 
     const handleChange = event => {
@@ -56,7 +55,7 @@ const NewQuestion = ({ open, onClose }) => {
                         <InputLabel ref={inputLabel} id="Question Type">
                             Question Type
                         </InputLabel>
-                        <Select
+                        <Select variant = 'standard'
                             labelId="Question Type"
                             id="Question Selector"
                             value={questionType}
