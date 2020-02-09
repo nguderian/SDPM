@@ -28,18 +28,11 @@ const useStyles = makeStyles(theme => ({
 
 const NewForm = () => {
     const classes = useStyles();
-    const [questionType, setQuestionType] = useState('');
+    // const [questionType, setQuestionType] = useState('');
 
-    const inputLabel = useRef(null);
-    const [labelWidth, setLabelWidth] = React.useState(0);
+    // const inputLabel = useRef(null);
+    // const [labelWidth, setLabelWidth] = React.useState(0);
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
-    // React.useEffect(() => {
-    //     setLabelWidth(inputLabel.current.offsetWidth);
-    // }, []);
-
-    // const handleChange = event => {
-    //     setQuestionType(event.target.value);
-    // };
 
     const handleClickOpen = () => {
         setAddQuestionOpen(true);
@@ -55,26 +48,7 @@ const NewForm = () => {
                 Add Question 
             </Button>
             {addQuestionOpen && <NewQuestion open={addQuestionOpen} onClose={() => setAddQuestionOpen(false)}/>}
-            {/* <NewQuestion open={open} onClose={handleClose} aria-labelledby="form-dialog-title"/> */}
-            {/* <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel ref={inputLabel} id="Question Type">
-                    Question Type
-                </InputLabel>
-                <Select
-                    labelId="Question Type"
-                    id="Question Selector"
-                    value={questionType}
-                    onChange={handleChange}
-                    labelWidth={labelWidth}
-                >
-                <MenuItem value="">
-                    <em>None</em>
-                </MenuItem>
-                <MenuItem value={'Free Response'}>Free Response</MenuItem>
-                <MenuItem value={'Multiple Choice'}>Multiple Choice</MenuItem>
-                <MenuItem value={'Likert Scale'}>Likert Scale</MenuItem>
-                </Select>
-            </FormControl> */}
+            
         </Fragment>
     );
 }
