@@ -1,14 +1,14 @@
 {
   "production": {
-    "host": "localhost",
+    "host": "sql9.freemysqlhosting.net",
     "port": 3306,
-    "database": "student_management",
-    "username": "root",
-    "password": "orlando"
+    "database": "sql9321404",
+    "username": "sql9321404",
+    "password": "ZHIlWZPWhY"
   },
   "development": {
     "host": "localhost",
-    "port": 3306,
+    "port": 8889,
     "database": "sd2testdb",
     "username": "root",
     "password": "password123"
@@ -17,5 +17,3 @@
     "port": 3001
   }
 }
-
-
