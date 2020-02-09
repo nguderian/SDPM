@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { FormControl, FormGroup, FormControlLabel, Checkbox, TextField } from '@material-ui/core';
-import { sizing } from '@material-ui/system';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -40,8 +39,6 @@ const NewFreeResponse = () => {
                 />}
             </FormControl>
         </div>
-        
-        
     );
 }
 
