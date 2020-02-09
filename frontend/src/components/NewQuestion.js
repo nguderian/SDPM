@@ -16,11 +16,11 @@ import NewMultipleChoice from './NewMultipleChoice';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
-        margin: theme.spacing(1),
-        minWidth: 200,
+        marginTop: theme.spacing(1),
+        minWidth: 300,
     },
     questionInput: {
-        maring: theme.spacing(1)
+        marginTop: theme.spacing(1)
     }
 }));
 
@@ -71,7 +71,6 @@ const NewQuestion = ({ open, onClose }) => {
                         autoFocus
                         id="name"
                         label="Enter Question Text"
-                        type="email"
                         fullWidth
                     />
 
