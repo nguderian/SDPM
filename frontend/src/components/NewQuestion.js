@@ -73,14 +73,10 @@ const NewQuestion = ({ open, onClose }) => {
                         label="Enter Question Text"
                         fullWidth
                     />
-
                     {questionType === 'Free Response' && <NewFreeResponse />}
                     {questionType === 'Multiple Choice' && <NewMultipleChoice />}
                     {questionType === 'Likert Scale' && <NewLikert/>}
-                    
                 </DialogContent>
-
-
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Cancel
