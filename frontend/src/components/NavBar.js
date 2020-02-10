@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -8,7 +8,6 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -63,7 +62,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
     const sideList = side => {
       if(logged && userType === 'student') {
         return (
-          <Fragment
+          <div
             className={classes.list}
             role="presentation"
             onClick={toggleDrawer(side, false)}
@@ -82,12 +81,12 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
                 </ListItem>
               ))}
             </List>
-          </Fragment>
+          </div>
         )
       }
       else {
         return (
-          <Fragment
+          <div
             className={classes.list}
             role="presentation"
             onClick={toggleDrawer(side, false)}
@@ -108,14 +107,14 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
                 </ListItem>
               ))}
             </List>
-          </Fragment>
+          </div>
         )
       }
     }
  
     return (
-      <Fragment>
-          <StyledNav position="static" classname={classes.root}>
+      <div>
+          <StyledNav position="static" className={classes.root}>
               <Toolbar>
                   <IconButton edge="start" className={classes.menuButton} color="black" aria-label="menu" onClick={toggleDrawer('left', true)}>
                       <MenuIcon />
@@ -129,7 +128,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
                   <Button color="black">Logout</Button>
               </Toolbar>
           </StyledNav> 
-      </Fragment>
+      </div>
     )
 }
 
