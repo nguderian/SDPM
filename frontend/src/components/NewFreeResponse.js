@@ -15,9 +15,14 @@ const useStyles = makeStyles(theme => ({
 const NewFreeResponse = () => {
     const classes = useStyles();
     const [hasAnswer, setHasAnswer] = React.useState(false);
+    const [answers, setAnswers] = React.useState('');
 
-    const handleChange = event => {
+    const handleCheckboxChange = event => {
         setHasAnswer(event.target.checked);
+    };
+
+    const handleTextFieldChange = event => {
+        setAnswers(event.target.value);
     };
 
     return (
@@ -25,17 +30,17 @@ const NewFreeResponse = () => {
             <FormControl component="fieldset" className={classes.formControl}>
                 <FormGroup>
                     <FormControlLabel
-                        control={<Checkbox checked={hasAnswer} onChange={handleChange} value="hasAnswer"/>}
+                        control={<Checkbox checked={hasAnswer} onChange={handleCheckboxChange} value="hasAnswer"/>}
                         label="Is there a correct answer?"
                     />
                 </FormGroup>
                 {hasAnswer && <TextField
-                    id="outlined-multiline-static"
                     label="Correct Answer(s)"
                     multiline
                     rows="4"
                     placeholder="Enter answer(s), separated by commas"
                     variant="outlined"
+                    onChange={handleTextFieldChange}
                 />}
             </FormControl>
         </div>

@@ -16,17 +16,22 @@ const useStyles = makeStyles(theme => ({
 const NewLikert = () => {
     const classes = useStyles();
     const [hasThreshold, setHasThreshold] = React.useState(false);
+    const [threshold, setThreshold] = React.useState('');
 
-    const handleChange = event => {
+    const handleCheckboxChange = event => {
         setHasThreshold(event.target.checked);
-    }
+    };
+
+    const handleTextFieldChange = event => {
+        setThreshold(event.target.value);
+    };
 
     return (
         <div className={classes.root}>
             <FormControl component="fieldset" className={classes.formControl}>
                 <FormGroup>
                     <FormControlLabel
-                        control={<Checkbox checked={hasThreshold} onChange={handleChange} value="hasThreshold"/>}
+                        control={<Checkbox checked={hasThreshold} onChange={handleCheckboxChange} value="hasThreshold"/>}
                         label="Is there a threshold?"
                     />
                 </FormGroup>
@@ -34,6 +39,7 @@ const NewLikert = () => {
                     label="Threshold"
                     placeholder="Enter threshold value"
                     variant="outlined"
+                    onChange={handleTextFieldChange}
                 />}
             </FormControl>
         </div>
