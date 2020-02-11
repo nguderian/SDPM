@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const NewLikert = () => {
+const NewLikert = ({ thresholdValue }) => {
     const classes = useStyles();
     const [hasThreshold, setHasThreshold] = React.useState(false);
     const [threshold, setThreshold] = React.useState('');
@@ -25,6 +25,7 @@ const NewLikert = () => {
 
     const handleTextFieldChange = event => {
         setThreshold(event.target.value);
+        thresholdValue(event.target.value);
     };
 
     return (

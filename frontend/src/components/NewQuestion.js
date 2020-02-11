@@ -32,6 +32,7 @@ const NewQuestion = ({ open, onClose }) => {
     const [questionText, setQuestionText] = useState('');
     const [frqAnswers, setFrqAnswers] = useState('');
     const [frqHasCorrect, setFrqHasCorrect] = useState('');
+    const [threshold, setThreshold] = useState('');
 
     const inputLabel = React.useRef(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
@@ -58,6 +59,10 @@ const NewQuestion = ({ open, onClose }) => {
         setFrqHasCorrect(correct);
     };
 
+    const storeThreshold = value => {
+        setThreshold(value);
+    };
+    
     return (
         <Fragment>
             <Dialog open={openModal} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -92,8 +97,8 @@ const NewQuestion = ({ open, onClose }) => {
                     />
                     {questionType === 'Free Response' && <NewFreeResponse possibleAnswers={storeFRQAnswers} hasCorrect={correctFRQAnswer}/>}
                     {questionType === 'Multiple Choice' && <NewMultipleChoice />}
-                    {questionType === 'Likert Scale' && <NewLikert/>}
-                    
+                    {questionType === 'Likert Scale' && <NewLikert thresholdValue={storeThreshold}/>}
+                    {console.log(threshold)}
                 </DialogContent>
                 
                 <DialogActions>
