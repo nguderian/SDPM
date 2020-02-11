@@ -18,6 +18,7 @@ const NewLikert = () => {
     const [hasThreshold, setHasThreshold] = React.useState(false);
     const [threshold, setThreshold] = React.useState('');
 
+    // event handlers
     const handleCheckboxChange = event => {
         setHasThreshold(event.target.checked);
     };

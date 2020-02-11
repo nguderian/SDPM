@@ -40,6 +40,7 @@ const NewMultipleChoice = () => {
         answer5: ''
     });
 
+    // event handlers
     const handleCheckBoxChange = answerChoice => event => {
         setAnswerIsCorrect({ ...answerIsCorrect, [answerChoice]: event.target.checked });
     };
@@ -48,6 +49,7 @@ const NewMultipleChoice = () => {
         setAnswers({ ...answers, [answerChoice]: event.target.value });
     };
 
+    // destructure
     const { 
         answer1IsCorrect, 
         answer2IsCorrect, 

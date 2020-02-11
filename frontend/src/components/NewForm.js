@@ -34,6 +34,7 @@ const useStyles = makeStyles(theme => ({
 const NewForm = () => {
     const classes = useStyles();
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
+    const [formName, setFormName] = useState('');
     const [state, setState] = React.useState({
         columns: [
             { title: 'Name', field: 'name' },
@@ -55,6 +56,7 @@ const NewForm = () => {
             },
         ],
     });
+
     const tableIcons = {
         Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
         FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -65,15 +67,21 @@ const NewForm = () => {
         Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
         ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
         Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-    }
+    };
+
+    // event handlers
     const handleClickOpen = () => {
         setAddQuestionOpen(true);
+    };
+
+    const handleTextFieldChange = event => {
+        setFormName(event.target.value);
     };
 
     return (
         <div>
             <form className={classes.formTitle} noValidate autoComplete="off">
-                <TextField id="outlined-basic" label="Form Name" variant="outlined" fullWidth={true}/>
+                <TextField id="outlined-basic" label="Form Name" variant="outlined" fullWidth={true} onChange={handleTextFieldChange}/>
             </form>
             <Button className={classes.createButton} variant="contained" color="primary" onClick={handleClickOpen}>
                 Add Question 

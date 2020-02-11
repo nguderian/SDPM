@@ -29,10 +29,14 @@ const NewQuestion = ({ open, onClose }) => {
     const classes = useStyles();
     const [openModal, setOpenModal] = React.useState(open);
     const [questionType, setQuestionType] = useState('');
+    const [questionText, setQuestionText] = useState('');
+    const [frqAnswers, setFrqAnswers] = useState('');
+    const [frqHasCorrect, setFrqHasCorrect] = useState('');
 
     const inputLabel = React.useRef(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
 
+    // event handlers
     const handleChange = event => {
         setQuestionType(event.target.value);
     };
@@ -40,6 +44,18 @@ const NewQuestion = ({ open, onClose }) => {
     const handleClose = () => {
         setOpenModal(false);
         onClose();
+    };
+
+    const handleTextFieldChange = event => {
+        setQuestionText(event.target.value);
+    };
+
+    const storeFRQAnswers = answers => {
+        setFrqAnswers(answers);
+    };
+
+    const correctFRQAnswer = correct => {
+        setFrqHasCorrect(correct);
     };
 
     return (
@@ -72,11 +88,14 @@ const NewQuestion = ({ open, onClose }) => {
                         id="name"
                         label="Enter Question Text"
                         fullWidth
+                        onChange={handleTextFieldChange}
                     />
-                    {questionType === 'Free Response' && <NewFreeResponse />}
+                    {questionType === 'Free Response' && <NewFreeResponse possibleAnswers={storeFRQAnswers} hasCorrect={correctFRQAnswer}/>}
                     {questionType === 'Multiple Choice' && <NewMultipleChoice />}
                     {questionType === 'Likert Scale' && <NewLikert/>}
+                    
                 </DialogContent>
+                
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Cancel
