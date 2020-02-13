@@ -25,15 +25,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const NewQuestion = ({ open, onClose }) => {
+const NewQuestion = ({ open, onClose, add }) => {
     const classes = useStyles();
     const [openModal, setOpenModal] = React.useState(open);
     const [questionType, setQuestionType] = useState('');
     const [questionText, setQuestionText] = useState('');
     const [frqAnswers, setFrqAnswers] = useState('');
-    const [frqHasCorrect, setFrqHasCorrect] = useState('');
     const [threshold, setThreshold] = useState('');
-    const [mcAnswerIsCorrect, setMcAnswerIsCorrect] = React.useState({
+    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = React.useState({
         answer1: false,
         answer2: false,
         answer3: false,
@@ -59,6 +58,7 @@ const NewQuestion = ({ open, onClose }) => {
     const handleClose = () => {
         setOpenModal(false);
         onClose();
+        add(questionType, questionText, frqAnswers, threshold, mcAnswers, isCorrectMCAnswer);
     };
 
     const handleTextFieldChange = event => {
@@ -74,7 +74,7 @@ const NewQuestion = ({ open, onClose }) => {
     };
     
     const storeCorrectMCAnswers = (answerChoice, isCorrect) => {
-        setMcAnswerIsCorrect({ ...mcAnswerIsCorrect, [answerChoice]: isCorrect });
+        setIsCorrectMcAnswer({ ...isCorrectMCAnswer, [answerChoice]: isCorrect });
     };
 
     const storeMCAnswers = (answerChoice, value) => {

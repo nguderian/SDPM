@@ -46,7 +46,7 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
     //         value: ''
     //     }, 
     // });
-    const [answerIsCorrect, setAnswerIsCorrect] = React.useState({
+    const [isCorrectMCAnswer, setIsCorrectMCAnswer] = React.useState({
         answer1: false,
         answer2: false,
         answer3: false,
@@ -69,7 +69,7 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
         //     isCorrect: event.target.checked,
         // }});
         // setAnswers({ ...answers, []: event.target.checked });
-        setAnswerIsCorrect({...answerIsCorrect, [answerChoice]: event.target.checked });
+        setIsCorrectMCAnswer({...isCorrectMCAnswer, [answerChoice]: event.target.checked });
         correctAnswers(answerChoice, event.target.checked);
     };
 
@@ -87,7 +87,7 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
         answer2, 
         answer3, 
         answer4, 
-        answer5 } = answerIsCorrect;
+        answer5 } = isCorrectMCAnswer;
     
     return (
         <div className={classes.root}>   

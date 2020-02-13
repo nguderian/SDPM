@@ -35,6 +35,7 @@ const NewForm = () => {
     const classes = useStyles();
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
     const [formName, setFormName] = useState('');
+    const [questions, setQuestions] = useState([]);
     const [state, setState] = React.useState({
         columns: [
             { title: 'Name', field: 'name' },
@@ -78,6 +79,28 @@ const NewForm = () => {
         setFormName(event.target.value);
     };
 
+    const addQuestion = (type, text, frqAnswer, threshold, mcAnswers, correctMCAnswers) => {
+        let question = {};
+        if (type === 'Free Response' || type === 'Likert Scale') {
+            question = {
+                questionType: type, 
+                questionText: text,
+                questionAnswer: frqAnswer === '' ? threshold : frqAnswer
+            }
+        }
+        else {
+            question = {
+                questionType: type,
+                questionText: text,
+                questionAnswer: mcAnswers,
+                correctQuestionAnswers: correctMCAnswers
+            }
+        }
+
+        console.log(question);
+        setQuestions(questions.concat(question));
+    };
+
     return (
         <div>
             <form className={classes.formTitle} noValidate autoComplete="off">
@@ -86,7 +109,11 @@ const NewForm = () => {
             <Button className={classes.createButton} variant="contained" color="primary" onClick={handleClickOpen}>
                 Add Question 
             </Button>
-            {addQuestionOpen && <NewQuestion open={addQuestionOpen} onClose={() => setAddQuestionOpen(false)}/>}
+            {addQuestionOpen && <NewQuestion 
+                open={addQuestionOpen} 
+                onClose={() => setAddQuestionOpen(false)}
+                add={addQuestion}
+                />}
             
             <MaterialTable
                 icons={tableIcons}
