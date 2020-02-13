@@ -16,7 +16,6 @@ const useStyles = makeStyles(theme => ({
 const NewLikert = ({ thresholdValue }) => {
     const classes = useStyles();
     const [hasThreshold, setHasThreshold] = React.useState(false);
-    const [threshold, setThreshold] = React.useState('');
 
     // event handlers
     const handleCheckboxChange = event => {
@@ -24,7 +23,6 @@ const NewLikert = ({ thresholdValue }) => {
     };
 
     const handleTextFieldChange = event => {
-        setThreshold(event.target.value);
         thresholdValue(event.target.value);
     };
 

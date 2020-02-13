@@ -12,19 +12,16 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const NewFreeResponse = ({ possibleAnswers, hasCorrect }) => {
+const NewFreeResponse = ({ possibleAnswers }) => {
     const classes = useStyles();
     const [hasAnswer, setHasAnswer] = React.useState(false);
-    const [answers, setAnswers] = React.useState('');
 
     // event handlers
     const handleCheckboxChange = event => {
-        setHasAnswer(event.target.checked);
-        hasCorrect(event.target.checked);  
+        setHasAnswer(event.target.checked);  
     };
 
     const handleTextFieldChange = event => {
-        setAnswers(event.target.value);
         possibleAnswers(event.target.value);
     };
 

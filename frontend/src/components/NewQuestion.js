@@ -33,6 +33,20 @@ const NewQuestion = ({ open, onClose }) => {
     const [frqAnswers, setFrqAnswers] = useState('');
     const [frqHasCorrect, setFrqHasCorrect] = useState('');
     const [threshold, setThreshold] = useState('');
+    const [mcAnswerIsCorrect, setMcAnswerIsCorrect] = React.useState({
+        answer1: false,
+        answer2: false,
+        answer3: false,
+        answer4: false, 
+        answer5: false
+    });
+    const [mcAnswers, setMCAnswers] = React.useState({
+        answer1: '',
+        answer2: '', 
+        answer3: '', 
+        answer4: '',
+        answer5: ''
+    });
 
     const inputLabel = React.useRef(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
@@ -55,14 +69,18 @@ const NewQuestion = ({ open, onClose }) => {
         setFrqAnswers(answers);
     };
 
-    const correctFRQAnswer = correct => {
-        setFrqHasCorrect(correct);
-    };
-
     const storeThreshold = value => {
         setThreshold(value);
     };
     
+    const storeCorrectMCAnswers = (answerChoice, isCorrect) => {
+        setMcAnswerIsCorrect({ ...mcAnswerIsCorrect, [answerChoice]: isCorrect });
+    };
+
+    const storeMCAnswers = (answerChoice, value) => {
+        setMCAnswers({ ...mcAnswers, [answerChoice]: value});
+    };
+
     return (
         <Fragment>
             <Dialog open={openModal} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -95,12 +113,10 @@ const NewQuestion = ({ open, onClose }) => {
                         fullWidth
                         onChange={handleTextFieldChange}
                     />
-                    {questionType === 'Free Response' && <NewFreeResponse possibleAnswers={storeFRQAnswers} hasCorrect={correctFRQAnswer}/>}
-                    {questionType === 'Multiple Choice' && <NewMultipleChoice />}
+                    {questionType === 'Free Response' && <NewFreeResponse possibleAnswers={storeFRQAnswers}/>}
+                    {questionType === 'Multiple Choice' && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers}/>}
                     {questionType === 'Likert Scale' && <NewLikert thresholdValue={storeThreshold}/>}
-                    {console.log(threshold)}
                 </DialogContent>
-                
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Cancel
