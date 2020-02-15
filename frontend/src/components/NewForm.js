@@ -36,25 +36,12 @@ const NewForm = () => {
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
     const [formName, setFormName] = useState('');
     const [questions, setQuestions] = useState([]);
-    const [state, setState] = React.useState({
+    const [tableData, setTableData] = React.useState({
         columns: [
-            { title: 'Name', field: 'name' },
-            { title: 'Surname', field: 'surname' },
-            { title: 'Birth Year', field: 'birthYear', type: 'numeric' },
-            {
-              title: 'Birth Place',
-              field: 'birthCity',
-              lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
-            },
+            { title: 'Question Type', field: 'questionType' },
+            { title: 'Question Text', field: 'questionText' },
         ],
         data: [
-            { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
-            {
-                name: 'Zerya Betül',
-                surname: 'Baran',
-                birthYear: 2017,
-                birthCity: 34,
-            },
         ],
     });
 
@@ -81,6 +68,10 @@ const NewForm = () => {
 
     const addQuestion = (type, text, frqAnswer, threshold, mcAnswers, correctMCAnswers) => {
         let question = {};
+        let tableQuestion = {
+            questionType: type, 
+            questionText: text,
+        }
         if (type === 'Free Response' || type === 'Likert Scale') {
             question = {
                 questionType: type, 
@@ -95,10 +86,10 @@ const NewForm = () => {
                 questionAnswer: mcAnswers,
                 correctQuestionAnswers: correctMCAnswers
             }
+            
         }
-
-        console.log(question);
         setQuestions(questions.concat(question));
+        setTableData(tableData.data.concat(tableQuestion));
     };
 
     return (
@@ -118,15 +109,15 @@ const NewForm = () => {
             <MaterialTable
                 icons={tableIcons}
                 title="Editable Example"
-                columns={state.columns}
-                data={state.data}
+                columns={tableData.columns}
+                data={tableData.data}
                 className={classes.dataTable}
                 editable={{
                     onRowAdd: newData =>
                     new Promise(resolve => {
                         setTimeout(() => {
                         resolve();
-                        setState(prevState => {
+                        setTableData(prevState => {
                             const data = [...prevState.data];
                             data.push(newData);
                             return { ...prevState, data };
@@ -138,7 +129,7 @@ const NewForm = () => {
                         setTimeout(() => {
                         resolve();
                         if (oldData) {
-                            setState(prevState => {
+                            setTableData(prevState => {
                             const data = [...prevState.data];
                             data[data.indexOf(oldData)] = newData;
                             return { ...prevState, data };
@@ -150,7 +141,7 @@ const NewForm = () => {
                     new Promise(resolve => {
                         setTimeout(() => {
                         resolve();
-                        setState(prevState => {
+                        setTableData(prevState => {
                             const data = [...prevState.data];
                             data.splice(data.indexOf(oldData), 1);
                             return { ...prevState, data };
@@ -159,6 +150,7 @@ const NewForm = () => {
                     }),
                 }}
             />
+            {console.log(questions)}
         </div>
     );
 }
