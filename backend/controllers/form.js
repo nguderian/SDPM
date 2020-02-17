@@ -3,6 +3,19 @@ const dice = require('dice-coefficient');
 const levenstein =require('js-levenshtein');
 class form {
 
+    static async getQuestionTypes(req, res, next) {
+
+        try {
+            let questionTypesList = await sequelize.query('CALL get_all_question_category()');
+            console.log(questionTypesList);
+            res.send(questionTypesList);
+        }
+        catch (error) {
+            console.log(error);
+            res.send({ status: "Get Question Types Failed" });
+        }
+    }
+
     static async createForm(req, res, next) {
 
         // Check the form type.
