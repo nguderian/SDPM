@@ -15,7 +15,7 @@ nconf.argv({
     }
 });
   
-nconf.env("__");
+nconf.env("production");
 nconf.file('./config/config.json');
   
 nconf.defaults({
