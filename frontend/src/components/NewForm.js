@@ -12,6 +12,8 @@ import DeleteOutline from '@material-ui/icons/DeleteOutline';
 import Edit from '@material-ui/icons/Edit';
 import Clear from '@material-ui/icons/Clear';
 import AddBox from '@material-ui/icons/AddBox';
+import Check from '@material-ui/icons/Check';
+import ClearIcon from '@material-ui/icons/Clear';
 import NewQuestion from './NewQuestion';
 
 const useStyles = makeStyles(theme => ({
@@ -36,14 +38,13 @@ const NewForm = () => {
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
     const [formName, setFormName] = useState('');
     const [questions, setQuestions] = useState([]);
-    const [tableData, setTableData] = React.useState({
-        columns: [
-            { title: 'Question Type', field: 'questionType' },
-            { title: 'Question Text', field: 'questionText' },
-        ],
-        data: [
-        ],
-    });
+    
+    // table values - partial duplicate of [questions]
+    const [tableColumns, setTableColumns] = React.useState([
+        { title: 'Question Type', field: 'questionType' },
+        { title: 'Question Text', field: 'questionText' },
+    ]);
+    const [tableData, setTableData] = React.useState([]);
 
     const tableIcons = {
         Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
@@ -55,6 +56,8 @@ const NewForm = () => {
         Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
         ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
         Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
+        Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+        Clear: forwardRef((props, ref) => <ClearIcon {...props} ref={ref} />),
     };
 
     // event handlers
@@ -71,7 +74,8 @@ const NewForm = () => {
         let tableQuestion = {
             questionType: type, 
             questionText: text,
-        }
+        };
+
         if (type === 'Free Response' || type === 'Likert Scale') {
             question = {
                 questionType: type, 
@@ -89,7 +93,7 @@ const NewForm = () => {
             
         }
         setQuestions(questions.concat(question));
-        setTableData(tableData.data.concat(tableQuestion));
+        setTableData(tableData.concat(tableQuestion));
     };
 
     return (
@@ -109,8 +113,8 @@ const NewForm = () => {
             <MaterialTable
                 icons={tableIcons}
                 title="Editable Example"
-                columns={tableData.columns}
-                data={tableData.data}
+                columns={tableColumns}
+                data={tableData}
                 className={classes.dataTable}
                 editable={{
                     onRowAdd: newData =>
@@ -150,7 +154,6 @@ const NewForm = () => {
                     }),
                 }}
             />
-            {console.log(questions)}
         </div>
     );
 }
