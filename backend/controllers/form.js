@@ -46,7 +46,7 @@ class form {
                 console.log(questions[i].question);
 
                 let insert = await sequelize.query(
-                    'CALL insert_form_question_test(?,?)',
+                    'CALL insert_form_question_test(?,?,?)',
                     {
                         replacements: [form_id, questions[i].question_category_id, questions[i].question_text],
                         type: sequelize.QueryTypes.CALL
