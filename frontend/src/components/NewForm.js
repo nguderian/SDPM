@@ -10,7 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import NewQuestion from './NewQuestion';
-
+import DeleteQuestion from './DeleteQuestion';
+import EditQuestion from './EditQuestion';
 
 const useStyles = makeStyles(theme => ({
     formTitle: {
@@ -32,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     },
     questionCard: {
         minWidth: 275,
-        margin: theme.spacing(2)
+        margin: theme.spacing(1)
     },
     title: {
         fontSize: 14
@@ -44,6 +45,9 @@ const NewForm = () => {
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
     const [formName, setFormName] = useState('');
     const [questions, setQuestions] = useState([]);
+    const [deleteQuestionOpen, setDeleteQuestionOpen] = useState(false);
+    const [editQuestionOpen, setEditQuestionOpen] = useState(false);
+    let indexToModify = null;
 
     // event handlers
     const handleClickOpen = () => {
@@ -75,12 +79,23 @@ const NewForm = () => {
         setQuestions(questions.concat(question));
     };
 
-    const deleteQuestion = (index) => {
-        let arr = [...questions]; // make a copy of our state
-        // console.log(arr);
-        arr.splice(index, 1);
-        // console.log(arr);
-        setQuestions(arr);
+    const deleteQuestion = (shouldDelete) => {
+        if(shouldDelete) {
+            let arr = [...questions]; // make a copy of our state
+            arr.splice(indexToModify, 1);
+            setQuestions(arr);
+        }
+    };
+
+    const handleDeleteQuestionClick = (index) => {
+        setDeleteQuestionOpen(true);
+        indexToModify = index;
+    };
+
+    const handleEditQuestionClick = (index) => {
+        setEditQuestionOpen(true);
+        indexToModify = index;
+        
     };
 
     return (
@@ -110,14 +125,15 @@ const NewForm = () => {
                                 <CardActions>
                                     <Button 
                                         variant="contained"
-                                        startIcon={<EditIcon />}>
+                                        startIcon={<EditIcon />}
+                                        onClick={() => handleEditQuestionClick(index)}>
                                         Edit
                                     </Button>
                                     <Button
                                         variant="contained"
                                         color="secondary"
                                         startIcon={<DeleteIcon />}
-                                        onClick={() => deleteQuestion(index)}>
+                                        onClick={() => handleDeleteQuestionClick(index)}>
                                         Delete
                                     </Button>
                                 </CardActions>
@@ -126,6 +142,17 @@ const NewForm = () => {
                     )}
                 </Grid>
             </div>
+            {deleteQuestionOpen && <DeleteQuestion 
+                open={deleteQuestionOpen}
+                onClose={() => setDeleteQuestionOpen(false)}
+                deleteQuestion={deleteQuestion}
+                />}
+            {editQuestionOpen && <EditQuestion 
+                open={editQuestionOpen}
+                onClose={() => setEditQuestionOpen(false)}
+                editQuestion={editQuestion}
+                question={}
+            />}
         </div>
     );
 }

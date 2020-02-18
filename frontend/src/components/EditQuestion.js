@@ -3,8 +3,10 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-const EditQuestion = ({ open }) => {
-    const [show, setShow] = React.useState(open);
+
+
+const EditQuestion = ({ open, onClose, editQuestion }) => {
+    const [show, setShow] = useState(open);
 
     // event handlers
     const handleCancel = () => {
