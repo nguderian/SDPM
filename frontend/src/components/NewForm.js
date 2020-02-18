@@ -2,20 +2,15 @@ import React, { useState, forwardRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import MaterialTable from 'material-table';
-import Search from '@material-ui/icons/Search';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
-import Edit from '@material-ui/icons/Edit';
-import Clear from '@material-ui/icons/Clear';
-import AddBox from '@material-ui/icons/AddBox';
-import Check from '@material-ui/icons/Check';
-import ClearIcon from '@material-ui/icons/Clear';
-import EditQuestion from './EditQuestion';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import NewQuestion from './NewQuestion';
+
 
 const useStyles = makeStyles(theme => ({
     formTitle: {
@@ -31,6 +26,16 @@ const useStyles = makeStyles(theme => ({
     },
     dataTable: {
         width: 200,
+    },
+    root: {
+        flexGrow: 1
+    },
+    questionCard: {
+        minWidth: 275,
+        margin: theme.spacing(2)
+    },
+    title: {
+        fontSize: 14
     }
 }));
 
@@ -39,29 +44,6 @@ const NewForm = () => {
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
     const [formName, setFormName] = useState('');
     const [questions, setQuestions] = useState([]);
-    
-    // table values - partial duplicate of [questions]
-    const [tableColumns, setTableColumns] = React.useState([
-        { title: 'Question Type', field: 'questionType', editComponent: props => (
-            <EditQuestion open={true} />
-        ) },
-        { title: 'Question Text', field: 'questionText' },
-    ]);
-    const [tableData, setTableData] = React.useState([]);
-
-    const tableIcons = {
-        Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-        FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-        LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-        NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-        PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-        Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-        Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-        ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-        Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-        Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-        Clear: forwardRef((props, ref) => <ClearIcon {...props} ref={ref} />),
-    };
 
     // event handlers
     const handleClickOpen = () => {
@@ -74,11 +56,6 @@ const NewForm = () => {
 
     const addQuestion = (type, text, frqAnswer, threshold, mcAnswers, correctMCAnswers) => {
         let question = {};
-        let tableQuestion = {
-            questionType: type, 
-            questionText: text,
-        };
-
         if (type === 'Free Response' || type === 'Likert Scale') {
             question = {
                 questionType: type, 
@@ -96,7 +73,14 @@ const NewForm = () => {
             
         }
         setQuestions(questions.concat(question));
-        setTableData(tableData.concat(tableQuestion));
+    };
+
+    const deleteQuestion = (index) => {
+        let arr = [...questions]; // make a copy of our state
+        // console.log(arr);
+        arr.splice(index, 1);
+        // console.log(arr);
+        setQuestions(arr);
     };
 
     return (
@@ -112,51 +96,36 @@ const NewForm = () => {
                 onClose={() => setAddQuestionOpen(false)}
                 add={addQuestion}
                 />}
-            
-            <MaterialTable
-                icons={tableIcons}
-                title="Editable Example"
-                columns={tableColumns}
-                data={tableData}
-                className={classes.dataTable}
-                editable={{
-                    onRowAdd: newData =>
-                    new Promise(resolve => {
-                        setTimeout(() => {
-                        resolve();
-                        setTableData(prevState => {
-                            const data = [...prevState.data];
-                            data.push(newData);
-                            return { ...prevState, data };
-                        });
-                        }, 600);
-                    }),
-                    onRowUpdate: (newData, oldData) =>
-                    new Promise(resolve => {
-                        setTimeout(() => {
-                        resolve();
-                        if (oldData) {
-                            setTableData(prevState => {
-                            const data = [...prevState.data];
-                            data[data.indexOf(oldData)] = newData;
-                            return { ...prevState, data };
-                            });
-                        }
-                        }, 600);
-                    }),
-                    onRowDelete: oldData =>
-                    new Promise(resolve => {
-                        setTimeout(() => {
-                        resolve();
-                        setTableData(prevState => {
-                            const data = [...prevState.data];
-                            data.splice(data.indexOf(oldData), 1);
-                            return { ...prevState, data };
-                        });
-                        }, 600);
-                    }),
-                }}
-            />
+            <div className={classes.root}>
+                <Grid container spacing={3}>
+                    {questions.map((question, index) => 
+                        <Grid item xs={4} key={index}>
+                            <Card className={classes.questionCard}>
+                                <CardContent>
+                                    <Typography className={classes.title} color="textSecondary" gutterBottom>
+                                        {question.questionType}
+                                    </Typography>
+                                    <Typography>{question.questionText}</Typography>
+                                </CardContent>
+                                <CardActions>
+                                    <Button 
+                                        variant="contained"
+                                        startIcon={<EditIcon />}>
+                                        Edit
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        startIcon={<DeleteIcon />}
+                                        onClick={() => deleteQuestion(index)}>
+                                        Delete
+                                    </Button>
+                                </CardActions>
+                            </Card>
+                        </Grid>
+                    )}
+                </Grid>
+            </div>
         </div>
     );
 }

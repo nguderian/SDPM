@@ -88,7 +88,7 @@ const NewQuestion = ({ open, onClose, add }) => {
 
     return (
         <Fragment>
-            <Dialog open={openModal} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog open={openModal} onClose={handleConfirm} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Add Question</DialogTitle>
                 <DialogContent>
                     <FormControl variant="outlined" className={classes.formControl}>
