@@ -14,6 +14,7 @@ import Clear from '@material-ui/icons/Clear';
 import AddBox from '@material-ui/icons/AddBox';
 import Check from '@material-ui/icons/Check';
 import ClearIcon from '@material-ui/icons/Clear';
+import EditQuestion from './EditQuestion';
 import NewQuestion from './NewQuestion';
 
 const useStyles = makeStyles(theme => ({
@@ -41,7 +42,9 @@ const NewForm = () => {
     
     // table values - partial duplicate of [questions]
     const [tableColumns, setTableColumns] = React.useState([
-        { title: 'Question Type', field: 'questionType' },
+        { title: 'Question Type', field: 'questionType', editComponent: props => (
+            <EditQuestion open={true} />
+        ) },
         { title: 'Question Text', field: 'questionText' },
     ]);
     const [tableData, setTableData] = React.useState([]);

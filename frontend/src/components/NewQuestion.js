@@ -55,7 +55,12 @@ const NewQuestion = ({ open, onClose, add }) => {
         setQuestionType(event.target.value);
     };
 
-    const handleClose = () => {
+    const handleCancel = () => {
+        setOpenModal(false);
+        onClose();
+    };
+
+    const handleConfirm = () => {
         setOpenModal(false);
         onClose();
         add(questionType, questionText, frqAnswers, threshold, mcAnswers, isCorrectMCAnswer);
@@ -118,10 +123,10 @@ const NewQuestion = ({ open, onClose, add }) => {
                     {questionType === 'Likert Scale' && <NewLikert thresholdValue={storeThreshold}/>}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={handleCancel} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={handleConfirm} color="primary">
                         Confirm
                     </Button>
                 </DialogActions>
