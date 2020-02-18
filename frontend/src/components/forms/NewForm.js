@@ -48,6 +48,7 @@ const NewForm = () => {
     const [deleteQuestionOpen, setDeleteQuestionOpen] = useState(false);
     const [editQuestionOpen, setEditQuestionOpen] = useState(false);
     let indexToModify = null;
+    let questionToModify = null;
 
     // event handlers
     const handleClickOpen = () => {
@@ -87,6 +88,12 @@ const NewForm = () => {
         }
     };
 
+    const editQuestion = (shouldEdit) => {
+        if(shouldEdit) {
+
+        }
+    };
+    
     const handleDeleteQuestionClick = (index) => {
         setDeleteQuestionOpen(true);
         indexToModify = index;
@@ -95,7 +102,7 @@ const NewForm = () => {
     const handleEditQuestionClick = (index) => {
         setEditQuestionOpen(true);
         indexToModify = index;
-        
+        questionToModify = questions[indexToModify];
     };
 
     return (
@@ -151,7 +158,7 @@ const NewForm = () => {
                 open={editQuestionOpen}
                 onClose={() => setEditQuestionOpen(false)}
                 editQuestion={editQuestion}
-                question={}
+                question={questionToModify}
             />}
         </div>
     );

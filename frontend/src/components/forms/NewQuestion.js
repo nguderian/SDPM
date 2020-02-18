@@ -27,7 +27,6 @@ const useStyles = makeStyles(theme => ({
 
 const NewQuestion = ({ open, onClose, add }) => {
     const classes = useStyles();
-    const [openModal, setOpenModal] = React.useState(open);
     const [questionType, setQuestionType] = useState('');
     const [questionText, setQuestionText] = useState('');
     const [frqAnswers, setFrqAnswers] = useState('');
@@ -56,12 +55,10 @@ const NewQuestion = ({ open, onClose, add }) => {
     };
 
     const handleCancel = () => {
-        setOpenModal(false);
         onClose();
     };
 
     const handleConfirm = () => {
-        setOpenModal(false);
         onClose();
         add(questionType, questionText, frqAnswers, threshold, mcAnswers, isCorrectMCAnswer);
     };

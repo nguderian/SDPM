@@ -7,18 +7,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        margin: theme.spacing(1)
-    }
-}));
-
 
 const DeleteQuestion = ({ open, onClose, deleteQuestion }) => {
-    const classes = useStyles();
-
-    const [openModal, setOpenModal] = useState(open);
-
     // event handlers
     const handleCancel = () => {
         onClose();
@@ -32,7 +22,7 @@ const DeleteQuestion = ({ open, onClose, deleteQuestion }) => {
 
     return (
         <div>
-            <Dialog open={openModal} onClose={onClose} aria-labelledby="simple-dialog-title" >
+            <Dialog open={open} onClose={onClose} aria-labelledby="simple-dialog-title" >
                 <DialogTitle id="simple-dialog-title"></DialogTitle>
                     <DialogContent>
                         <Typography>Would you like to delete this question?</Typography>
