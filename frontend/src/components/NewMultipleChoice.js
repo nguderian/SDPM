@@ -22,9 +22,31 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const NewMultipleChoice = () => {
+const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
     const classes = useStyles();
-    const [answer, setAnswer] = React.useState({
+    // const [answers, setAnswers] = React.useState({
+    //     answer1: {
+    //         isCorrect: false, 
+    //         value: ''
+    //     }, 
+    //     answer2: {
+    //         isCorrect: false,
+    //         value: ''
+    //     },
+    //     answer3: {
+    //         isCorrect: false, 
+    //         value: ''
+    //     }, 
+    //     answer4: {
+    //         isCorrect: false, 
+    //         value: ''
+    //     }, 
+    //     answer5: {
+    //         isCorrect: false, 
+    //         value: ''
+    //     }, 
+    // });
+    const [isCorrectMCAnswer, setIsCorrectMCAnswer] = React.useState({
         answer1: false,
         answer2: false,
         answer3: false,
@@ -32,14 +54,43 @@ const NewMultipleChoice = () => {
         answer5: false
     });
 
-    const handleChange = answerChoice => event => {
-        setAnswer({ ...answer, [answerChoice]: event.target.checked });
+    // const [answers, setAnswers] = React.useState({
+    //     answer1: '',
+    //     answer2: '', 
+    //     answer3: '', 
+    //     answer4: '',
+    //     answer5: ''
+    // });
+
+    // event handlers
+    const handleCheckBoxChange = answerChoice => event => {
+        // setAnswers({ ...answers, `${answerChoice}`.isCorrect = event.target.value });
+        // setAnswers({ ...answers, answerChoice: {
+        //     isCorrect: event.target.checked,
+        // }});
+        // setAnswers({ ...answers, []: event.target.checked });
+        setIsCorrectMCAnswer({...isCorrectMCAnswer, [answerChoice]: event.target.checked });
+        correctAnswers(answerChoice, event.target.checked);
     };
 
-    const { answer1, answer2, answer3, answer4, answer5 } = answer;
+    const handleTextFieldChange = answerChoice => event => {
+        // setAnswers({ ...answers, [`${answerChoice}.value`]: event.target.value });
+        // setAnswers({ ...answers, [answerChoice].value: {event.target.value} });
+        // setAnswers({ ...answers, [answerChoice]: event.target.value });
+        
+        possibleAnswers(answerChoice, event.target.value);
+    };
 
+    // destructure
+    const { 
+        answer1, 
+        answer2, 
+        answer3, 
+        answer4, 
+        answer5 } = isCorrectMCAnswer;
+    
     return (
-        <div className={classes.root}>
+        <div className={classes.root}>   
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Typography className={classes.helperText}>Check off correct answers</Typography>
@@ -47,52 +98,52 @@ const NewMultipleChoice = () => {
                 <Grid item xs={1}>
                     <FormGroup>
                         <FormControlLabel
-                            control={<Checkbox checked={answer1} className={classes.checkBox} onChange={handleChange('answer1')} value="isCorrect"/>}
+                            control={<Checkbox checked={answer1} className={classes.checkBox} onChange={handleCheckBoxChange('answer1')} value="isCorrect"/>}
                         />
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer1" label="Enter Answer" variant="outlined" fullWidth/>
+                    <TextField autoFocus id="answer1" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer1')}/>
                 </Grid>
                 <Grid item xs={1}>
                     <FormGroup>
                         <FormControlLabel
-                            control={<Checkbox checked={answer2} className={classes.checkBox} onChange={handleChange('answer2')} value="isCorrect"/>}
+                            control={<Checkbox checked={answer2} className={classes.checkBox} onChange={handleCheckBoxChange('answer2')} value="isCorrect"/>}
                         />
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer2" label="Enter Answer" variant="outlined" fullWidth/>
+                    <TextField autoFocus id="answer2" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer2')}/>
                 </Grid>
                 <Grid item xs={1}>
                     <FormGroup>
                         <FormControlLabel
-                            control={<Checkbox checked={answer3} className={classes.checkBox} onChange={handleChange('answer3')} value="isCorrect"/>}
+                            control={<Checkbox checked={answer3} className={classes.checkBox} onChange={handleCheckBoxChange('answer3')} value="isCorrect"/>}
                         />
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer3" label="Enter Answer" variant="outlined" fullWidth/>
+                    <TextField autoFocus id="answer3" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer3')}/>
                 </Grid>
                 <Grid item xs={1}>
                     <FormGroup>
                         <FormControlLabel
-                            control={<Checkbox checked={answer4} className={classes.checkBox} onChange={handleChange('answer4')} value="isCorrect"/>}
+                            control={<Checkbox checked={answer4} className={classes.checkBox} onChange={handleCheckBoxChange('answer4')} value="isCorrect"/>}
                         />
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer4" label="Enter Answer" variant="outlined" fullWidth/>
+                    <TextField autoFocus id="answer4" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer4')}/>
                 </Grid>
                 <Grid item xs={1}>
                     <FormGroup>
                         <FormControlLabel
-                            control={<Checkbox checked={answer5} className={classes.checkBox} onChange={handleChange('answer5')} value="isCorrect"/>}
+                            control={<Checkbox checked={answer5} className={classes.checkBox} onChange={handleCheckBoxChange('answer5')} value="isCorrect"/>}
                         />
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer5" label="Enter Answer" variant="outlined" fullWidth/>
+                    <TextField autoFocus id="answer5" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer5')}/>
                 </Grid>
             </Grid>
         </div>

@@ -12,6 +12,9 @@ import DeleteOutline from '@material-ui/icons/DeleteOutline';
 import Edit from '@material-ui/icons/Edit';
 import Clear from '@material-ui/icons/Clear';
 import AddBox from '@material-ui/icons/AddBox';
+import Check from '@material-ui/icons/Check';
+import ClearIcon from '@material-ui/icons/Clear';
+import EditQuestion from './EditQuestion';
 import NewQuestion from './NewQuestion';
 
 const useStyles = makeStyles(theme => ({
@@ -34,27 +37,18 @@ const useStyles = makeStyles(theme => ({
 const NewForm = () => {
     const classes = useStyles();
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
-    const [state, setState] = React.useState({
-        columns: [
-            { title: 'Name', field: 'name' },
-            { title: 'Surname', field: 'surname' },
-            { title: 'Birth Year', field: 'birthYear', type: 'numeric' },
-            {
-              title: 'Birth Place',
-              field: 'birthCity',
-              lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
-            },
-        ],
-        data: [
-            { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
-            {
-                name: 'Zerya Betül',
-                surname: 'Baran',
-                birthYear: 2017,
-                birthCity: 34,
-            },
-        ],
-    });
+    const [formName, setFormName] = useState('');
+    const [questions, setQuestions] = useState([]);
+    
+    // table values - partial duplicate of [questions]
+    const [tableColumns, setTableColumns] = React.useState([
+        { title: 'Question Type', field: 'questionType', editComponent: props => (
+            <EditQuestion open={true} />
+        ) },
+        { title: 'Question Text', field: 'questionText' },
+    ]);
+    const [tableData, setTableData] = React.useState([]);
+
     const tableIcons = {
         Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
         FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -65,33 +59,72 @@ const NewForm = () => {
         Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
         ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
         Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-    }
+        Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+        Clear: forwardRef((props, ref) => <ClearIcon {...props} ref={ref} />),
+    };
+
+    // event handlers
     const handleClickOpen = () => {
         setAddQuestionOpen(true);
+    };
+
+    const handleTextFieldChange = event => {
+        setFormName(event.target.value);
+    };
+
+    const addQuestion = (type, text, frqAnswer, threshold, mcAnswers, correctMCAnswers) => {
+        let question = {};
+        let tableQuestion = {
+            questionType: type, 
+            questionText: text,
+        };
+
+        if (type === 'Free Response' || type === 'Likert Scale') {
+            question = {
+                questionType: type, 
+                questionText: text,
+                questionAnswer: frqAnswer === '' ? threshold : frqAnswer
+            }
+        }
+        else {
+            question = {
+                questionType: type,
+                questionText: text,
+                questionAnswer: mcAnswers,
+                correctQuestionAnswers: correctMCAnswers
+            }
+            
+        }
+        setQuestions(questions.concat(question));
+        setTableData(tableData.concat(tableQuestion));
     };
 
     return (
         <div>
             <form className={classes.formTitle} noValidate autoComplete="off">
-                <TextField id="outlined-basic" label="Form Name" variant="outlined" fullWidth={true}/>
+                <TextField id="outlined-basic" label="Form Name" variant="outlined" fullWidth={true} onChange={handleTextFieldChange}/>
             </form>
             <Button className={classes.createButton} variant="contained" color="primary" onClick={handleClickOpen}>
                 Add Question 
             </Button>
-            {addQuestionOpen && <NewQuestion open={addQuestionOpen} onClose={() => setAddQuestionOpen(false)}/>}
+            {addQuestionOpen && <NewQuestion 
+                open={addQuestionOpen} 
+                onClose={() => setAddQuestionOpen(false)}
+                add={addQuestion}
+                />}
             
             <MaterialTable
                 icons={tableIcons}
                 title="Editable Example"
-                columns={state.columns}
-                data={state.data}
+                columns={tableColumns}
+                data={tableData}
                 className={classes.dataTable}
                 editable={{
                     onRowAdd: newData =>
                     new Promise(resolve => {
                         setTimeout(() => {
                         resolve();
-                        setState(prevState => {
+                        setTableData(prevState => {
                             const data = [...prevState.data];
                             data.push(newData);
                             return { ...prevState, data };
@@ -103,7 +136,7 @@ const NewForm = () => {
                         setTimeout(() => {
                         resolve();
                         if (oldData) {
-                            setState(prevState => {
+                            setTableData(prevState => {
                             const data = [...prevState.data];
                             data[data.indexOf(oldData)] = newData;
                             return { ...prevState, data };
@@ -115,7 +148,7 @@ const NewForm = () => {
                     new Promise(resolve => {
                         setTimeout(() => {
                         resolve();
-                        setState(prevState => {
+                        setTableData(prevState => {
                             const data = [...prevState.data];
                             data.splice(data.indexOf(oldData), 1);
                             return { ...prevState, data };

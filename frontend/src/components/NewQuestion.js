@@ -25,21 +25,65 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const NewQuestion = ({ open, onClose }) => {
+const NewQuestion = ({ open, onClose, add }) => {
     const classes = useStyles();
     const [openModal, setOpenModal] = React.useState(open);
     const [questionType, setQuestionType] = useState('');
+    const [questionText, setQuestionText] = useState('');
+    const [frqAnswers, setFrqAnswers] = useState('');
+    const [threshold, setThreshold] = useState('');
+    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = React.useState({
+        answer1: false,
+        answer2: false,
+        answer3: false,
+        answer4: false, 
+        answer5: false
+    });
+    const [mcAnswers, setMCAnswers] = React.useState({
+        answer1: '',
+        answer2: '', 
+        answer3: '', 
+        answer4: '',
+        answer5: ''
+    });
 
     const inputLabel = React.useRef(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
 
+    // event handlers
     const handleChange = event => {
         setQuestionType(event.target.value);
     };
 
-    const handleClose = () => {
+    const handleCancel = () => {
         setOpenModal(false);
         onClose();
+    };
+
+    const handleConfirm = () => {
+        setOpenModal(false);
+        onClose();
+        add(questionType, questionText, frqAnswers, threshold, mcAnswers, isCorrectMCAnswer);
+    };
+
+    const handleTextFieldChange = event => {
+        setQuestionText(event.target.value);
+    };
+
+    const storeFRQAnswers = answers => {
+        setFrqAnswers(answers);
+    };
+
+    const storeThreshold = value => {
+        setThreshold(value);
+    };
+    
+    const storeCorrectMCAnswers = (answerChoice, isCorrect) => {
+        setIsCorrectMcAnswer({ ...isCorrectMCAnswer, [answerChoice]: isCorrect });
+    };
+
+    const storeMCAnswers = (answerChoice, value) => {
+        setMCAnswers({ ...mcAnswers, [answerChoice]: value});
     };
 
     return (
@@ -72,16 +116,17 @@ const NewQuestion = ({ open, onClose }) => {
                         id="name"
                         label="Enter Question Text"
                         fullWidth
+                        onChange={handleTextFieldChange}
                     />
-                    {questionType === 'Free Response' && <NewFreeResponse />}
-                    {questionType === 'Multiple Choice' && <NewMultipleChoice />}
-                    {questionType === 'Likert Scale' && <NewLikert/>}
+                    {questionType === 'Free Response' && <NewFreeResponse possibleAnswers={storeFRQAnswers}/>}
+                    {questionType === 'Multiple Choice' && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers}/>}
+                    {questionType === 'Likert Scale' && <NewLikert thresholdValue={storeThreshold}/>}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={handleCancel} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={handleConfirm} color="primary">
                         Confirm
                     </Button>
                 </DialogActions>
