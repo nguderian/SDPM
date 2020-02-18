@@ -10,9 +10,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import NewFreeResponse from './NewFreeResponse';
-import NewLikert from './NewLikert';
-import NewMultipleChoice from './NewMultipleChoice';
+import NewFreeResponse from './questions/NewFreeResponse';
+import NewLikert from './questions/NewLikert';
+import NewMultipleChoice from './questions/NewMultipleChoice';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -50,7 +50,7 @@ const NewQuestion = ({ open, onClose, add }) => {
     const [labelWidth, setLabelWidth] = React.useState(0);
 
     // event handlers
-    const handleChange = event => {
+    const handleQuestionTypeChange = event => {
         setQuestionType(event.target.value);
     };
 
@@ -63,7 +63,7 @@ const NewQuestion = ({ open, onClose, add }) => {
         add(questionType, questionText, frqAnswers, threshold, mcAnswers, isCorrectMCAnswer);
     };
 
-    const handleTextFieldChange = event => {
+    const handleQuestionTextChange = event => {
         setQuestionText(event.target.value);
     };
 
@@ -85,7 +85,7 @@ const NewQuestion = ({ open, onClose, add }) => {
 
     return (
         <Fragment>
-            <Dialog open={openModal} onClose={handleConfirm} aria-labelledby="form-dialog-title">
+            <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Add Question</DialogTitle>
                 <DialogContent>
                     <FormControl variant="outlined" className={classes.formControl}>
@@ -96,7 +96,7 @@ const NewQuestion = ({ open, onClose, add }) => {
                             labelId="Question Type"
                             id="Question Selector"
                             value={questionType}
-                            onChange={handleChange}
+                            onChange={handleQuestionTypeChange}
                             labelWidth={labelWidth}
                         >
                             <MenuItem value="">
@@ -113,7 +113,7 @@ const NewQuestion = ({ open, onClose, add }) => {
                         id="name"
                         label="Enter Question Text"
                         fullWidth
-                        onChange={handleTextFieldChange}
+                        onChange={handleQuestionTextChange}
                     />
                     {questionType === 'Free Response' && <NewFreeResponse possibleAnswers={storeFRQAnswers}/>}
                     {questionType === 'Multiple Choice' && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers}/>}
