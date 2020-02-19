@@ -160,7 +160,14 @@ const NewForm = () => {
         <div>
             <Typography variant="h4" className={classes.pageTitle}>Create a New Form</Typography>
             <form className={classes.formTitle} noValidate autoComplete="off">
-                <TextField id="outlined-basic" label="Form Name" variant="outlined" fullWidth={true} onChange={handleTextFieldChange}/>
+                <TextField id="outlined-basic" 
+                    error={formName === '' ? true : false} 
+                    helperText={formName === '' ? "Form name is required." : ''} 
+                    label="Form Name" 
+                    variant="outlined" 
+                    fullWidth={true} 
+                    onChange={handleTextFieldChange}
+                />
             </form>
             <Button className={classes.createButton} variant="contained" color="primary" onClick={handleClickOpen}>
                 Add Question 

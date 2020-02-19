@@ -9,6 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import NewFreeResponse from './questions/NewFreeResponse';
 import NewLikert from './questions/NewLikert';
@@ -88,7 +89,7 @@ const NewQuestion = ({ open, onClose, add }) => {
             <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Add Question</DialogTitle>
                 <DialogContent>
-                    <FormControl variant="outlined" className={classes.formControl}>
+                    <FormControl variant="outlined" className={classes.formControl} error={questionType === '' ? true : false}>
                         <InputLabel ref={inputLabel} id="Question Type">
                             Question Type
                         </InputLabel>
@@ -106,13 +107,15 @@ const NewQuestion = ({ open, onClose, add }) => {
                             <MenuItem value={'Multiple Choice'}>Multiple Choice</MenuItem>
                             <MenuItem value={'Likert Scale'}>Likert Scale</MenuItem>
                         </Select>
+                        {questionType === '' ? <FormHelperText error>Question Type is Required</FormHelperText> : null}
                     </FormControl>
                     <TextField
                         className={classes.questionInput}
-                        autoFocus
                         id="name"
                         label="Enter Question Text"
                         fullWidth
+                        error={questionText === '' ? true : false} 
+                        helperText={questionText === '' ? "Question text is required" : ''} 
                         onChange={handleQuestionTextChange}
                     />
                     {questionType === 'Free Response' && <NewFreeResponse possibleAnswers={storeFRQAnswers}/>}
