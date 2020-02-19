@@ -7,6 +7,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import NewQuestion from './NewQuestion';
@@ -16,6 +17,7 @@ import EditQuestion from './EditQuestion';
 const useStyles = makeStyles(theme => ({
     formTitle: {
         margin: theme.spacing(1),
+        marginTop: theme.spacing(2),
     },
     formControl: {
         margin: theme.spacing(1),
@@ -24,6 +26,12 @@ const useStyles = makeStyles(theme => ({
     createButton: {
         margin: theme.spacing(1),
         textAlign: 'center',
+        marginTop: theme.spacing(2),
+    },
+    pageTitle: {
+        margin: theme.spacing(1),
+        marginTop: theme.spacing(2),
+        textAlign: 'center'
     },
     dataTable: {
         width: 200,
@@ -37,6 +45,11 @@ const useStyles = makeStyles(theme => ({
     },
     title: {
         fontSize: 14
+    },
+    divider: {
+        margin: theme.spacing(1),
+        marginBottom: theme.spacing(2),
+        marginTop: theme.spacing(2)
     }
 }));
 
@@ -101,7 +114,6 @@ const NewForm = () => {
     };
 
     const editQuestion = (shouldEdit, type, text, frqAnswer, threshold, mcAnswers, correctMCAnswers) => {
-        console.log(shouldEdit);
         if(shouldEdit) {
             let question = {};
             if (type === 'Free Response' || type === 'Likert Scale') {
@@ -146,6 +158,7 @@ const NewForm = () => {
 
     return (
         <div>
+            <Typography variant="h4" className={classes.pageTitle}>Create a New Form</Typography>
             <form className={classes.formTitle} noValidate autoComplete="off">
                 <TextField id="outlined-basic" label="Form Name" variant="outlined" fullWidth={true} onChange={handleTextFieldChange}/>
             </form>
@@ -157,11 +170,12 @@ const NewForm = () => {
                 onClose={() => setAddQuestionOpen(false)}
                 add={addQuestion}
                 />}
+            <Divider className={classes.divider} variant="fullWidth"/>
             <div className={classes.root}>
                 <Grid container spacing={3}>
                     {questions.map((question, index) => 
                         <Grid item xs={4} key={index}>
-                            <Card className={classes.questionCard}>
+                            <Card className={classes.questionCard} variant="outlined">
                                 <CardContent>
                                     <Typography className={classes.title} color="textSecondary" gutterBottom>
                                         {question.questionType}
