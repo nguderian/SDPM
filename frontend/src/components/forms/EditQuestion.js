@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -46,7 +46,7 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
         answer5: ''
     });
 
-    const inputLabel = React.useRef(null);
+    const inputLabel = useRef(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
     
     // event handlers
@@ -56,8 +56,8 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     };
 
     const handleConfirm = () => {
-        let newQuestion = {};
-        editQuestion(true, newQuestion)
+        onClose();
+        editQuestion(true, questionType, questionText, frqAnswers, threshold, mcAnswers, isCorrectMCAnswer)
     };
 
     const storeFRQAnswers = answers => {
@@ -86,7 +86,6 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     };
     return (
         <div>
-            {console.log(question)}
             <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Edit Question</DialogTitle>
                 <DialogContent>

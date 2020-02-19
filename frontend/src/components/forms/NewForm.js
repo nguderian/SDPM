@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -45,10 +45,23 @@ const NewForm = () => {
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
     const [formName, setFormName] = useState('');
     const [questions, setQuestions] = useState([]);
-    const [deleteQuestionOpen, setDeleteQuestionOpen] = useState(false);
-    const [editQuestionOpen, setEditQuestionOpen] = useState(false);
-    let indexToModify = null;
-    const [questionToModify, setQuestionToModify] = useState({});
+    const [modificationParameters, setModificationParameters] = useState({
+        deleteQuestionOpen: false,
+        editQuestionOpen: false,
+        indexToModify: null,
+        questionToModify: null,
+    });
+
+    const handleModificationParameters = (parameters, values) => {
+        console.log(parameters, values);
+        const tempParams = {...modificationParameters};
+        parameters.forEach((parameter, idx) => {
+            tempParams[parameter] = values[idx];
+        });
+        
+        console.log(tempParams);
+        setModificationParameters({...tempParams});
+    };
 
     // event handlers
     const handleClickOpen = () => {
@@ -75,7 +88,6 @@ const NewForm = () => {
                 questionAnswer: mcAnswers,
                 correctQuestionAnswers: correctMCAnswers
             }
-            
         }
         setQuestions(questions.concat(question));
     };
@@ -83,26 +95,53 @@ const NewForm = () => {
     const deleteQuestion = (shouldDelete) => {
         if(shouldDelete) {
             let arr = [...questions]; // make a copy of our state
-            arr.splice(indexToModify, 1);
+            arr.splice(modificationParameters.indexToModify, 1);
             setQuestions(arr);
         }
     };
 
-    const editQuestion = (shouldEdit) => {
+    const editQuestion = (shouldEdit, type, text, frqAnswer, threshold, mcAnswers, correctMCAnswers) => {
+        console.log(shouldEdit);
         if(shouldEdit) {
+            let question = {};
+            if (type === 'Free Response' || type === 'Likert Scale') {
+                question = {
+                    questionType: type, 
+                    questionText: text,
+                    questionAnswer: frqAnswer === '' ? threshold : frqAnswer
+                }
+            }
+            else {
+                question = {
+                    questionType: type,
+                    questionText: text,
+                    questionAnswer: mcAnswers,
+                    correctQuestionAnswers: correctMCAnswers
+                }
+            }
 
+            console.log(question);
+            console.log(modificationParameters.indexToModify);
+            let arr = [...questions];
+            console.log(arr);
+            arr[modificationParameters.indexToModify] = question;
+            console.log(arr);
+            setQuestions(arr);
         }
     };
-    
+
     const handleDeleteQuestionClick = (index) => {
-        indexToModify = index;
-        setDeleteQuestionOpen(true);
+        handleModificationParameters(
+            ["deleteQuestionOpen", "indexToModify"],
+            [true, index]
+        );
     };
 
     const handleEditQuestionClick = (index) => {
-        indexToModify = index;
-        setQuestionToModify(questions[indexToModify]);
-        setEditQuestionOpen(true);
+        handleModificationParameters(
+            ["editQuestionOpen", "indexToModify", "questionToModify"],
+            [true, index, questions[index]]
+        );
     };
 
     return (
@@ -149,16 +188,16 @@ const NewForm = () => {
                     )}
                 </Grid>
             </div>
-            {deleteQuestionOpen && <DeleteQuestion 
-                open={deleteQuestionOpen}
-                onClose={() => setDeleteQuestionOpen(false)}
+            {modificationParameters.deleteQuestionOpen && <DeleteQuestion 
+                open={modificationParameters.deleteQuestionOpen}
+                onClose={() => handleModificationParameters(["deleteQuestionOpen"], [false])}
                 deleteQuestion={deleteQuestion}
-                />}
-            {editQuestionOpen && <EditQuestion 
-                open={editQuestionOpen}
-                onClose={() => setEditQuestionOpen(false)}
+            />}
+            {modificationParameters.editQuestionOpen && <EditQuestion 
+                open={modificationParameters.editQuestionOpen}
+                onClose={() => handleModificationParameters(["editQuestionOpen"], [false])}
                 editQuestion={editQuestion}
-                question={questionToModify}
+                question={modificationParameters.questionToModify}
             />}
         </div>
     );
