@@ -22,6 +22,7 @@ class form {
 
         let status = {};
         let form_id;
+        let question_id;
 
         try {
             let returnFormID = await sequelize.query(
@@ -43,14 +44,14 @@ class form {
         // Insert the questions for the new form.
         for (let i = 0; i < questions.length; i++) {
             try {
-                console.log(questions[i].question);
-
                 let insert = await sequelize.query(
                     'CALL insert_form_question_test(?,?,?)',
                     {
                         replacements: [form_id, questions[i].question_category_id, questions[i].question_text],
                         type: sequelize.QueryTypes.CALL
                     })
+                question_id = insert[0]['LAST_INSERT_ID()'];
+
                 status.status3 = "Question Insert"
                 next;
             } catch (error) {
@@ -58,6 +59,28 @@ class form {
                 status.status2 = "Failed";
                 next;
             }
+            console.log(questions[i]);
+
+            for (let j = 0; j < questions[i].answers.length; j++) {
+                try {
+                    let returnAnswer_id = await sequelize.query(
+                        'CALL insert_form_answer_test(?,?,?)',
+                        {
+                            replacements: [question_id, questions[i].answers[j].answer_text, questions[i].answers[j].is_correct],
+                            type: sequelize.QueryTypes.CALL
+                        })
+
+                    
+                }
+                catch (error) {
+                    console.log(error);
+                    status.status2 = "Failed";
+                    next;
+                }
+                //console.log(questions[i].answers[j]);
+            }
+
+
         }
 
         res.send({ form_id });
@@ -69,41 +92,41 @@ class form {
         const { form_id } = req.body;
 
         let returnForm, formType;
-        
+
         // get the form type.
-        try{
+        try {
             let result = await sequelize.query('CALL get_form_type(?)',
-            { replacements : [form_id], type : sequelize.QueryTypes.CALL});
-            
+                { replacements: [form_id], type: sequelize.QueryTypes.CALL });
+
             formType = result[0]['type'];
-            
-        }catch(error){
+
+        } catch (error) {
             console.log(error);
-            res.send({ status : "Could not get form type" });
+            res.send({ status: "Could not get form type" });
         }
 
         // Get the form and any questions for the user to submit.
-        if(formType === 'survey'){
+        if (formType === 'survey') {
             let returnSurvey;
-            try{
+            try {
                 returnSurvey = await sequelize.query('CALL get_survey(?)',
-                {replacements : [ form_id ], type : sequelize.QueryTypes.CALL});
-            }catch(error){
+                    { replacements: [form_id], type: sequelize.QueryTypes.CALL });
+            } catch (error) {
                 console.log(error);
-                res.send({ status : "Could not get survey to take" });
+                res.send({ status: "Could not get survey to take" });
             }
-            res.send({survey : returnSurvey});
+            res.send({ survey: returnSurvey });
         }
-        else if(formType === 'quiz'){
+        else if (formType === 'quiz') {
             let returnQuiz;
-            try{
+            try {
                 returnQuiz = await sequelize.query('CALL get_quiz(?)',
-                {replacements : [ form_id ], type : sequelize.QueryTypes.CALL});
-            }catch(error){
+                    { replacements: [form_id], type: sequelize.QueryTypes.CALL });
+            } catch (error) {
                 console.log(error);
-                res.send({ status : "Could not get quiz to take" });
+                res.send({ status: "Could not get quiz to take" });
             }
-            res.send({ quiz : returnQuiz});
+            res.send({ quiz: returnQuiz });
         }
     }
 
