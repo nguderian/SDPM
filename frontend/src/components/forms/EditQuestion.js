@@ -1,8 +1,15 @@
 import React, { useState, Fragment, useRef } from 'react';
+import { makeStyles } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import EditFreeResponse from './questions/EditFreeResponse';
 import EditLikert from './questions/EditLikert';
 import EditMultipleChoice from './questions/EditMultipleChoice';
@@ -18,24 +25,70 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const EditQuestion = ({ open, onClose, editQuestion, questionToEdit }) => {
+const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     const classes = useStyles();
+    const [questionType, setQuestionType] = useState(question.questionType);
+    const [questionText, setQuestionText] = useState('');
+    const [frqAnswers, setFrqAnswers] = useState('');
+    const [threshold, setThreshold] = useState('');
+    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = React.useState({
+        answer1: false,
+        answer2: false,
+        answer3: false,
+        answer4: false, 
+        answer5: false
+    });
+    const [mcAnswers, setMCAnswers] = React.useState({
+        answer1: '',
+        answer2: '', 
+        answer3: '', 
+        answer4: '',
+        answer5: ''
+    });
+
     const inputLabel = React.useRef(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
+    
     // event handlers
     const handleCancel = () => {
         onClose();
-        editQuestion(false, questionToEdit);
+        editQuestion(false, question);
     };
 
     const handleConfirm = () => {
-        editQuestion(true, )
+        let newQuestion = {};
+        editQuestion(true, newQuestion)
     };
 
+    const storeFRQAnswers = answers => {
+        setFrqAnswers(answers);
+    };
+
+    const storeThreshold = value => {
+        setThreshold(value);
+    };
+
+    // event handlers
+    const handleQuestionTypeChange = event => {
+        setQuestionType(event.target.value);
+    };
+
+    const handleQuestionTextChange = event => {
+        setQuestionText(event.target.value);
+    };
+
+    const storeCorrectMCAnswers = (answerChoice, isCorrect) => {
+        setIsCorrectMcAnswer({ ...isCorrectMCAnswer, [answerChoice]: isCorrect });
+    };
+
+    const storeMCAnswers = (answerChoice, value) => {
+        setMCAnswers({ ...mcAnswers, [answerChoice]: value});
+    };
     return (
         <div>
+            {console.log(question)}
             <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Add Question</DialogTitle>
+                <DialogTitle id="form-dialog-title">Edit Question</DialogTitle>
                 <DialogContent>
                     <FormControl variant="outlined" className={classes.formControl}>
                         <InputLabel ref={inputLabel} id="Question Type">
@@ -45,9 +98,8 @@ const EditQuestion = ({ open, onClose, editQuestion, questionToEdit }) => {
                             labelId="Question Type"
                             id="Question Selector"
                             value={questionType}
-                            onChange={handleChange}
+                            onChange={handleQuestionTypeChange}
                             labelWidth={labelWidth}
-                            defaultValue={questionToEdit.questionType}
                         >
                             <MenuItem value="">
                                 <em>None</em>
@@ -63,12 +115,12 @@ const EditQuestion = ({ open, onClose, editQuestion, questionToEdit }) => {
                         id="name"
                         label="Enter Question Text"
                         fullWidth
-                        defaultValue={questionToEdit.questionText}
-                        onChange={handleTextFieldChange}
+                        defaultValue={question.questionText}
+                        onChange={handleQuestionTextChange}
                     />
-                    {questionToEdit.questionType === 'Free Response' && <EditFreeResponse possibleAnswers={storeFRQAnswers}/>}
-                    {questionToEdit.questionType === 'Multiple Choice' && <EditMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers}/>}
-                    {questionToEdit.questionType === 'Likert Scale' && <EditLikert thresholdValue={storeThreshold}/>}
+                    {questionType === 'Free Response' && <EditFreeResponse possibleAnswers={storeFRQAnswers} question={question}/>}
+                    {questionType === 'Multiple Choice' && <EditMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} question={question}/>}
+                    {questionType === 'Likert Scale' && <EditLikert thresholdValue={storeThreshold} question={question}/>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCancel} color="primary">
