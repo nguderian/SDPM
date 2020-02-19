@@ -28,17 +28,17 @@ const useStyles = makeStyles(theme => ({
 const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     const classes = useStyles();
     const [questionType, setQuestionType] = useState(question.questionType);
-    const [questionText, setQuestionText] = useState('');
-    const [frqAnswers, setFrqAnswers] = useState('');
-    const [threshold, setThreshold] = useState('');
-    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = React.useState({
+    const [questionText, setQuestionText] = useState(question.questionText);
+    const [frqAnswers, setFrqAnswers] = useState(question.questionType === 'Free Response' ? question.questionAnswer : '');
+    const [threshold, setThreshold] = useState(question.questionType === 'Likert Scale' ? question.questionAnswer : '');
+    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = React.useState(question.questionType === 'Multiple Choice' ? question.correctQuestionAnswers : {
         answer1: false,
         answer2: false,
         answer3: false,
         answer4: false, 
         answer5: false
     });
-    const [mcAnswers, setMCAnswers] = React.useState({
+    const [mcAnswers, setMCAnswers] = React.useState(question.questionType === 'Multiple Choice' ? question.questionAnswer : {
         answer1: '',
         answer2: '', 
         answer3: '', 
@@ -61,11 +61,15 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     };
 
     const storeFRQAnswers = answers => {
-        setFrqAnswers(answers);
+        if (answers !== null)  {
+            setFrqAnswers(answers);
+        }
     };
 
     const storeThreshold = value => {
-        setThreshold(value);
+        if (value !== null) {
+            setThreshold(value);
+        }
     };
 
     // event handlers
@@ -82,8 +86,11 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     };
 
     const storeMCAnswers = (answerChoice, value) => {
-        setMCAnswers({ ...mcAnswers, [answerChoice]: value});
+        if(value !== null) {
+            setMCAnswers({ ...mcAnswers, [answerChoice]: value});
+        }
     };
+
     return (
         <div>
             <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
@@ -114,7 +121,7 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
                         id="name"
                         label="Enter Question Text"
                         fullWidth
-                        defaultValue={question.questionText}
+                        defaultValue={questionText}
                         onChange={handleQuestionTextChange}
                     />
                     {questionType === 'Free Response' && <EditFreeResponse possibleAnswers={storeFRQAnswers} question={question}/>}

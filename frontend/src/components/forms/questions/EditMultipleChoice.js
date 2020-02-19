@@ -23,26 +23,12 @@ const useStyles = makeStyles(theme => ({
 
 const EditMultipleChoice = ({ possibleAnswers, correctAnswers, question }) => {
     const classes = useStyles();
-    let previousAnswers = {
+    const [isCorrectMCAnswer, setIsCorrectMCAnswer] = React.useState(question.questionType === 'Multiple Choice' ? question.correctQuestionAnswers : {
         answer1: false,
         answer2: false,
         answer3: false,
         answer4: false,
         answer5: false,
-    }
-    if(question.questionType === 'Multiple Choice') {
-        previousAnswers.answer1 = question.correctQuestionAnswers.answer1;
-        previousAnswers.answer2 = question.correctQuestionAnswers.answer2;
-        previousAnswers.answer3 = question.correctQuestionAnswers.answer3;
-        previousAnswers.answer4 = question.correctQuestionAnswers.answer4;
-        previousAnswers.answer5 = question.correctQuestionAnswers.answer5;
-    }
-    const [isCorrectMCAnswer, setIsCorrectMCAnswer] = React.useState({
-        answer1: previousAnswers.answer1,
-        answer2: previousAnswers.answer2,
-        answer3: previousAnswers.answer3,
-        answer4: previousAnswers.answer4,
-        answer5: previousAnswers.answer5,
     });
 
     // event handlers
