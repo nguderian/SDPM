@@ -11,12 +11,14 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import { Link } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import ClassIcon from '@material-ui/icons/Class';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CreateIcon from '@material-ui/icons/Create';
 import SearchIcon from '@material-ui/icons/Search';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -69,17 +71,22 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
             onKeyDown={toggleDrawer(side, false)}
           >
             <List>
-              {['Home', 'Class', 'Assignments', 'Settings'].map((text, index) => (
-                <ListItem button key={text}>
-                  <ListItemIcon>
-                    {index === 0 && <HomeIcon/>}
-                    {index === 1 && <ClassIcon/>}
-                    {index === 2 && <AssignmentIcon/>}
-                    {index === 3 && <SettingsIcon/>}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))}
+              <ListItem button component={Link} to='/'>
+                <ListItemIcon><HomeIcon/></ListItemIcon>
+                <ListItemText primary='Home'/>
+              </ListItem>
+              <ListItem button component={Link} to='/'>
+                <ListItemIcon><ClassIcon/></ListItemIcon>
+                <ListItemText primary='Class'/>
+              </ListItem>
+              <ListItem button component={Link} to='/CreateForm'>
+                <ListItemIcon><AssignmentIcon/></ListItemIcon>
+                <ListItemText primary='Assignments'/>
+              </ListItem>
+              <ListItem button component={Link} to='/NewForm'>
+                <ListItemIcon><SettingsIcon/></ListItemIcon>
+                <ListItemText primary='Settings'/>
+              </ListItem>
             </List>
           </div>
         )
@@ -93,19 +100,30 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
             onKeyDown={toggleDrawer(side, false)}
           >
             <List>
-              {['Home', 'Classes', 'Assignments', 'Create Form', 'Search Forms', 'Settings'].map((text, index) => (
-                <ListItem button key={text}>
-                  <ListItemIcon>
-                    {index === 0 && <HomeIcon/>}
-                    {index === 1 && <ClassIcon/>}
-                    {index === 2 && <AssignmentIcon/>}
-                    {index === 3 && <CreateIcon/>}
-                    {index === 4 && <SearchIcon/>}
-                    {index === 5 && <SettingsIcon/>}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              ))}
+              <ListItem button component={Link} to='/'>
+                <ListItemIcon><HomeIcon/></ListItemIcon>
+                <ListItemText primary='Home'/>
+              </ListItem>
+              <ListItem button component={Link} to='/'>
+                <ListItemIcon><ClassIcon/></ListItemIcon>
+                <ListItemText primary='Class'/>
+              </ListItem>
+              <ListItem button component={Link} to='/'>
+                <ListItemIcon><AssignmentIcon/></ListItemIcon>
+                <ListItemText primary='Assignments'/>
+              </ListItem>
+              <ListItem button component={Link} to='/CreateForm'>
+                <ListItemIcon><CreateIcon/></ListItemIcon>
+                <ListItemText primary='Create Form'/>
+              </ListItem>
+              <ListItem button component={Link} to='/'>
+                <ListItemIcon><SearchIcon/></ListItemIcon>
+                <ListItemText primary='Search Forms'/>
+              </ListItem>
+              <ListItem button component={Link} to='/Settings'>
+                <ListItemIcon><SettingsIcon/></ListItemIcon>
+                <ListItemText primary='Settings'/>
+              </ListItem>
             </List>
           </div>
         )
