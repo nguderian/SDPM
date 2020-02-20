@@ -13,6 +13,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import NewQuestion from './NewQuestion';
 import DeleteQuestion from './DeleteQuestion';
 import EditQuestion from './EditQuestion';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 
 const useStyles = makeStyles(theme => ({
     formTitle: {
@@ -37,7 +42,9 @@ const useStyles = makeStyles(theme => ({
         width: 200,
     },
     root: {
-        flexGrow: 1
+        flexGrow: 1,
+        maxHeight: 300,
+        overflow: 'auto'
     },
     questionCard: {
         minWidth: 275,
@@ -51,6 +58,12 @@ const useStyles = makeStyles(theme => ({
         marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2)
     }, 
+    formDetail: {
+        display: 'flex',
+        flexDirection: 'row',
+        margin: theme.spacing(1),
+        marginTop: theme.spacing(2),
+    }
 }));
 
 const NewForm = () => {
@@ -58,6 +71,7 @@ const NewForm = () => {
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
     const [formName, setFormName] = useState('');
     const [questions, setQuestions] = useState([]);
+    const [classForForm, setClassForForm] = useState('sd1');
     const [modificationParameters, setModificationParameters] = useState({
         deleteQuestionOpen: false,
         editQuestionOpen: false,
@@ -83,6 +97,10 @@ const NewForm = () => {
 
     const handleTextFieldChange = event => {
         setFormName(event.target.value);
+    };
+
+    const handleClassChange = event => {
+        setClassForForm(event.target.value);
     };
 
     const addQuestion = (type, text, frqAnswer, threshold, mcAnswers, correctMCAnswers) => {
@@ -172,6 +190,15 @@ const NewForm = () => {
                     onChange={handleTextFieldChange}
                 />
             </form>
+            <div className={classes.formDetail}>
+                <FormControl component="fieldset">
+                    <FormLabel component="legend">Choose Class</FormLabel>
+                    <RadioGroup aria-label="class" value={classForForm} onChange={handleClassChange}>
+                        <FormControlLabel value="sd1" control={<Radio />} label="SD1" />
+                        <FormControlLabel value="sd2" control={<Radio />} label="SD2" />
+                    </RadioGroup>
+                </FormControl>
+            </div>
             <Button className={classes.createButton} variant="contained" color="primary" onClick={handleClickOpen}>
                 Add Question 
             </Button>
@@ -215,7 +242,8 @@ const NewForm = () => {
             <Button
                 variant="contained"
                 color="primary"
-                onClick={createForm}>
+                onClick={createForm}
+                className={classes.createButton}>
                 Create Form
             </Button>
             {modificationParameters.deleteQuestionOpen && <DeleteQuestion 
