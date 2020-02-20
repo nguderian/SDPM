@@ -33,7 +33,6 @@ store.subscribe(() => {
 
 ReactDOM.render(
     <Provider store={store}>
-        <NavBarContainer/>
         {routes}
     </Provider>
     , document.getElementById('root')
