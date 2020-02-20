@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1),
         marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2)
-    }
+    }, 
 }));
 
 const NewForm = () => {
@@ -156,6 +156,9 @@ const NewForm = () => {
         );
     };
 
+    const createForm = () => {
+
+    }
     return (
         <div>
             <Typography variant="h4" className={classes.pageTitle}>Create a New Form</Typography>
@@ -209,6 +212,12 @@ const NewForm = () => {
                     )}
                 </Grid>
             </div>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={createForm}>
+                Create Form
+            </Button>
             {modificationParameters.deleteQuestionOpen && <DeleteQuestion 
                 open={modificationParameters.deleteQuestionOpen}
                 onClose={() => handleModificationParameters(["deleteQuestionOpen"], [false])}
