@@ -2,8 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { 
-    Typography, 
-    FormControl, 
+    Typography,
     FormGroup, 
     FormControlLabel, 
     Checkbox, 
@@ -24,28 +23,6 @@ const useStyles = makeStyles(theme => ({
 
 const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
     const classes = useStyles();
-    // const [answers, setAnswers] = React.useState({
-    //     answer1: {
-    //         isCorrect: false, 
-    //         value: ''
-    //     }, 
-    //     answer2: {
-    //         isCorrect: false,
-    //         value: ''
-    //     },
-    //     answer3: {
-    //         isCorrect: false, 
-    //         value: ''
-    //     }, 
-    //     answer4: {
-    //         isCorrect: false, 
-    //         value: ''
-    //     }, 
-    //     answer5: {
-    //         isCorrect: false, 
-    //         value: ''
-    //     }, 
-    // });
     const [isCorrectMCAnswer, setIsCorrectMCAnswer] = React.useState({
         answer1: false,
         answer2: false,
@@ -54,30 +31,13 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
         answer5: false
     });
 
-    // const [answers, setAnswers] = React.useState({
-    //     answer1: '',
-    //     answer2: '', 
-    //     answer3: '', 
-    //     answer4: '',
-    //     answer5: ''
-    // });
-
     // event handlers
     const handleCheckBoxChange = answerChoice => event => {
-        // setAnswers({ ...answers, `${answerChoice}`.isCorrect = event.target.value });
-        // setAnswers({ ...answers, answerChoice: {
-        //     isCorrect: event.target.checked,
-        // }});
-        // setAnswers({ ...answers, []: event.target.checked });
         setIsCorrectMCAnswer({...isCorrectMCAnswer, [answerChoice]: event.target.checked });
         correctAnswers(answerChoice, event.target.checked);
     };
 
     const handleTextFieldChange = answerChoice => event => {
-        // setAnswers({ ...answers, [`${answerChoice}.value`]: event.target.value });
-        // setAnswers({ ...answers, [answerChoice].value: {event.target.value} });
-        // setAnswers({ ...answers, [answerChoice]: event.target.value });
-        
         possibleAnswers(answerChoice, event.target.value);
     };
 

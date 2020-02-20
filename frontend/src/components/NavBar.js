@@ -52,7 +52,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
     });
 
     const toggleDrawer = (side, open) => event => {
-      if (event.type === 'keydown' && (event.key === 'Tab' || event.key == 'Shift')) {
+      if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
           return;
       }
 
