@@ -66,7 +66,8 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const NewForm = () => {
+const NewForm = ({ user_id, userType, token, loggedIn }) => {
+    console.log(userType);
     const classes = useStyles();
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
     const [formName, setFormName] = useState('');
@@ -176,7 +177,9 @@ const NewForm = () => {
 
     const createForm = () => {
 
-    }
+    };
+
+    
     return (
         <div>
             <Typography variant="h4" className={classes.pageTitle}>Create a New Form</Typography>
