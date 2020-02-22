@@ -176,7 +176,31 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
     };
 
     const createForm = () => {
+        let arr = [];
 
+        questions.forEach((question, index) => {
+            let obj = {};
+            obj["question_category_id"] = question.questionType;
+            obj["question_text"] = question.questionText;
+
+            if (question.questionType === 'Free Response' || question.questionType === 'Likert Scale') {
+                obj["answers"] = [{ "answer_Text" : question.questionAnswer, 
+                                    "is_correct" : question.questionAnswer === '' ? 0 : 1
+                                }]
+            }
+            else {
+                obj["answers"]
+            }
+            
+            arr.concat(obj);
+        });
+
+        let body = {
+            "title": formName,
+            "class": classForForm,
+            "user_id": user_id,
+            questions: arr
+        }
     };
 
     
