@@ -18,6 +18,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
     formTitle: {
@@ -67,7 +68,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const NewForm = ({ user_id, userType, token, loggedIn }) => {
-    console.log(userType);
+    // console.log(userType);
     const classes = useStyles();
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
     const [formName, setFormName] = useState('');
@@ -81,13 +82,11 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
     });
 
     const handleModificationParameters = (parameters, values) => {
-        console.log(parameters, values);
         const tempParams = {...modificationParameters};
         parameters.forEach((parameter, idx) => {
             tempParams[parameter] = values[idx];
         });
         
-        console.log(tempParams);
         setModificationParameters({...tempParams});
     };
 
@@ -106,7 +105,7 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
 
     const addQuestion = (type, text, frqAnswer, threshold, mcAnswers, correctMCAnswers) => {
         let question = {};
-        if (type === 'Free Response' || type === 'Likert Scale') {
+        if (type === 3 || type === 2) {
             question = {
                 questionType: type, 
                 questionText: text,
@@ -176,31 +175,67 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
     };
 
     const createForm = () => {
-        let arr = [];
-
+        let questionsArr = [];
+        
         questions.forEach((question, index) => {
-            let obj = {};
-            obj["question_category_id"] = question.questionType;
-            obj["question_text"] = question.questionText;
+            let questionObj = {
+                "question_category_id": null,
+                "question_text": null,
+                "answers": []
+            };
 
-            if (question.questionType === 'Free Response' || question.questionType === 'Likert Scale') {
-                obj["answers"] = [{ "answer_Text" : question.questionAnswer, 
-                                    "is_correct" : question.questionAnswer === '' ? 0 : 1
-                                }]
+            questionObj.question_category_id = question.questionType;
+            questionObj.question_text = question.questionText;
+
+            if (question.questionType === 3 || question.questionType === 2) {
+                questionObj.answers.push({
+                    "answer_Text" : question.questionAnswer, 
+                    "is_correct" : question.questionAnswer === '' ? 0 : 1
+                });
             }
             else {
-                obj["answers"]
+               const keys = Object.keys(question.questionAnswer);
+
+               keys.forEach((key, index) => {
+                   if (question.questionAnswer[key] !== '') {
+                       questionObj.answers.push({
+                           "answer_text": question.questionAnswer[key],
+                           "is_correct": question.correctQuestionAnswers[key] ? 1 : 0
+                       })
+                   }
+               })
             }
-            
-            arr.concat(obj);
+
+            questionsArr.push(questionObj);
         });
 
+        // console.log(questionsArr)
         let body = {
             "title": formName,
             "class": classForForm,
             "user_id": user_id,
-            questions: arr
+            questions: questionsArr
         }
+
+        // let options = {
+        //     method: 'POST',
+        //     url: 'http://localhost:3001/createForm',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     data: body
+        // };
+
+        // let response = await axios(options);
+        // let responseOK = response && response.status === 200 && response.statusText === 'OK';
+        // if(responseOK) {
+        //     // send confirmation that form was created
+        // }
+        // else {
+        //     // send alert showing error and what the error was
+        //     console.log('something went wrong')
+        // }
     };
 
     
@@ -242,7 +277,9 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                             <Card className={classes.questionCard} variant="outlined">
                                 <CardContent>
                                     <Typography className={classes.title} color="textSecondary" gutterBottom>
-                                        {question.questionType}
+                                        {question.questionType === 3 && 'Free Response'}
+                                        {question.questionType === 2 && 'Likert Scale'}
+                                        {question.questionType === 1 && 'Multiple Choice'}
                                     </Typography>
                                     <Typography>{question.questionText}</Typography>
                                 </CardContent>

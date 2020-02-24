@@ -14,6 +14,7 @@ import Select from '@material-ui/core/Select';
 import NewFreeResponse from './questions/NewFreeResponse';
 import NewLikert from './questions/NewLikert';
 import NewMultipleChoice from './questions/NewMultipleChoice';
+import AlertDialog from '../AlertDialog';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -46,7 +47,7 @@ const NewQuestion = ({ open, onClose, add }) => {
         answer4: '',
         answer5: ''
     });
-
+    const [openAlertDialog, setOpenAlertDialog] = useState('false');
     const inputLabel = React.useRef(null);
     const [labelWidth, setLabelWidth] = React.useState(0);
 
@@ -59,7 +60,23 @@ const NewQuestion = ({ open, onClose, add }) => {
         onClose();
     };
 
+    const handleAlertDialog = () => {
+        setOpenAlertDialog(false);
+    };
+
     const handleConfirm = () => {
+        // if(questionType === null) {
+        //     // render alert dialog with appropriate text
+        //     setOpenAlertDialog(true);
+        //     return (
+        //         <AlertDialog open={openAlertDialog} onClose={handleAlertDialog} alertMessage="You must choose a question type"/>
+        //     )
+        // }
+        // else if(questionText === '') {
+            
+        // }
+        // else if(questionType === 'Free Response')
+
         onClose();
         add(questionType, questionText, frqAnswers, threshold, mcAnswers, isCorrectMCAnswer);
     };
@@ -103,9 +120,9 @@ const NewQuestion = ({ open, onClose, add }) => {
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            <MenuItem value={'Free Response'}>Free Response</MenuItem>
-                            <MenuItem value={'Multiple Choice'}>Multiple Choice</MenuItem>
-                            <MenuItem value={'Likert Scale'}>Likert Scale</MenuItem>
+                            <MenuItem value={3}>Free Response</MenuItem>
+                            <MenuItem value={1}>Multiple Choice</MenuItem>
+                            <MenuItem value={2}>Likert Scale</MenuItem>
                         </Select>
                         {questionType === '' ? <FormHelperText error>Question Type is Required</FormHelperText> : null}
                     </FormControl>
@@ -118,9 +135,9 @@ const NewQuestion = ({ open, onClose, add }) => {
                         helperText={questionText === '' ? "Question text is required" : ''} 
                         onChange={handleQuestionTextChange}
                     />
-                    {questionType === 'Free Response' && <NewFreeResponse possibleAnswers={storeFRQAnswers}/>}
-                    {questionType === 'Multiple Choice' && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers}/>}
-                    {questionType === 'Likert Scale' && <NewLikert thresholdValue={storeThreshold}/>}
+                    {questionType === 3 && <NewFreeResponse possibleAnswers={storeFRQAnswers}/>}
+                    {questionType === 1 && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers}/>}
+                    {questionType === 2 && <NewLikert thresholdValue={storeThreshold}/>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCancel} color="primary">

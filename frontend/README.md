@@ -21,6 +21,7 @@ After node is installed, when you download the repository, make sure you do `npm
   * material-table
     * `npm install material-table --save`
 * routing `npm install react-router-dom`
+* http requests `npm install axios`
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
