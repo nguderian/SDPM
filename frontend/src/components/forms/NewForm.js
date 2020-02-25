@@ -72,6 +72,7 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
     const classes = useStyles();
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
     const [formName, setFormName] = useState('');
+    const [formDescription, setFormDescription] = useState('');
     const [questions, setQuestions] = useState([]);
     const [classForForm, setClassForForm] = useState('sd1');
     const [modificationParameters, setModificationParameters] = useState({
@@ -95,8 +96,12 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
         setAddQuestionOpen(true);
     };
 
-    const handleTextFieldChange = event => {
+    const handleFormTitleChange = event => {
         setFormName(event.target.value);
+    };
+
+    const handleFormDescriptionChange = event => {
+        setFormDescription(event.target.value)
     };
 
     const handleClassChange = event => {
@@ -212,21 +217,26 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
         // console.log(questionsArr)
         let body = {
             "title": formName,
-            "class": classForForm,
+            "description": formDescription,
+            "sd1_term": "fall", 
+            "sd1_year": 2018,
+            "sd2_term": "spring",
+            "sd2_year": 2019,
             "user_id": user_id,
             questions: questionsArr
         }
 
-        // let options = {
-        //     method: 'POST',
-        //     url: 'http://localhost:3001/createForm',
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json'
-        //     },
-        //     data: body
-        // };
+        let options = {
+            method: 'POST',
+            url: 'http://localhost:3001/api/createForm',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: body
+        };
 
+        console.log(options);
         // let response = await axios(options);
         // let responseOK = response && response.status === 200 && response.statusText === 'OK';
         // if(responseOK) {
@@ -249,7 +259,15 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                     label="Form Name" 
                     variant="outlined" 
                     fullWidth={true} 
-                    onChange={handleTextFieldChange}
+                    onChange={handleFormTitleChange}
+                />
+            </form>
+            <form className={classes.formTitle} noValidate autoComplete="off">
+                <TextField
+                    label="Form Description"
+                    variant="outlined"
+                    fullWidth={true}
+                    onChange={handleFormDescriptionChange}
                 />
             </form>
             <div className={classes.formDetail}>

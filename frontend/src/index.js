@@ -6,7 +6,6 @@ import { createStore } from 'redux';
 import currentUser from './storeConfig/reducers';
 import * as serviceWorker from './serviceWorker';
 import routes from './Routes'
-import NavBarContainer from './components/containers/NavBarContainer';
 
 // checks to see if there's data in local storage (browser)
 // if there is it loads it to the store as initial state
