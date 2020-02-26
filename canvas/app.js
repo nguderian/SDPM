@@ -29,8 +29,8 @@ app.get('/', (req, res, next) => {
 
 app.get('/application', (req, res, next) => {
   if (req.session.userId) {
-    console.log(req.session.userId);
-    console.log(req.session.coursename);
+    console.log('User: ' + req.session.userId);
+    console.log('Course: ' + req.session.coursename);
     return res.render('newpage', {
       email: req.session.email,
       username: req.session.username,
