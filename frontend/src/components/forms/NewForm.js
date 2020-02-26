@@ -18,6 +18,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
     formTitle: {
@@ -66,10 +67,12 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const NewForm = () => {
+const NewForm = ({ user_id, userType, token, loggedIn }) => {
+    // console.log(userType);
     const classes = useStyles();
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
     const [formName, setFormName] = useState('');
+    const [formDescription, setFormDescription] = useState('');
     const [questions, setQuestions] = useState([]);
     const [classForForm, setClassForForm] = useState('sd1');
     const [modificationParameters, setModificationParameters] = useState({
@@ -80,13 +83,11 @@ const NewForm = () => {
     });
 
     const handleModificationParameters = (parameters, values) => {
-        console.log(parameters, values);
         const tempParams = {...modificationParameters};
         parameters.forEach((parameter, idx) => {
             tempParams[parameter] = values[idx];
         });
         
-        console.log(tempParams);
         setModificationParameters({...tempParams});
     };
 
@@ -95,8 +96,12 @@ const NewForm = () => {
         setAddQuestionOpen(true);
     };
 
-    const handleTextFieldChange = event => {
+    const handleFormTitleChange = event => {
         setFormName(event.target.value);
+    };
+
+    const handleFormDescriptionChange = event => {
+        setFormDescription(event.target.value)
     };
 
     const handleClassChange = event => {
@@ -105,7 +110,7 @@ const NewForm = () => {
 
     const addQuestion = (type, text, frqAnswer, threshold, mcAnswers, correctMCAnswers) => {
         let question = {};
-        if (type === 'Free Response' || type === 'Likert Scale') {
+        if (type === 3 || type === 2) {
             question = {
                 questionType: type, 
                 questionText: text,
@@ -175,8 +180,75 @@ const NewForm = () => {
     };
 
     const createForm = () => {
+        let questionsArr = [];
+        
+        questions.forEach((question, index) => {
+            let questionObj = {
+                "question_category_id": null,
+                "question_text": null,
+                "answers": []
+            };
 
-    }
+            questionObj.question_category_id = question.questionType;
+            questionObj.question_text = question.questionText;
+
+            if (question.questionType === 3 || question.questionType === 2) {
+                questionObj.answers.push({
+                    "answer_Text" : question.questionAnswer, 
+                    "is_correct" : question.questionAnswer === '' ? 0 : 1
+                });
+            }
+            else {
+               const keys = Object.keys(question.questionAnswer);
+
+               keys.forEach((key, index) => {
+                   if (question.questionAnswer[key] !== '') {
+                       questionObj.answers.push({
+                           "answer_text": question.questionAnswer[key],
+                           "is_correct": question.correctQuestionAnswers[key] ? 1 : 0
+                       })
+                   }
+               })
+            }
+
+            questionsArr.push(questionObj);
+        });
+
+        // console.log(questionsArr)
+        let body = {
+            "title": formName,
+            "description": formDescription,
+            "sd1_term": "fall", 
+            "sd1_year": 2018,
+            "sd2_term": "spring",
+            "sd2_year": 2019,
+            "user_id": user_id,
+            questions: questionsArr
+        }
+
+        let options = {
+            method: 'POST',
+            url: 'http://localhost:3001/api/createForm',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            data: body
+        };
+
+        console.log(options);
+        // let response = await axios(options);
+        // let responseOK = response && response.status === 200 && response.statusText === 'OK';
+        // if(responseOK) {
+        //     // send confirmation that form was created
+        // }
+        // else {
+        //     // send alert showing error and what the error was
+        //     console.log('something went wrong')
+        // }
+    };
+
+    
     return (
         <div>
             <Typography variant="h4" className={classes.pageTitle}>Create a New Form</Typography>
@@ -187,7 +259,15 @@ const NewForm = () => {
                     label="Form Name" 
                     variant="outlined" 
                     fullWidth={true} 
-                    onChange={handleTextFieldChange}
+                    onChange={handleFormTitleChange}
+                />
+            </form>
+            <form className={classes.formTitle} noValidate autoComplete="off">
+                <TextField
+                    label="Form Description"
+                    variant="outlined"
+                    fullWidth={true}
+                    onChange={handleFormDescriptionChange}
                 />
             </form>
             <div className={classes.formDetail}>
@@ -215,7 +295,9 @@ const NewForm = () => {
                             <Card className={classes.questionCard} variant="outlined">
                                 <CardContent>
                                     <Typography className={classes.title} color="textSecondary" gutterBottom>
-                                        {question.questionType}
+                                        {question.questionType === 3 && 'Free Response'}
+                                        {question.questionType === 2 && 'Likert Scale'}
+                                        {question.questionType === 1 && 'Multiple Choice'}
                                     </Typography>
                                     <Typography>{question.questionText}</Typography>
                                 </CardContent>
