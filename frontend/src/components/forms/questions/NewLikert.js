@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import { FormControl, FormGroup, FormControlLabel, Checkbox, TextField } from '@material-ui/core';
 
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
 
 const NewLikert = ({ thresholdValue }) => {
     const classes = useStyles();
-    const [hasThreshold, setHasThreshold] = React.useState(false);
+    const [hasThreshold, setHasThreshold] = useState(false);
 
     // event handlers
     const handleCheckboxChange = event => {

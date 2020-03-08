@@ -33,14 +33,14 @@ const NewQuestion = ({ open, onClose, add }) => {
     const [questionText, setQuestionText] = useState('');
     const [frqAnswers, setFrqAnswers] = useState('');
     const [threshold, setThreshold] = useState('');
-    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = React.useState({
+    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = useState({
         answer1: false,
         answer2: false,
         answer3: false,
         answer4: false, 
         answer5: false
     });
-    const [mcAnswers, setMCAnswers] = React.useState({
+    const [mcAnswers, setMCAnswers] = useState({
         answer1: '',
         answer2: '', 
         answer3: '', 
@@ -49,7 +49,7 @@ const NewQuestion = ({ open, onClose, add }) => {
     });
     const [openAlertDialog, setOpenAlertDialog] = useState('false');
     const inputLabel = React.useRef(null);
-    const [labelWidth, setLabelWidth] = React.useState(0);
+    const [labelWidth, setLabelWidth] = useState(0);
 
     // event handlers
     const handleQuestionTypeChange = event => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import { FormControl, FormGroup, FormControlLabel, Checkbox, TextField } from '@material-ui/core';
 
@@ -20,7 +20,7 @@ const EditFreeResponse = ({ possibleAnswers, question }) => {
         hasCorrect = question.questionAnswer === '' ? false : true;
         previousAnswer = question.questionAnswer;
     }
-    const [hasAnswer, setHasAnswer] = React.useState(hasCorrect);
+    const [hasAnswer, setHasAnswer] = useState(hasCorrect);
 
     // event handlers
     const handleCheckboxChange = event => {
