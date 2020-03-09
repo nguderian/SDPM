@@ -1,5 +1,5 @@
-import ViewAssignments from '../forms/ViewAssignments';
-import {onLogin} from '..//../storeConfig/actions';
+import ViewAssignments from '../../forms/ViewAssignments';
+import {onLogin} from '../../../storeConfig/actions';
 import {connect} from 'react-redux';
 
 const mapStateToProps = state =>{

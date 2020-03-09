@@ -3,8 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import AssignmentCard from './AssignmentCard';
 import axios from 'axios';
 
 
@@ -24,9 +23,6 @@ const useStyles = makeStyles(theme => ({
         height: '100vh',
         overflow: 'auto'
     },
-    assignmentCard: {
-        margin: theme.spacing(1)
-    }
 }))
 
 
@@ -47,24 +43,25 @@ const ViewAssignments = ({ user_id, userType, token, loggedIn }) => {
         }
     ]);
 
-    return (
-        <div>
-            <Typography variant="h4" className={classes.pageTitle}>Assignments</Typography>
-            <Divider className={classes.divider} variant="fullWidth"/>
+    const assignmentList = assignments.map((assignment, index) => {
+        return (
             <div className={classes.root}>
                 <Grid container spacing={3}>
                     {assignments.map((assignment, index) => 
                         <Grid item xs={12} key={index}>
-                            <Card className={classes.assignmentCard} variant="outlined">
-                                <CardContent>
-                                    <Typography>{assignment.formTitle}</Typography>
-                                </CardContent>
-
-                            </Card>
+                            <AssignmentCard assignment={assignment}/>
                         </Grid>
                     )}
                 </Grid>
             </div>
+        );
+    });
+
+    return (
+        <div>
+            <Typography variant="h4" className={classes.pageTitle}>Assignments</Typography>
+            <Divider className={classes.divider} variant="fullWidth"/>
+            {assignmentList}
         </div>
         
     );
