@@ -22,24 +22,23 @@ const AssignmentCard = ({ assignment }) => {
         <div>
             <Card 
                 className={classes.assignmentCard} 
-                variant="outlined"
-                
+                variant="outlined" 
             >
-                <CardActionArea>
-                    <CardContent>
-                        <Typography>{assignment.formTitle}</Typography>
-                    </CardContent>
-                </CardActionArea>
-                {/* <CardActions>
+                <CardContent>
+                    <Typography gutterBottom>{assignment.formTitle}</Typography>
+                    {/* <Link to={{ pathname: `/student/viewAssignments/${assignment.formId}`}}/> */}
+                </CardContent>
+                <CardActions>
                     <Button
                         variant="contained"
+                        color="primary"
                         component={Link}
-                        to={`/student/viewAssignments/${assignment.formId}`}
+                        to={{ pathname: `/student/viewAssignments/${assignment.formTitle}`, state: { form : assignment }}}
                         >
                         Complete Assignment
                     </Button>
-                </CardActions> */}
-                <Link to={{ pathname: `/student/viewAssignments/${assignment.formId}`}}/>
+                </CardActions>
+                {/* <Link to={{ pathname: `/student/viewAssignments/${assignment.formId}`}}/> */}
             </Card>
             
         </div>

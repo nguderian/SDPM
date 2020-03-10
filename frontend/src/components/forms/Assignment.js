@@ -1,11 +1,14 @@
 import React from 'react';
 
 const Assignment = ({ match, location }) => {
-
-    const { params: { id } } = match;
-
+    const { form } = location.state;
+    
     return(
-        <h1>{id}</h1>
+        <div>
+            <h1>{form.id}</h1>
+            <h2>{form.formTitle}</h2>
+        </div>
+        
     );
 }
 
