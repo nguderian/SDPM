@@ -18,7 +18,7 @@ class form {
 
     static async createForm(req, res, next) {
 
-        const { user_id, title, description, sd1_term, sd2_term, sd1_year, sd2_year, questions } = req.body;
+        const { user_id, title, description, questions, class_id } = req.body;
 
         let status = {};
         let form_id;
@@ -26,9 +26,11 @@ class form {
 
         try {
             let returnFormID = await sequelize.query(
-                'CALL insert_form_test(?,?,?,?,?,?,?)',
-                { replacements: [title, description, sd1_term, sd1_year, sd2_term, sd2_year, user_id], type: sequelize.QueryTypes.CALL });
-            // console.log(returnFormID[0]['LAST_INSERT_ID()']);
+
+                'CALL insert_form_test(?,?,?,?)',
+                { replacements: [user_id, title, description, class_id], type: sequelize.QueryTypes.CALL });
+            console.log(returnFormID[0]['LAST_INSERT_ID()']);
+
             form_id = returnFormID[0]['LAST_INSERT_ID()'];
             //console.log(form_id);
             status.status1 = "Form Created";
