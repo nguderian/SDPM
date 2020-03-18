@@ -90,18 +90,30 @@ class form {
 
     static async getForm(req, res, next) {
 
-        // TODO need to return all info for a form.
-        const { form_id } = req.body;
+
+        const { form_id, type } = req.body;
 
         let returnForm;
-        try {
-            returnForm = await sequelize.query('CALL get_form_test(?)',
-                { replacements: [form_id], type: sequelize.QueryTypes.CALL });
-        } catch (error) {
-            console.log(error);
-            res.send({ status: "Could not get quiz to take" });
+        if (type == "student") {
+            try {
+                returnForm = await sequelize.query('CALL get_form_test(?)',
+                    { replacements: [form_id], type: sequelize.QueryTypes.CALL });
+            } catch (error) {
+                console.log(error);
+                res.send({ status: "Could not get quiz to take" });
+            }
+            res.send({ form: returnForm });
         }
-        res.send({ form: returnForm });
+        else if (type == "coordinator") {
+            try {
+                returnForm = await sequelize.query('CALL get_form_test_instructor(?)',
+                    { replacements: [form_id], type: sequelize.QueryTypes.CALL });
+            } catch (error) {
+                console.log(error);
+                res.send({ status: "Could not get quiz to take" });
+            }
+            res.send({ form: returnForm });
+        }
     }
 
 
