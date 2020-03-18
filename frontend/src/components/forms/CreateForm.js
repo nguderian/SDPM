@@ -7,23 +7,6 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import { Link } from 'react-router-dom'
 
-// const CreateForm = () => {
-//     return (
-//         <Container maxWidth="xl">
-//             <Typography component="div" style={{ backgroundColor: '#cfe8fc', height: '100vh' }}>
-//             <Box p={10}>
-//                 <Button variant="contained" color="primary">
-//                     Create New
-//                 </Button>
-//             </Box>
-//             <Container maxWidth="md">
-//                 <Typography component="" style={{ backgroundColor: 'black', height: '100vh' }}/>
-//             </Container>
-//             </Typography>
-//         </Container>
-//     );
-// }
-
 const useStyles = makeStyles(theme => ({
     root: {
       flexGrow: 1,
