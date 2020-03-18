@@ -18,7 +18,7 @@ class form {
 
     static async createForm(req, res, next) {
 
-        const { user_id, title, description, sd1_term, sd2_term, sd1_year, sd2_year, questions, class_id } = req.body;
+        const { user_id, title, description, questions, class_id } = req.body;
 
         let status = {};
         let form_id;
