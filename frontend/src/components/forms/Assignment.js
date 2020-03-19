@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+const useStyles = makeStyles(theme =>({
+    pageTitle: {
+        margin: theme.spacing(1),
+        marginTop: theme.spacing(2),
+        textAlign: 'center'
+    },
+}));
+
 
 const Assignment = ({ match, location }) => {
+    const classes = useStyles();
     const { form } = location.state;
     
     return(
-        <div>
-            <h1>{form.id}</h1>
-            <h2>{form.formTitle}</h2>
-        </div>
+        <Fragment>
+            <Typography variant="h4" className={classes.pageTitle}>
+                {form.formTitle}
+            </Typography>
+        </Fragment>
         
     );
 }
