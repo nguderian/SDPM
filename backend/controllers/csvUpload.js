@@ -114,7 +114,7 @@ class csvUpload {
                 // Index # -> name
                 // 3 -> NID, 4 -> last name, 5 -> first name, 7 -> email
                 for(let i = 1; i < students.length; i++) {
-                    insertStudents(students[i][3], students[i][4], students[i][5], students[i][7], sd1_term, sd1_year, res);
+                    insertStudents(students[i][2], students[i][3], students[i][4], students[i][6], sd1_term, sd1_year, res);
                 }
                 res.json('Upload Successful');     
             });
