@@ -14,6 +14,16 @@ const Assignment = ({ match, location }) => {
     const classes = useStyles();
     const { form } = location.state;
     
+    // form.questions.map((question, index) => {
+    //     let obj = {
+    //         questionID = question.questionId,
+    //         answer = []
+    //     };
+    //     arr.push(obj);
+    // });
+
+    const [answers, setAnswers] = useState(arr);
+
     return(
         <Fragment>
             <Typography variant="h4" className={classes.pageTitle}>
