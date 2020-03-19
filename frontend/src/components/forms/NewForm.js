@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -16,9 +16,18 @@ import EditQuestion from './EditQuestion';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import DateFnsUtils from '@date-io/date-fns'
+import { 
+    MuiPickersUtilsProvider,
+    DatePicker, 
+    TimePicker
+} from '@material-ui/pickers/';
+
 import axios from 'axios';
+
 
 const useStyles = makeStyles(theme => ({
     formTitle: {
@@ -60,10 +69,9 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(2)
     }, 
     formDetail: {
-        display: 'flex',
-        flexDirection: 'row',
         margin: theme.spacing(1),
         marginTop: theme.spacing(2),
+        minWidth: 250
     }
 }));
 
@@ -74,14 +82,21 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
     const [formName, setFormName] = useState('');
     const [formDescription, setFormDescription] = useState('');
     const [questions, setQuestions] = useState([]);
-    const [classForForm, setClassForForm] = useState('sd1');
+    const [classForForm, setClassForForm] = useState('');
+    const [distribution, setDistribution] = useState('');
+    const [formType, setFormtype] = useState('');
+    const [assignee, setAssignee] = useState('');
+    const [selectedStartDate, setSelectedStartDate] = useState(new Date());
+    const [selectedEndDate, setSelectedEndDate] = useState(new Date());
+    const [selectedStartTime, setSelectedStartTime] = useState(new Date());
+    const [selectedEndTime, setSelectedEndTime] = useState(new Date());
     const [modificationParameters, setModificationParameters] = useState({
         deleteQuestionOpen: false,
         editQuestionOpen: false,
         indexToModify: null,
         questionToModify: null,
     });
-
+    
     const handleModificationParameters = (parameters, values) => {
         const tempParams = {...modificationParameters};
         parameters.forEach((parameter, idx) => {
@@ -179,6 +194,34 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
         );
     };
 
+    const handleDistributionChange = event => {
+        setDistribution(event.target.value);
+    };
+
+    const handleFormTypeChange = event => {
+        setFormtype(event.target.value);
+    };
+
+    const handleAssigneeChange = event => {
+        setAssignee(event.target.value);
+    };
+
+    const handleStartDateChange = date => {
+        setSelectedStartDate(date);
+    };
+
+    const handleEndDateChange = date => {
+        setSelectedEndDate(date);
+    };
+
+    const handleStartTimeChange = time => {
+        setSelectedStartTime(time);
+    };
+
+    const handleEndTimeChange = time => {
+        setSelectedEndTime(time);
+    };
+
     const createForm = () => {
         let questionsArr = [];
         
@@ -250,7 +293,7 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
 
     
     return (
-        <div>
+        <Fragment>
             <Typography variant="h4" className={classes.pageTitle}>Create a New Form</Typography>
             <form className={classes.formTitle} noValidate autoComplete="off">
                 <TextField id="outlined-basic" 
@@ -270,15 +313,96 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                     onChange={handleFormDescriptionChange}
                 />
             </form>
-            <div className={classes.formDetail}>
-                <FormControl component="fieldset">
-                    <FormLabel component="legend">Choose Class</FormLabel>
-                    <RadioGroup aria-label="class" value={classForForm} onChange={handleClassChange}>
-                        <FormControlLabel value="sd1" control={<Radio />} label="SD1" />
-                        <FormControlLabel value="sd2" control={<Radio />} label="SD2" />
-                    </RadioGroup>
+            
+            <div style={{ display: 'flex', flexDirection: 'row'}}>
+                <FormControl variant="outlined" className={classes.formDetail}>
+                    <InputLabel>Distribution</InputLabel>
+                    <Select
+                        label="Distribution"
+                        value={distribution}
+                        onChange={handleDistributionChange}
+                    >
+                        <MenuItem value="template">Template</MenuItem>
+                        <MenuItem value="instance">Instance</MenuItem>
+                    </Select>
                 </FormControl>
+                <FormControl variant="outlined" className={classes.formDetail}>
+                    <InputLabel>Form Type</InputLabel>
+                    <Select
+                        label="Form Type"
+                        value={formType}
+                        onChange={handleFormTypeChange}
+                    >
+                        <MenuItem value="survey">Survey</MenuItem>
+                        <MenuItem value="quiz">Quiz</MenuItem>
+                        <MenuItem value="meeting">Meeting</MenuItem>
+                        <MenuItem value="attendance">Attendance</MenuItem>
+                    </Select>
+                </FormControl>
+                
+                {distribution === 'instance' && 
+                    <Fragment>
+                        <FormControl variant="outlined" className={classes.formDetail}>
+                            <InputLabel>Class</InputLabel>
+                            <Select
+                                label="Class"
+                                value={classForForm}
+                                onChange={handleClassChange}
+                            >
+                                <MenuItem value="sd1">SD1</MenuItem>
+                                <MenuItem value="sd2">SD2</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="outlined" className={classes.formDetail}>
+                            <InputLabel>Assign to Who?</InputLabel>
+                            <Select
+                                label="Assignee"
+                                value={assignee}
+                                onChange={handleAssigneeChange}
+                            >
+                                <MenuItem value="allStudents">All students</MenuItem>
+                                <MenuItem value="teams">Teams</MenuItem>
+                                <MenuItem value="individuals">Individuals</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>  
+                            <DatePicker
+                                className={classes.formTitle}
+                                label="Start Date"
+                                animateYearScrolling={true}
+                                disablePast={true}
+                                value={selectedStartDate}
+                                onChange={handleStartDateChange}
+                                minDate={new Date()}
+                                format="MM/dd/yyy"
+                            /> 
+                            <DatePicker
+                                className={classes.formTitle}
+                                label="End Date"
+                                animateYearScrolling={true}
+                                disablePast={true}
+                                value={selectedEndDate}
+                                onChange={handleEndDateChange}
+                                minDate={new Date()}
+                                format="MM/dd/yyy"
+                            />
+                            <TimePicker
+                                className={classes.formTitle}
+                                label="Start Time"
+                                value={selectedStartTime}
+                                onChange={handleStartTimeChange}
+                            />
+                            <TimePicker
+                                className={classes.formTitle}
+                                label="End Time"
+                                value={selectedEndTime}
+                                onChange={handleEndTimeChange}
+                            />
+                        </MuiPickersUtilsProvider>
+                    </Fragment>
+                }
             </div>
+            
             <Button className={classes.createButton} variant="contained" color="primary" onClick={handleClickOpen}>
                 Add Question 
             </Button>
@@ -339,9 +463,9 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                 editQuestion={editQuestion}
                 question={modificationParameters.questionToModify}
             />}
-        </div>
+        </Fragment>
     );
 }
 
-export default NewForm
+export default NewForm;
 
