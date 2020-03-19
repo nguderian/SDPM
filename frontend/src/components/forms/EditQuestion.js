@@ -31,14 +31,14 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     const [questionText, setQuestionText] = useState(question.questionText);
     const [frqAnswers, setFrqAnswers] = useState(question.questionType === 'Free Response' ? question.questionAnswer : '');
     const [threshold, setThreshold] = useState(question.questionType === 'Likert Scale' ? question.questionAnswer : '');
-    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = React.useState(question.questionType === 'Multiple Choice' ? question.correctQuestionAnswers : {
+    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = useState(question.questionType === 'Multiple Choice' ? question.correctQuestionAnswers : {
         answer1: false,
         answer2: false,
         answer3: false,
         answer4: false, 
         answer5: false
     });
-    const [mcAnswers, setMCAnswers] = React.useState(question.questionType === 'Multiple Choice' ? question.questionAnswer : {
+    const [mcAnswers, setMCAnswers] = useState(question.questionType === 'Multiple Choice' ? question.questionAnswer : {
         answer1: '',
         answer2: '', 
         answer3: '', 
@@ -47,7 +47,7 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     });
 
     const inputLabel = useRef(null);
-    const [labelWidth, setLabelWidth] = React.useState(0);
+    const [labelWidth, setLabelWidth] = useState(0);
     
     // event handlers
     const handleCancel = () => {

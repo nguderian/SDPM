@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { 
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 
 const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
     const classes = useStyles();
-    const [isCorrectMCAnswer, setIsCorrectMCAnswer] = React.useState({
+    const [isCorrectMCAnswer, setIsCorrectMCAnswer] = useState({
         answer1: false,
         answer2: false,
         answer3: false,

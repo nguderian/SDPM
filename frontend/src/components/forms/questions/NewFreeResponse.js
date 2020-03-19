@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import { FormControl, FormGroup, FormControlLabel, Checkbox, TextField } from '@material-ui/core';
 
@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
 
 const NewFreeResponse = ({ possibleAnswers }) => {
     const classes = useStyles();
-    const [hasAnswer, setHasAnswer] = React.useState(false);
+    const [hasAnswer, setHasAnswer] = useState(false);
 
     // event handlers
     const handleCheckboxChange = event => {
