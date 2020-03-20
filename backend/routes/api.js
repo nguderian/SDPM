@@ -5,6 +5,7 @@ const passport = require('passport');
 const multer = require('multer');
 const requireAuth = passport.authenticate('jwt', { session: false });
 
+
 // Controllers
 const loginController = require('../controllers/login');
 const studentController = require('../controllers/student');
@@ -16,6 +17,7 @@ const formController = require('../controllers/form');
 const frontendTestController = require('../controllers/frontendTest');
 const csvUploadController = require('../controllers/csvUpload');
 const alertsController = require('../controllers/alerts');
+const classesControler = require('../controllers/classes');
 
 const csvTypes = [
     'text/plain',
@@ -96,6 +98,9 @@ router.post('/getQuestionTypes', requireAuth, formController.getQuestionTypes);
 // CSV Upload
 router.post('/studentUpload', requireAuth, upload.single('file'), csvUploadController.uploadStudentCSV);
 router.post('/teamUpload', requireAuth, upload.single('file'), csvUploadController.uploadTeamCSV);
+
+// Classes 
+router.post('/insertClass', requireAuth, classesControler.insertClass);
 
 // Alerts
 router.post('/getUserDashboardAlerts', requireAuth, alertsController.getUserDashboardAlerts);
