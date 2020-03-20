@@ -5,14 +5,17 @@ const csv = require('fast-csv');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+var mailer = require('./mailer');
 
-async function insertStudents(NID, last_name, first_name, email, sd1_term, sd1_year, res) {
+async function insertStudents(NID, last_name, first_name, email, sd1_term, sd1_year, class_id, res) {
     let new_user_id;
     let type = 'student';
 
     let current_date = (new Date()).valueOf().toString();
     let random = Math.random().toString();
     let tmp_pass = current_date + random;
+
+    // mailer.sendEmail(email, "New Account Created", "Your temporary password is:" + tmp_pass);
 
     // Generate a salt and then hash the password
     const salt = await bcrypt.genSalt(saltRounds);
@@ -34,13 +37,15 @@ async function insertStudents(NID, last_name, first_name, email, sd1_term, sd1_y
 
     // Insert student
     try {
-        await sequelize.query('CALL insert_student(?,?,?,?,?,?,?)',
-            {replacements : [1, sd1_term, sd1_year, null, null, null, new_user_id], type : sequelize.QueryTypes.CALL});
+        await sequelize.query('CALL insert_student(?,?,?,?,?,?,?,?)',
+            {replacements : [1, sd1_term, sd1_year, "spring", 2020, 0, new_user_id, class_id], type : sequelize.QueryTypes.CALL});
     }
     catch(error) {
         res.send({ status: "Insert error" });
         console.log(error);
     }
+
+    mailer.sendEmail(email, "New Account Created", "Your username is: " + NID +  "\nYour temporary password is: " + tmp_pass);
 }
 
 async function insertTeams(teams, students, user_id, res) {
@@ -102,7 +107,7 @@ async function insertTeams(teams, students, user_id, res) {
 class csvUpload {
     static uploadStudentCSV(req, res, next) {
         const { file } = req.file;
-        const { sd1_term, sd1_year } = req.body;
+        const { sd1_term, sd1_year, class_id } = req.body;
 
         const students = [];
         
@@ -114,7 +119,7 @@ class csvUpload {
                 // Index # -> name
                 // 3 -> NID, 4 -> last name, 5 -> first name, 7 -> email
                 for(let i = 1; i < students.length; i++) {
-                    insertStudents(students[i][2], students[i][3], students[i][4], students[i][6], sd1_term, sd1_year, res);
+                    insertStudents(students[i][2], students[i][3], students[i][4], students[i][6], sd1_term, sd1_year, class_id, res);
                 }
                 res.json('Upload Successful');     
             });
