@@ -102,6 +102,8 @@ router.post('/teamUpload', requireAuth, upload.single('file'), csvUploadControll
 // Classes 
 router.post('/insertClass', requireAuth, classesControler.insertClass);
 router.post('/getAllClasses', requireAuth, classesControler.getAllClasses);
+router.post('/getStudentsInClass', requireAuth, classesControler.getStudentsInClass);
+
 
 // Alerts
 router.post('/getUserDashboardAlerts', requireAuth, alertsController.getUserDashboardAlerts);
