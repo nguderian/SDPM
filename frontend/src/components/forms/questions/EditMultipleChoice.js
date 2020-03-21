@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
 
 const EditMultipleChoice = ({ possibleAnswers, correctAnswers, question }) => {
     const classes = useStyles();
-    const [isCorrectMCAnswer, setIsCorrectMCAnswer] = React.useState(question.questionType === 'Multiple Choice' ? question.correctQuestionAnswers : {
+    const [isCorrectMCAnswer, setIsCorrectMCAnswer] = React.useState(question.questionType === 1 ? question.correctQuestionAnswers : {
         answer1: false,
         answer2: false,
         answer3: false,
