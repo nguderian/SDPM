@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -79,7 +79,8 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
     const [formName, setFormName] = useState('');
     const [formDescription, setFormDescription] = useState('');
     const [questions, setQuestions] = useState([]);
-    const [classForForm, setClassForForm] = useState('');
+    const [classesToAssign, setClassesToAssign] = useState([]);
+    const [selectedClass, setSelectedClass] = useState('');
     const [distribution, setDistribution] = useState('');
     const [formType, setFormtype] = useState('');
     const [assignee, setAssignee] = useState('');
@@ -92,6 +93,29 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
         questionToModify: null,
     });
     
+    useEffect(() => {
+        async function fetchData() {
+            const options = {
+                method: 'POST',
+                url: 'http://localhost:3001/api/getAllClasses',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                }, 
+                data: {
+                    'user_id': 241
+                }
+            };
+    
+            // const result = await axios(options).then((result) => console.log(result.data));
+            const result = await axios(options);
+    
+            setClassesToAssign(result.data);
+        }
+        fetchData();
+    }, []);
+
+    // event handlers
     const handleModificationParameters = (parameters, values) => {
         const tempParams = {...modificationParameters};
         parameters.forEach((parameter, idx) => {
@@ -101,7 +125,6 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
         setModificationParameters({...tempParams});
     };
 
-    // event handlers
     const handleClickOpen = () => {
         setAddQuestionOpen(true);
     };
@@ -115,7 +138,7 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
     };
 
     const handleClassChange = event => {
-        setClassForForm(event.target.value);
+        setSelectedClass(event.target.value);
     };
 
     const addQuestion = (type, text, frqAnswer, threshold, mcAnswers, correctMCAnswers) => {
@@ -345,11 +368,12 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                             <InputLabel>Class</InputLabel>
                             <Select
                                 label="Class"
-                                value={classForForm}
+                                value={selectedClass}
                                 onChange={handleClassChange}
-                            >
-                                <MenuItem value="sd1">SD1</MenuItem>
-                                <MenuItem value="sd2">SD2</MenuItem>
+                            >   
+                                {classesToAssign.map((classToAssign, index) => 
+                                    <MenuItem key={index} value={classToAssign.class_id}>{classToAssign.name}</MenuItem>
+                                )}
                             </Select>
                         </FormControl>
                         <FormControl variant="outlined" className={classes.formDetail}>
