@@ -18,8 +18,8 @@ After node is installed, when you download the repository, make sure you do `npm
   * `npm install @material-ui/core`
   * `npm install @material-ui/icons`
   * `npm install typeface-roboto --save`
-  * material-table
-    * `npm install material-table --save`
+  * pickers
+    * `npm install @material-ui/pickers`
 * routing `npm install react-router-dom`
 * http requests `npm install axios`
 

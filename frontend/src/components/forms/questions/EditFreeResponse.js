@@ -16,7 +16,7 @@ const EditFreeResponse = ({ possibleAnswers, question }) => {
     const classes = useStyles();
     let hasCorrect = false;
     let previousAnswer = '';
-    if(question.questionType === 'Free Response') {
+    if(question.questionType === 3) {
         hasCorrect = question.questionAnswer === '' ? false : true;
         previousAnswer = question.questionAnswer;
     }

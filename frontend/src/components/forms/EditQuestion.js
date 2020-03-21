@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, Fragment } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -29,25 +29,22 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     const classes = useStyles();
     const [questionType, setQuestionType] = useState(question.questionType);
     const [questionText, setQuestionText] = useState(question.questionText);
-    const [frqAnswers, setFrqAnswers] = useState(question.questionType === 'Free Response' ? question.questionAnswer : '');
-    const [threshold, setThreshold] = useState(question.questionType === 'Likert Scale' ? question.questionAnswer : '');
-    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = useState(question.questionType === 'Multiple Choice' ? question.correctQuestionAnswers : {
+    const [frqAnswers, setFrqAnswers] = useState(question.questionType === 3 ? question.questionAnswer : '');
+    const [threshold, setThreshold] = useState(question.questionType === 2 ? question.questionAnswer : '');
+    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = React.useState(question.questionType === 1 ? question.correctQuestionAnswers : {
         answer1: false,
         answer2: false,
         answer3: false,
         answer4: false, 
         answer5: false
     });
-    const [mcAnswers, setMCAnswers] = useState(question.questionType === 'Multiple Choice' ? question.questionAnswer : {
+    const [mcAnswers, setMCAnswers] = React.useState(question.questionType === 1 ? question.questionAnswer : {
         answer1: '',
         answer2: '', 
         answer3: '', 
         answer4: '',
         answer5: ''
     });
-
-    const inputLabel = useRef(null);
-    const [labelWidth, setLabelWidth] = useState(0);
     
     // event handlers
     const handleCancel = () => {
@@ -92,27 +89,25 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     };
 
     return (
-        <div>
+        <Fragment>
             <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Edit Question</DialogTitle>
                 <DialogContent>
                     <FormControl variant="outlined" className={classes.formControl}>
-                        <InputLabel ref={inputLabel} id="Question Type">
+                        <InputLabel>
                             Question Type
                         </InputLabel>
-                        <Select variant = 'standard'
-                            labelId="Question Type"
-                            id="Question Selector"
+                        <Select 
+                            label="Question Type"
                             value={questionType}
                             onChange={handleQuestionTypeChange}
-                            labelWidth={labelWidth}
                         >
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            <MenuItem value={'Free Response'}>Free Response</MenuItem>
-                            <MenuItem value={'Multiple Choice'}>Multiple Choice</MenuItem>
-                            <MenuItem value={'Likert Scale'}>Likert Scale</MenuItem>
+                            <MenuItem value={3}>Free Response</MenuItem>
+                            <MenuItem value={1}>Multiple Choice</MenuItem>
+                            <MenuItem value={2}>Likert Scale</MenuItem>
                         </Select>
                     </FormControl>
                     <TextField
@@ -124,9 +119,9 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
                         defaultValue={questionText}
                         onChange={handleQuestionTextChange}
                     />
-                    {questionType === 'Free Response' && <EditFreeResponse possibleAnswers={storeFRQAnswers} question={question}/>}
-                    {questionType === 'Multiple Choice' && <EditMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} question={question}/>}
-                    {questionType === 'Likert Scale' && <EditLikert thresholdValue={storeThreshold} question={question}/>}
+                    {questionType === 3 && <EditFreeResponse possibleAnswers={storeFRQAnswers} question={question}/>}
+                    {questionType === 1 && <EditMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} question={question}/>}
+                    {questionType === 2 && <EditLikert thresholdValue={storeThreshold} question={question}/>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCancel} color="primary">
@@ -137,7 +132,7 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </Fragment>
     );
 }
 

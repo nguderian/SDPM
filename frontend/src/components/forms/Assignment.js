@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles(theme =>({
@@ -22,7 +22,7 @@ const Assignment = ({ match, location }) => {
     //     arr.push(obj);
     // });
 
-    const [answers, setAnswers] = useState(arr);
+    // const [answers, setAnswers] = useState(arr);
 
     return(
         <Fragment>

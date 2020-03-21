@@ -17,7 +17,7 @@ const EditLikert = ({ thresholdValue, question }) => {
     const classes = useStyles();
     let previousThreshold = '';
     let hadThreshold = false;
-    if(question.questionType === 'Likert Scale') {
+    if(question.questionType === 2) {
         hadThreshold = question.questionAnswer === '' ? false : true;
         previousThreshold = question.questionAnswer;
     }

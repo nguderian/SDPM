@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -13,12 +13,18 @@ import EditIcon from '@material-ui/icons/Edit';
 import NewQuestion from './NewQuestion';
 import DeleteQuestion from './DeleteQuestion';
 import EditQuestion from './EditQuestion';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import DateFnsUtils from '@date-io/date-fns'
+import { 
+    MuiPickersUtilsProvider,
+    DateTimePicker
+} from '@material-ui/pickers/';
+
 import axios from 'axios';
+
 
 const useStyles = makeStyles(theme => ({
     formTitle: {
@@ -60,10 +66,9 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(2)
     }, 
     formDetail: {
-        display: 'flex',
-        flexDirection: 'row',
         margin: theme.spacing(1),
         marginTop: theme.spacing(2),
+        minWidth: 250
     }
 }));
 
@@ -74,14 +79,43 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
     const [formName, setFormName] = useState('');
     const [formDescription, setFormDescription] = useState('');
     const [questions, setQuestions] = useState([]);
-    const [classForForm, setClassForForm] = useState('sd1');
+    const [classesToAssign, setClassesToAssign] = useState([]);
+    const [selectedClass, setSelectedClass] = useState('');
+    const [distribution, setDistribution] = useState('');
+    const [formType, setFormtype] = useState('');
+    const [assignee, setAssignee] = useState('');
+    const [startDateTime, setStartDateTime] = useState(new Date());
+    const [endDateTime, setEndDateTime] = useState(new Date());
     const [modificationParameters, setModificationParameters] = useState({
         deleteQuestionOpen: false,
         editQuestionOpen: false,
         indexToModify: null,
         questionToModify: null,
     });
+    
+    useEffect(() => {
+        async function fetchData() {
+            const options = {
+                method: 'POST',
+                url: 'http://localhost:3001/api/getAllClasses',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                }, 
+                data: {
+                    'user_id': 241
+                }
+            };
+    
+            // const result = await axios(options).then((result) => console.log(result.data));
+            const result = await axios(options);
+    
+            setClassesToAssign(result.data);
+        }
+        fetchData();
+    }, []);
 
+    // event handlers
     const handleModificationParameters = (parameters, values) => {
         const tempParams = {...modificationParameters};
         parameters.forEach((parameter, idx) => {
@@ -91,7 +125,6 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
         setModificationParameters({...tempParams});
     };
 
-    // event handlers
     const handleClickOpen = () => {
         setAddQuestionOpen(true);
     };
@@ -105,7 +138,7 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
     };
 
     const handleClassChange = event => {
-        setClassForForm(event.target.value);
+        setSelectedClass(event.target.value);
     };
 
     const addQuestion = (type, text, frqAnswer, threshold, mcAnswers, correctMCAnswers) => {
@@ -179,6 +212,38 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
         );
     };
 
+    const handleDistributionChange = event => {
+        setDistribution(event.target.value);
+    };
+
+    const handleFormTypeChange = event => {
+        setFormtype(event.target.value);
+    };
+
+    const handleAssigneeChange = event => {
+        setAssignee(event.target.value);
+    };
+
+    const handleStartDateTimeChange = dateTime => {
+        let month = ("0" + (dateTime.getMonth() + 1)).slice(-2);
+        let monthDate = ("0" + dateTime.getDate()).slice(-2);
+        let hours = ("0" + dateTime.getHours()).slice(-2);
+        let minutes = ("0" + dateTime.getMinutes()).slice(-2);
+        let seconds = ("0" + dateTime.getSeconds()).slice(-2);
+        let formattedDateTime = `${dateTime.getFullYear()}-${month}-${monthDate} ${hours}:${minutes}:${seconds}`;
+        setStartDateTime(formattedDateTime);
+    };
+
+    const handleEndDateTimeChange = dateTime => {
+        let month = ("0" + (dateTime.getMonth() + 1)).slice(-2);
+        let monthDate = ("0" + dateTime.getDate()).slice(-2);
+        let hours = ("0" + dateTime.getHours()).slice(-2);
+        let minutes = ("0" + dateTime.getMinutes()).slice(-2);
+        let seconds = ("0" + dateTime.getSeconds()).slice(-2);
+        let formattedDateTime = `${dateTime.getFullYear()}-${month}-${monthDate} ${hours}:${minutes}:${seconds}`;
+        setEndDateTime(formattedDateTime);
+    };
+
     const createForm = () => {
         let questionsArr = [];
         
@@ -189,7 +254,7 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                 "answers": []
             };
 
-            questionObj.question_category_id = question.questionType;
+            questionObj.category_id = question.questionType;
             questionObj.question_text = question.questionText;
 
             if (question.questionType === 3 || question.questionType === 2) {
@@ -216,13 +281,13 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
 
         // console.log(questionsArr)
         let body = {
+            "type": formType,
+            "access_level": assignee, 
+            "user_id": user_id,
+            "start_date": startDateTime,
+            "end_date": endDateTime,
             "title": formName,
             "description": formDescription,
-            "sd1_term": "fall", 
-            "sd1_year": 2018,
-            "sd2_term": "spring",
-            "sd2_year": 2019,
-            "user_id": user_id,
             questions: questionsArr
         }
 
@@ -250,7 +315,7 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
 
     
     return (
-        <div>
+        <Fragment>
             <Typography variant="h4" className={classes.pageTitle}>Create a New Form</Typography>
             <form className={classes.formTitle} noValidate autoComplete="off">
                 <TextField id="outlined-basic" 
@@ -270,15 +335,81 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                     onChange={handleFormDescriptionChange}
                 />
             </form>
-            <div className={classes.formDetail}>
-                <FormControl component="fieldset">
-                    <FormLabel component="legend">Choose Class</FormLabel>
-                    <RadioGroup aria-label="class" value={classForForm} onChange={handleClassChange}>
-                        <FormControlLabel value="sd1" control={<Radio />} label="SD1" />
-                        <FormControlLabel value="sd2" control={<Radio />} label="SD2" />
-                    </RadioGroup>
+            
+            <div style={{ display: 'flex', flexDirection: 'row'}}>
+                <FormControl variant="outlined" className={classes.formDetail}>
+                    <InputLabel>Distribution</InputLabel>
+                    <Select
+                        label="Distribution"
+                        value={distribution}
+                        onChange={handleDistributionChange}
+                    >
+                        <MenuItem value="template">Template</MenuItem>
+                        <MenuItem value="instance">Instance</MenuItem>
+                    </Select>
                 </FormControl>
+                <FormControl variant="outlined" className={classes.formDetail}>
+                    <InputLabel>Form Type</InputLabel>
+                    <Select
+                        label="Form Type"
+                        value={formType}
+                        onChange={handleFormTypeChange}
+                    >
+                        <MenuItem value="survey">Survey</MenuItem>
+                        <MenuItem value="quiz">Quiz</MenuItem>
+                        <MenuItem value="meeting">Meeting</MenuItem>
+                        <MenuItem value="attendance">Attendance</MenuItem>
+                    </Select>
+                </FormControl>
+                
+                {distribution === 'instance' && 
+                    <Fragment>
+                        <FormControl variant="outlined" className={classes.formDetail}>
+                            <InputLabel>Class</InputLabel>
+                            <Select
+                                label="Class"
+                                value={selectedClass}
+                                onChange={handleClassChange}
+                            >   
+                                {classesToAssign.map((classToAssign, index) => 
+                                    <MenuItem key={index} value={classToAssign.class_id}>{classToAssign.name}</MenuItem>
+                                )}
+                            </Select>
+                        </FormControl>
+                        <FormControl variant="outlined" className={classes.formDetail}>
+                            <InputLabel>Assign to Who?</InputLabel>
+                            <Select
+                                label="Assignee"
+                                value={assignee}
+                                onChange={handleAssigneeChange}
+                            >
+                                <MenuItem value="allStudents">All students</MenuItem>
+                                <MenuItem value="teams">Teams</MenuItem>
+                                <MenuItem value="individuals">Individuals</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>  
+                            <DateTimePicker 
+                                className={classes.formTitle}
+                                label="Start"
+                                inputVariant="outlined"
+                                value={startDateTime}
+                                onChange={handleStartDateTimeChange}
+                                disablePast={true}
+                            />
+                            <DateTimePicker 
+                                className={classes.formTitle}
+                                label="End"
+                                inputVariant="outlined"
+                                value={endDateTime}
+                                onChange={handleEndDateTimeChange}
+                                disablePast={true}
+                            />
+                        </MuiPickersUtilsProvider>
+                    </Fragment>
+                }
             </div>
+            
             <Button className={classes.createButton} variant="contained" color="primary" onClick={handleClickOpen}>
                 Add Question 
             </Button>
@@ -339,9 +470,9 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                 editQuestion={editQuestion}
                 question={modificationParameters.questionToModify}
             />}
-        </div>
+        </Fragment>
     );
 }
 
-export default NewForm
+export default NewForm;
 

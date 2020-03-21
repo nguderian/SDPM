@@ -17,7 +17,7 @@ const initialState =  (localStorage['redux-store']) ? JSON.parse(localStorage['r
     user_id:'ta840968',
     token:'',
     loggedIn:true,
-    userType:'student',
+    userType:'sponsor',
     ip_address:'10.171.204.179'
 })
 
