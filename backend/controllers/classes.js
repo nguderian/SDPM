@@ -29,6 +29,30 @@ class classes {
         res.send({ 'status': status, 'class_id': class_id });
 
     }
+
+    static async getAllClasses(req, res, next) {
+
+        const { user_id } = req.body;
+        let status = {};
+        let returnClasses;
+
+        try {
+            returnClasses = await sequelize.query(
+                'CALL get_all_classes_coordinator(?)',
+                { replacements: [user_id], type: sequelize.QueryTypes.CALL });
+            status.status1 = "All classes";
+            console.log(returnClasses);
+            next;
+        } catch (error) {
+            console.log(class_id);
+            status.status1 = "Failed";
+            next;
+        }
+
+        res.send(returnClasses);
+
+    }
+    
     
 
 }
