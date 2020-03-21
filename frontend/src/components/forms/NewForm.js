@@ -13,8 +13,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import NewQuestion from './NewQuestion';
 import DeleteQuestion from './DeleteQuestion';
 import EditQuestion from './EditQuestion';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -22,8 +20,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import DateFnsUtils from '@date-io/date-fns'
 import { 
     MuiPickersUtilsProvider,
-    DatePicker, 
-    TimePicker
+    DateTimePicker
 } from '@material-ui/pickers/';
 
 import axios from 'axios';
@@ -86,10 +83,8 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
     const [distribution, setDistribution] = useState('');
     const [formType, setFormtype] = useState('');
     const [assignee, setAssignee] = useState('');
-    const [selectedStartDate, setSelectedStartDate] = useState(new Date());
-    const [selectedEndDate, setSelectedEndDate] = useState(new Date());
-    const [selectedStartTime, setSelectedStartTime] = useState(new Date());
-    const [selectedEndTime, setSelectedEndTime] = useState(new Date());
+    const [startDateTime, setStartDateTime] = useState(new Date());
+    const [endDateTime, setEndDateTime] = useState(new Date());
     const [modificationParameters, setModificationParameters] = useState({
         deleteQuestionOpen: false,
         editQuestionOpen: false,
@@ -206,20 +201,24 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
         setAssignee(event.target.value);
     };
 
-    const handleStartDateChange = date => {
-        setSelectedStartDate(date);
+    const handleStartDateTimeChange = dateTime => {
+        let month = ("0" + (dateTime.getMonth() + 1)).slice(-2);
+        let monthDate = ("0" + dateTime.getDate()).slice(-2);
+        let hours = ("0" + dateTime.getHours()).slice(-2);
+        let minutes = ("0" + dateTime.getMinutes()).slice(-2);
+        let seconds = ("0" + dateTime.getSeconds()).slice(-2);
+        let formattedDateTime = `${dateTime.getFullYear()}-${month}-${monthDate} ${hours}:${minutes}:${seconds}`;
+        setStartDateTime(formattedDateTime);
     };
 
-    const handleEndDateChange = date => {
-        setSelectedEndDate(date);
-    };
-
-    const handleStartTimeChange = time => {
-        setSelectedStartTime(time);
-    };
-
-    const handleEndTimeChange = time => {
-        setSelectedEndTime(time);
+    const handleEndDateTimeChange = dateTime => {
+        let month = ("0" + (dateTime.getMonth() + 1)).slice(-2);
+        let monthDate = ("0" + dateTime.getDate()).slice(-2);
+        let hours = ("0" + dateTime.getHours()).slice(-2);
+        let minutes = ("0" + dateTime.getMinutes()).slice(-2);
+        let seconds = ("0" + dateTime.getSeconds()).slice(-2);
+        let formattedDateTime = `${dateTime.getFullYear()}-${month}-${monthDate} ${hours}:${minutes}:${seconds}`;
+        setEndDateTime(formattedDateTime);
     };
 
     const createForm = () => {
@@ -232,7 +231,7 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                 "answers": []
             };
 
-            questionObj.question_category_id = question.questionType;
+            questionObj.category_id = question.questionType;
             questionObj.question_text = question.questionText;
 
             if (question.questionType === 3 || question.questionType === 2) {
@@ -259,13 +258,13 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
 
         // console.log(questionsArr)
         let body = {
+            "type": formType,
+            "access_level": assignee, 
+            "user_id": user_id,
+            "start_date": startDateTime,
+            "end_date": endDateTime,
             "title": formName,
             "description": formDescription,
-            "sd1_term": "fall", 
-            "sd1_year": 2018,
-            "sd2_term": "spring",
-            "sd2_year": 2019,
-            "user_id": user_id,
             questions: questionsArr
         }
 
@@ -366,37 +365,21 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                             </Select>
                         </FormControl>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>  
-                            <DatePicker
+                            <DateTimePicker 
                                 className={classes.formTitle}
-                                label="Start Date"
-                                animateYearScrolling={true}
+                                label="Start"
+                                inputVariant="outlined"
+                                value={startDateTime}
+                                onChange={handleStartDateTimeChange}
                                 disablePast={true}
-                                value={selectedStartDate}
-                                onChange={handleStartDateChange}
-                                minDate={new Date()}
-                                format="MM/dd/yyy"
-                            /> 
-                            <DatePicker
+                            />
+                            <DateTimePicker 
                                 className={classes.formTitle}
-                                label="End Date"
-                                animateYearScrolling={true}
+                                label="End"
+                                inputVariant="outlined"
+                                value={endDateTime}
+                                onChange={handleEndDateTimeChange}
                                 disablePast={true}
-                                value={selectedEndDate}
-                                onChange={handleEndDateChange}
-                                minDate={new Date()}
-                                format="MM/dd/yyy"
-                            />
-                            <TimePicker
-                                className={classes.formTitle}
-                                label="Start Time"
-                                value={selectedStartTime}
-                                onChange={handleStartTimeChange}
-                            />
-                            <TimePicker
-                                className={classes.formTitle}
-                                label="End Time"
-                                value={selectedEndTime}
-                                onChange={handleEndTimeChange}
                             />
                         </MuiPickersUtilsProvider>
                     </Fragment>
