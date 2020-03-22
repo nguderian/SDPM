@@ -764,9 +764,9 @@ class form {
 
             let studentList;
             // Get all students who fit the current criteria.
-            const { form_id, start_date, end_date, sd1_term, sd1_year, sd2_term, sd2_year } = req.body;
+            const { form_id, start_date, end_date, class_id  } = req.body;
             try {
-                studentList = await sequelize.query('CALL get_all_students_assign(?,?,?,?)', { replacements: [sd1_term, sd1_year, sd2_term, sd2_year], type: sequelize.QueryTypes.CALL });
+                studentList = await sequelize.query('CALL get_all_students_class(?)', { replacements: [class_id], type: sequelize.QueryTypes.CALL });
                 next;
             } catch (error) {
                 console.log(error);
