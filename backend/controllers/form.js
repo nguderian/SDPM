@@ -180,7 +180,7 @@ class form {
                 next;
             } catch (error) {
                 console.log(error);
-                status.status1 = "Meeting Creatation Failed";
+                status.status1 = "Meeting Creation Failed";
                 next;
             }
 
@@ -189,12 +189,15 @@ class form {
                 let result = await sequelize.query('CALL insert_form_instance_team(?,?,?,?)',
                     { replacements: [end_date, form_id, start_date, team_id], type: sequelize.QueryTypes.CALL });
                 status.status2 = "Instance Created";
+                status.instance_id = result[0]['LAST_INSERT_ID()'];
                 next;
             } catch (error) {
                 console.log(error);
-                status.status2 = "Instance Create Failed";
+                status.status2 = "Instance Creation Failed";
                 next;
             }
+            status.form_id = form_id;
+            
             res.send(status);
 
         }
@@ -449,7 +452,7 @@ class form {
                 try {
                     // Submit the survey instance.
                     let callSurvey = await sequelize.query(`CALL submit_survey(?,?,?,?)`,
-                        { replacements: [form_id, results[i].question_id, results[i].answer_text, user_id], type: sequelize.QueryTypes.CALL });
+                        { replacements: [instance_id, results[i].question_id, results[i].answer_text, user_id], type: sequelize.QueryTypes.CALL });
                     // res.send({ status: "Success" });
                     console.log(`Insert ${results[i].question_id} and ${results[i].text}`);
                     status.status2 = "Success"
@@ -764,9 +767,9 @@ class form {
 
             let studentList;
             // Get all students who fit the current criteria.
-            const { form_id, start_date, end_date, sd1_term, sd1_year, sd2_term, sd2_year } = req.body;
+            const { form_id, start_date, end_date, class_id  } = req.body;
             try {
-                studentList = await sequelize.query('CALL get_all_students_assign(?,?,?,?)', { replacements: [sd1_term, sd1_year, sd2_term, sd2_year], type: sequelize.QueryTypes.CALL });
+                studentList = await sequelize.query('CALL get_all_students_class(?)', { replacements: [class_id], type: sequelize.QueryTypes.CALL });
                 next;
             } catch (error) {
                 console.log(error);
