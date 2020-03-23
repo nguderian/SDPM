@@ -16,6 +16,9 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -37,6 +40,17 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+}));
+
 export default function MaterialTableDemo() {
   const [state, setState] = React.useState({
     columns: [
@@ -56,7 +70,9 @@ export default function MaterialTableDemo() {
   });
 
   return (
-    <div style={{ maxWidth: "50%" }}>
+    <div style={{ maxWidth: "100%" }}>
+      <Grid container spacing={0}>
+      <Grid item xs>
     <MaterialTable
       icons = {tableIcons}
       title="Student/Group Roster"
@@ -99,6 +115,60 @@ export default function MaterialTableDemo() {
             }, 600);
           }),
       }}
-    /></div>
+    /></Grid>
+
+
+    <Grid item xs>
+    <MaterialTable
+      icons = {tableIcons}
+      title="Student/Group Roster"
+      columns={state.columns}
+      data={state.data}
+      editable={{
+        onRowAdd: newData =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              resolve();
+              setState(prevState => {
+                const data = [...prevState.data];
+                data.push(newData);
+                return { ...prevState, data };
+              });
+            }, 600);
+          }),
+        onRowUpdate: (newData, oldData) =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              resolve();
+              if (oldData) {
+                setState(prevState => {
+                  const data = [...prevState.data];
+                  data[data.indexOf(oldData)] = newData;
+                  return { ...prevState, data };
+                });
+              }
+            }, 600);
+          }),
+        onRowDelete: oldData =>
+          new Promise(resolve => {
+            setTimeout(() => {
+              resolve();
+              setState(prevState => {
+                const data = [...prevState.data];
+                data.splice(data.indexOf(oldData), 1);
+                return { ...prevState, data };
+              });
+            }, 600);
+          }),
+      }}
+    /></Grid>
+</Grid>
+<Button
+  variant="contained"
+  color="secondary">
+  Update Roster
+  </Button></div>
+
+
   );
 }
