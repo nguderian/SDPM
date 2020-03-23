@@ -180,7 +180,7 @@ class form {
                 next;
             } catch (error) {
                 console.log(error);
-                status.status1 = "Meeting Creatation Failed";
+                status.status1 = "Meeting Creation Failed";
                 next;
             }
 
@@ -189,12 +189,15 @@ class form {
                 let result = await sequelize.query('CALL insert_form_instance_team(?,?,?,?)',
                     { replacements: [end_date, form_id, start_date, team_id], type: sequelize.QueryTypes.CALL });
                 status.status2 = "Instance Created";
+                status.instance_id = result[0]['LAST_INSERT_ID()'];
                 next;
             } catch (error) {
                 console.log(error);
-                status.status2 = "Instance Create Failed";
+                status.status2 = "Instance Creation Failed";
                 next;
             }
+            status.form_id = form_id;
+            
             res.send(status);
 
         }
