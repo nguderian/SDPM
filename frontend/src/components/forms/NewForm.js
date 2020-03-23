@@ -188,13 +188,8 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                 }
             }
 
-            console.log(question);
-            console.log(modificationParameters.indexToModify);
             let arr = [...questions];
-            console.log(arr);
             arr[modificationParameters.indexToModify] = question;
-            console.log(arr);
-            setQuestions(arr);
         }
     };
 
@@ -249,17 +244,28 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
         
         questions.forEach((question, index) => {
             let questionObj = {
-                "question_category_id": null,
+                "category_id": null,
                 "question_text": null,
+                "question_type": null,
                 "answers": []
             };
 
-            questionObj.category_id = question.questionType;
+            questionObj.category_id = 2;
             questionObj.question_text = question.questionText;
+            if(question.questionType === 1) {
+                questionObj.question_type = "multiple_choice";
+            }
+            else if(question.questionType === 2) {
+                questionObj.question_type = "likert_scale"
+            }
+            else if(question.questionType === 3) {
+                questionObj.question_type = "free_response"
+            }
 
+           
             if (question.questionType === 3 || question.questionType === 2) {
                 questionObj.answers.push({
-                    "answer_Text" : question.questionAnswer, 
+                    "answer_text" : question.questionAnswer, 
                     "is_correct" : question.questionAnswer === '' ? 0 : 1
                 });
             }
