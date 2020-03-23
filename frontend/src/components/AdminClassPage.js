@@ -56,6 +56,7 @@ export default function MaterialTableDemo() {
   });
 
   return (
+    <div style={{ maxWidth: "50%" }}>
     <MaterialTable
       icons = {tableIcons}
       title="Student/Group Roster"
@@ -98,6 +99,6 @@ export default function MaterialTableDemo() {
             }, 600);
           }),
       }}
-    />
+    /></div>
   );
 }
