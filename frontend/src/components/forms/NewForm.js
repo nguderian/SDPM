@@ -244,7 +244,7 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
         setEndDateTime(formattedDateTime);
     };
 
-    const createForm = () => {
+    async function createForm() {
         let questionsArr = [];
         
         questions.forEach((question, index) => {
@@ -282,10 +282,11 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
         // console.log(questionsArr)
         let body = {
             "type": formType,
-            "access_level": assignee, 
+            "access_level": userType, //TODO: this is actually user type. The assignee goes under the 'code' field for /assignForm
             "user_id": user_id,
-            "start_date": startDateTime,
-            "end_date": endDateTime,
+            "team_id": formType === 'meeting' ? 1: '', // value needed for meetings
+            "start_date": formType === 'meeting' ? startDateTime : '',
+            "end_date": formType === 'meeting' ? endDateTime : '',
             "title": formName,
             "description": formDescription,
             questions: questionsArr
@@ -296,21 +297,55 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
             url: 'http://localhost:3001/api/createForm',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
             },
             data: body
         };
 
         console.log(options);
-        // let response = await axios(options);
-        // let responseOK = response && response.status === 200 && response.statusText === 'OK';
-        // if(responseOK) {
-        //     // send confirmation that form was created
-        // }
-        // else {
-        //     // send alert showing error and what the error was
-        //     console.log('something went wrong')
-        // }
+        let response = await axios(options);
+        console.log(response);
+        let responseOK = response && response.status === 200 && response.statusText === 'OK';
+        let newFormId = response.data.form_id;
+        if(responseOK) {
+            console.log(response.data.form_id)
+        }
+        else {
+            // send alert showing error and what the error was
+            console.log('something went wrong')
+        }
+
+        if(distribution === 'instance') {
+            let body = {
+                "class_id": selectedClass,
+                "start_date": startDateTime,
+                "end_date": endDateTime,
+                "form_id": newFormId,
+                "code": assignee
+            };
+
+            let options={
+                method: 'POST',
+                url: 'http://localhost:3001/api/assignForm',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                },
+                data: body
+            };
+
+            console.log(options);
+            let response = await axios(options);
+            console.log(response);
+            let responseOK = response && response.status === 200 && response.statusText === 'OK';
+            if(responseOK) {
+                console.log('successful instance created')
+            }
+            else {
+                // send alert showing error and what the error was
+                console.log('something went wrong')
+            }
+        }
     };
 
     
@@ -338,17 +373,6 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
             
             <div style={{ display: 'flex', flexDirection: 'row'}}>
                 <FormControl variant="outlined" className={classes.formDetail}>
-                    <InputLabel>Distribution</InputLabel>
-                    <Select
-                        label="Distribution"
-                        value={distribution}
-                        onChange={handleDistributionChange}
-                    >
-                        <MenuItem value="template">Template</MenuItem>
-                        <MenuItem value="instance">Instance</MenuItem>
-                    </Select>
-                </FormControl>
-                <FormControl variant="outlined" className={classes.formDetail}>
                     <InputLabel>Form Type</InputLabel>
                     <Select
                         label="Form Type"
@@ -361,6 +385,40 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                         <MenuItem value="attendance">Attendance</MenuItem>
                     </Select>
                 </FormControl>
+                {formType !== 'meeting' &&
+                    <FormControl variant="outlined" className={classes.formDetail}>
+                        <InputLabel>Distribution</InputLabel>
+                        <Select
+                            label="Distribution"
+                            value={distribution}
+                            onChange={handleDistributionChange}
+                        >
+                            <MenuItem value="template">Template</MenuItem>
+                            <MenuItem value="instance">Instance</MenuItem>
+                        </Select>
+                    </FormControl>
+                }
+                
+                {formType === 'meeting' && 
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>  
+                        <DateTimePicker 
+                            className={classes.formTitle}
+                            label="Start"
+                            inputVariant="outlined"
+                            value={startDateTime}
+                            onChange={handleStartDateTimeChange}
+                            disablePast={true}
+                        />
+                        <DateTimePicker 
+                            className={classes.formTitle}
+                            label="End"
+                            inputVariant="outlined"
+                            value={endDateTime}
+                            onChange={handleEndDateTimeChange}
+                            disablePast={true}
+                        />
+                    </MuiPickersUtilsProvider>
+                }
                 
                 {distribution === 'instance' && 
                     <Fragment>
@@ -372,6 +430,7 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                                 onChange={handleClassChange}
                             >   
                                 {classesToAssign.map((classToAssign, index) => 
+                                    
                                     <MenuItem key={index} value={classToAssign.class_id}>{classToAssign.name}</MenuItem>
                                 )}
                             </Select>
@@ -383,9 +442,9 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                                 value={assignee}
                                 onChange={handleAssigneeChange}
                             >
-                                <MenuItem value="allStudents">All students</MenuItem>
-                                <MenuItem value="teams">Teams</MenuItem>
-                                <MenuItem value="individuals">Individuals</MenuItem>
+                                <MenuItem value={1}>All students</MenuItem>
+                                <MenuItem value={2}>Teams</MenuItem>
+                                <MenuItem value={3}>Individuals</MenuItem>
                             </Select>
                         </FormControl>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>  
