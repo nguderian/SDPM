@@ -1,4 +1,6 @@
 import React, { usetState, Fragment } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -12,8 +14,12 @@ const useStyles = makeStyles(theme => ({
 const FormOrTemplateCreated = ({ open, onClose, confirmationText }) => {
     const classes = useStyles();
 
-    const handleDialogClose = arg => {
-        onClose(arg);
+    const handleGoToForms = () => {
+
+    };
+
+    const handleCreateSimilar = () => {
+
     };
 
     return (
