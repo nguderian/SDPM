@@ -473,9 +473,9 @@ class form {
                 try {
                     // Submit the survey instance.
                     let callSurvey = await sequelize.query(`CALL submit_quiz(?,?,?,?)`,
-                        { replacements: [results[i].text, instance_id, results[i].question_id, user_id], type: sequelize.QueryTypes.CALL });
+                        { replacements: [results[i].answer_text, instance_id, results[i].question_id, user_id], type: sequelize.QueryTypes.CALL });
                     // res.send({ status: "Success" });
-                    console.log(`Insert ${results[i].question_id} and ${results[i].text}`);
+                    console.log(`Insert ${results[i].question_id} and ${results[i].answer_text}`);
                     status.status2 = "Submit quiz success";
                     next;
                 } catch (error) {
@@ -872,7 +872,7 @@ async function quizGrader(user_id, form_id, instance_id, responses) {
     } catch (error) {
         console.log(error)
     }
-
+   
     // a and b are for lengths.
     var a = keys.length;
     var b = responses.length;
@@ -894,7 +894,7 @@ async function quizGrader(user_id, form_id, instance_id, responses) {
                     case 'multiple_choice':
                         {
 
-                            if (responses[j].text == keys[i].key_text) {
+                            if (responses[j].answer_text == keys[i].key_text) {
                                 correct++;
                             }
                             break;
