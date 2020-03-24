@@ -16,6 +16,22 @@ class form {
         }
     }
 
+    static async takeAttendance(req, res, next) {
+
+        const { instance_id, users } = req.body;
+            try {
+                let meeting = await sequelize.query('CALL meeting_complete(?)',
+                    { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
+                for (let i = 0; i < users.length; i++) {
+                    let insert = await sequelize.query('CALL insert_form_attendance(?,?,?,?)', { replacements: [users[i].did_attend, instance_id, users[i].reason, users[i].user_id], type: sequelize.QueryTypes.CALL });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+            res.send({ status: "Attendance success" });
+        
+    }
+
     static async createForm(req, res, next) {
 
         // Check the form type.
@@ -303,7 +319,7 @@ class form {
             res.send(status);
 
         }
-
+        /*
         if (type === 'attendance') {
             // Frontend should send instance_id, list of users with
             // user_id, did_attend, and reason.
@@ -320,6 +336,7 @@ class form {
             res.send({ status: "Attendance success" });
 
         }
+        */
 
     }
 
