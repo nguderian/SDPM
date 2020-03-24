@@ -121,7 +121,7 @@ export default function MaterialTableDemo() {
     <Grid item xs>
     <MaterialTable
       icons = {tableIcons}
-      title="Student/Group Roster"
+      title="Notifications"
       columns={state.columns}
       data={state.data}
       editable={{
@@ -167,7 +167,8 @@ export default function MaterialTableDemo() {
   variant="contained"
   color="secondary">
   Update Roster
-  </Button></div>
+  </Button>
+  </div>
 
 
   );

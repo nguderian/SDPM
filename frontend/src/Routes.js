@@ -6,12 +6,13 @@ import CreateFormContainer from './components/containers/forms/CreateFormContain
 import NewFormContainer from './components/containers/forms/NewFormContainer';
 import NavBarContainer from './components/containers/NavBarContainer';
 import AdminClassPage from './components/AdminClassPage';
+import Home from './components/Home';
 
 const routes = (
     <Router>
         <NavBarContainer/>
         <Switch> 
-            <Route path='/' exact component={Hello}/>
+            <Route path='/' exact component={Home}/>
             <Route path='/login' exact component={Login}/>
             <Route path='/CreateForm' exact component={CreateFormContainer}/>
             <Route path='/NewForm' exact component={NewFormContainer}/>
