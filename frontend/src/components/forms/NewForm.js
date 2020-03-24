@@ -13,6 +13,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import NewQuestion from './NewQuestion';
 import DeleteQuestion from './DeleteQuestion';
 import EditQuestion from './EditQuestion';
+import FormOrTemplateCreated from './FormOrTemplateCreated';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -86,6 +87,8 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
     const [assignee, setAssignee] = useState('');
     const [startDateTime, setStartDateTime] = useState(new Date());
     const [endDateTime, setEndDateTime] = useState(new Date());
+    const [templateMade, setTemplateMade] = useState(false);
+    const [instanceMade, setInstanceMade] = useState(false);
     const [modificationParameters, setModificationParameters] = useState({
         deleteQuestionOpen: false,
         editQuestionOpen: false,
@@ -241,7 +244,9 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
 
     async function createForm() {
         let questionsArr = [];
-        
+        let templateCreated = false;
+        let instanceCreated = false;
+
         questions.forEach((question, index) => {
             let questionObj = {
                 "category_id": null,
@@ -285,7 +290,6 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
             questionsArr.push(questionObj);
         });
 
-        // console.log(questionsArr)
         let body = {
             "type": formType,
             "access_level": userType, //TODO: this is actually user type. The assignee goes under the 'code' field for /assignForm
@@ -312,9 +316,11 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
         let response = await axios(options);
         console.log(response);
         let responseOK = response && response.status === 200 && response.statusText === 'OK';
+        
         let newFormId = response.data.form_id;
         if(responseOK) {
-            console.log(response.data.form_id)
+            // console.log(response.data.form_id)
+            templateCreated = true;
         }
         else {
             // send alert showing error and what the error was
@@ -344,13 +350,22 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
             let response = await axios(options);
             console.log(response);
             let responseOK = response && response.status === 200 && response.statusText === 'OK';
+            
             if(responseOK) {
-                console.log('successful instance created')
+                // console.log('successful instance created')
+                instanceCreated = true;
             }
             else {
                 // send alert showing error and what the error was
                 console.log('something went wrong')
             }
+        }
+
+        if(templateCreated) {
+            setTemplateMade(true);
+        }
+        else if(instanceCreated) {
+            setInstanceMade(true);
         }
     };
 
@@ -535,6 +550,16 @@ const NewForm = ({ user_id, userType, token, loggedIn }) => {
                 editQuestion={editQuestion}
                 question={modificationParameters.questionToModify}
             />}
+            {/* {instanceMade && <FormOrTemplateCreated 
+                open={instanceMade}
+                onClose={() => handle}
+                confirmationText="Form Instance Created! What would you like to do?"
+            />}
+            {templateMade && <FormOrTemplateCreated 
+                open={templateMade}
+                onClose={() => handleCreateDialogClose(false)}
+                confirmationText="Form Template Created! What would you like to do?"
+            />} */}
         </Fragment>
     );
 }
