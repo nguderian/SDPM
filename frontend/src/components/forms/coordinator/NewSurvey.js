@@ -58,8 +58,9 @@ const useStyles = makeStyles(theme => ({
 const NewSurvey = ({ userId, userType, token, loggedIn }) => {
     const classes = useStyles();
     const [classList, setClassList] = useState([]);
-    const [selectedClass, setSelectedClass] = useState('');
+    const [selectedClass, setSelectedClass] = useState(null);
     const [teams, setTeams] = useState([]);
+    const [selectedTeam, setSelectedTeam] = useState('');
     const [surveyTitle, setSurveyTitle] = useState('');
     const [surveyDescription, setSurveyDescription] = useState('');
 
@@ -81,28 +82,31 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
 
             setClassList(result.data);
         }
-        // TODO: NEEDS FIXING lol 
-        async function getTeams() {
-            const options = {
-                method: 'POST',
-                url: 'http://localhost:3001/api/getAllTeams',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
-                },
-                data: {
-                    'user_id': '12'
-                }
-            };
-
-            const result = await axios(options);
-            console.log(result)
-
-            setTeams(result.data.team)
-        }
         getClasses()
-        getTeams()
     }, []);
+
+    useEffect(() => {
+        if(selectedClass) {
+            async function getTeams() {
+                const options = {
+                    method: 'POST',
+                    url: 'http://localhost:3001/api/getTeamsInClass',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                    },
+                    data: {
+                        'class_id': selectedClass
+                    }
+                };
+    
+                const result = await axios(options);
+                console.log(result);
+                setTeams(result.data);
+            }
+            getTeams()
+        }
+    }, [selectedClass]);
 
     const handleSurveyTitleChange = event => {
         setSurveyTitle(event.target.value);
@@ -116,11 +120,14 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
         setSelectedClass(event.target.value);
     };
 
+    const handleTeamChange = event => {
+        setSelectedTeam(event.target.value);
+    };
+
     async function createSurvey() {
 
     };
 
-    //TODO: get request to get all teams from that class
     return (
         <Fragment>
             <Typography variant="h4" className={classes.pageTitle}>Create a New Peer Review</Typography>
@@ -152,8 +159,20 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
                         onChange={handleClassChange}
                     >   
                         {classList.map((classItem, index) => 
-                            
                             <MenuItem key={index} value={classItem.class_id}>{classItem.name}</MenuItem>
+                        )}
+                    </Select>
+                </FormControl>
+
+                <FormControl variant='outlined' className={classes.surveyDetails}>
+                    <InputLabel>Teams</InputLabel>
+                    <Select
+                        label="Team"
+                        value={selectedTeam}
+                        onChange={handleTeamChange}
+                    >   
+                        {teams.map((team, index) => 
+                            <MenuItem key={index} value={team.team_id}>{team.project_name}</MenuItem>
                         )}
                     </Select>
                 </FormControl>

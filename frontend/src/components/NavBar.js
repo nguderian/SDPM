@@ -115,7 +115,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
               </ListItem>
               <ListItem button component={Link} to='/coordinator/CreateSurvey'>
                 <ListItemIcon><CreateIcon/></ListItemIcon>
-                <ListItemText primary='Create Survey'/>
+                <ListItemText primary='Create Peer Review'/>
               </ListItem>
               <ListItem button component={Link} to='/coordinator/CreateQuiz'>
                 <ListItemIcon><CreateIcon/></ListItemIcon>
@@ -127,7 +127,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
               </ListItem>
               <ListItem button component={Link} to='/'>
                 <ListItemIcon><CreateIcon/></ListItemIcon>
-                <ListItemText primary='Create Attendance Sheet'/>
+                <ListItemText primary='Take Attendance'/>
               </ListItem>
               <ListItem button component={Link} to='/'>
                 <ListItemIcon><SearchIcon/></ListItemIcon>
