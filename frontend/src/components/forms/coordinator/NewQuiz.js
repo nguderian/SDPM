@@ -248,7 +248,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                 questionObj.question_type = "multiple_choice";
             }
             else if(question.questionType === 2) {
-                questionObj.question_type = "likert_scale"
+                questionObj.question_type = "fill_blank"
             }
             else if(question.questionType === 3) {
                 questionObj.question_type = "free_response"
@@ -258,17 +258,17 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
             if (question.questionType === 2) {
                 questionObj.answers.push({
                     "answer_text" : question.questionAnswer, 
-                    "is_correct" : question.questionAnswer === '' ? 0 : 1
+                    "isCorrect" : 1
                 });
             }
-            else {
+            else if (question.questionType === 3) {
                const keys = Object.keys(question.questionAnswer);
 
                keys.forEach((key, index) => {
                    if (question.questionAnswer[key] !== '') {
                        questionObj.answers.push({
                            "answer_text": question.questionAnswer[key],
-                           "is_correct": question.correctQuestionAnswers[key] ? 1 : 0
+                           "isCorrect": question.correctQuestionAnswers[key] ? 1 : 0
                        })
                    }
                })
@@ -291,7 +291,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
             method: 'POST',
             url: 'http://localhost:3001/api/createForm',
             headers: {
-                'Accept': 'application/json',
+                'Content-Type': 'application/json',
                 'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
             },
             data: body
@@ -349,7 +349,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
     
     return (
         <Fragment>
-        {console.log(questions)}
+        {/* {console.log(questions)} */}
             <Typography variant="h4" className={classes.pageTitle}>Create a New Quiz</Typography>
             <form className={classes.quizTitle} noValidate autoComplete="off">
                 <TextField
