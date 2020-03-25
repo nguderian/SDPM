@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import NewQuestion from '../NewQuestion';
+import NewQuestion from '../questions/NewQuestion';
 import DeleteQuestion from '../questions/DeleteQuestion';
 import EditQuestion from '../questions/EditQuestion';
 import FormOrTemplateCreated from '../FormOrTemplateCreated';
@@ -79,8 +79,6 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
     const [assignee, setAssignee] = useState('');
     const [startDateTime, setStartDateTime] = useState(new Date());
     const [endDateTime, setEndDateTime] = useState(new Date());
-    const [templateMade, setTemplateMade] = useState(false);
-    const [instanceMade, setInstanceMade] = useState(false);
     const [modificationParameters, setModificationParameters] = useState({
         deleteQuestionOpen: false,
         editQuestionOpen: false,
@@ -137,13 +135,13 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
         setSelectedClass(event.target.value);
     };
 
-    const addQuestion = (type, text, threshold, mcAnswers, correctMCAnswers) => {
+    const addQuestion = (type, text, fillBlankAnswer, mcAnswers, correctMCAnswers) => {
         let question = {};
         if (type === 3 || type === 2) {
             question = {
                 questionType: type, 
                 questionText: text,
-                questionAnswer: type === 2 ? threshold : ''
+                questionAnswer: type === 2 ? fillBlankAnswer : ''
             }
         }
         else {
@@ -165,15 +163,15 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
         }
     };
 
-    const editQuestion = (shouldEdit, type, text, threshold, mcAnswers, correctMCAnswers) => {
-        console.log(shouldEdit, type, text, threshold, mcAnswers, correctMCAnswers);
+    const editQuestion = (shouldEdit, type, text, fillBlankAnswer, mcAnswers, correctMCAnswers) => {
+        // console.log(shouldEdit, type, text, fillBlankAnswer, mcAnswers, correctMCAnswers);
         if(shouldEdit) {
             let question = {};
             if (type === 3 || type === 2) {
                 question = {
                     questionType: type, 
                     questionText: text,
-                    questionAnswer: type === 2 ? threshold : ''
+                    questionAnswer: type === 2 ? fillBlankAnswer : ''
                 }
             }
             else {
@@ -236,12 +234,9 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
 
     async function createForm() {
         let questionsArr = [];
-        let templateCreated = false;
-        let instanceCreated = false;
 
         questions.forEach((question, index) => {
             let questionObj = {
-                "category_id": null,
                 "question_text": null,
                 "question_type": null,
                 "answers": []
@@ -283,12 +278,10 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
         });
 
         let body = {
+            'form_threshold': '', //TODO: Create UI element to capture the "failing grade"
             "type": 'quiz',
             "access_level": userType, //TODO: this is actually user type. The assignee goes under the 'code' field for /assignForm
             "user_id": userId,
-            "team_id": '', // value needed for meetings
-            "start_date": '',
-            "end_date": '',
             "title": quizTitle,
             "description": quizDescription,
             questions: questionsArr
@@ -312,7 +305,6 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
         let newFormId = response.data.form_id;
         if(responseOK) {
             console.log(newFormId)
-            templateCreated = true;
         }
         else {
             // send alert showing error and what the error was
@@ -344,20 +336,13 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
             let responseOK = response && response.status === 200 && response.statusText === 'OK';
             
             if(responseOK) {
-                // console.log('successful instance created')
-                instanceCreated = true;
+                console.log('successful instance created')
+                
             }
             else {
                 // send alert showing error and what the error was
                 console.log('something went wrong')
             }
-        }
-
-        if(templateCreated) {
-            setTemplateMade(true);
-        }
-        else if(instanceCreated) {
-            setInstanceMade(true);
         }
     };
 
@@ -465,7 +450,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                                 <CardContent>
                                     <Typography className={classes.questionTitle} color="textSecondary" gutterBottom>
                                         {question.questionType === 3 && 'Free Response'}
-                                        {question.questionType === 2 && 'Likert Scale'}
+                                        {question.questionType === 2 && 'Fill in the blank'}
                                         {question.questionType === 1 && 'Multiple Choice'}
                                     </Typography>
                                     <Typography>{question.questionText}</Typography>

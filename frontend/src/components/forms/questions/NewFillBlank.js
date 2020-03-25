@@ -13,38 +13,27 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const NewLikert = ({ thresholdValue }) => {
+const NewFillBlank = ({ fillBlank }) => {
     const classes = useStyles();
-    const [hasThreshold, setHasThreshold] = useState(false);
-
+    
     // event handlers
-    const handleCheckboxChange = event => {
-        setHasThreshold(event.target.checked);
-    };
-
     const handleTextFieldChange = event => {
-        thresholdValue(event.target.value);
+        fillBlank(event.target.value);
     };
 
     return (
         <div className={classes.root}>
             <FormControl component="fieldset" className={classes.formControl}>
-                <FormGroup>
-                    <FormControlLabel
-                        control={<Checkbox checked={hasThreshold} onChange={handleCheckboxChange} value="hasThreshold"/>}
-                        label="Is there a threshold?"
-                    />
-                </FormGroup>
-                {hasThreshold && <TextField
-                    label="Threshold"
-                    placeholder="Enter threshold value"
+                <TextField
+                    label="Correct Answer"
+                    placeholder="Enter Correct Answer"
                     variant="outlined"
                     onChange={handleTextFieldChange}
-                />}
+                />
             </FormControl>
         </div>
     );
 }
 
 
-export default NewLikert;
+export default NewFillBlank;

@@ -10,7 +10,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import EditLikert from './EditLikert';
+import EditFillBlank from './EditFillBlank';
 import EditMultipleChoice from './EditMultipleChoice';
 
 const useStyles = makeStyles(theme => ({
@@ -28,7 +28,7 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     const classes = useStyles();
     const [questionType, setQuestionType] = useState(question.questionType);
     const [questionText, setQuestionText] = useState(question.questionText);
-    const [threshold, setThreshold] = useState(question.questionType === 2 ? question.questionAnswer : '');
+    const [fillBlankAnswer, setFillBlankAnswer] = useState(question.questionType === 2 ? question.questionAnswer : '');
     const [isCorrectMCAnswer, setIsCorrectMcAnswer] = React.useState(question.questionType === 1 ? question.correctQuestionAnswers : {
         answer1: false,
         answer2: false,
@@ -52,12 +52,12 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
 
     const handleConfirm = () => {
         onClose();
-        editQuestion(true, questionType, questionText, threshold, mcAnswers, isCorrectMCAnswer)
+        editQuestion(true, questionType, questionText, fillBlankAnswer, mcAnswers, isCorrectMCAnswer)
     };
 
-    const storeThreshold = value => {
+    const storeFillBlankAnswer = value => {
         if (value !== null) {
-            setThreshold(value);
+            setFillBlankAnswer(value);
         }
     };
 
@@ -99,7 +99,7 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
                             </MenuItem>
                             <MenuItem value={3}>Free Response</MenuItem>
                             <MenuItem value={1}>Multiple Choice</MenuItem>
-                            <MenuItem value={2}>Likert Scale</MenuItem>
+                            <MenuItem value={2}>Fill in the blank</MenuItem>
                         </Select>
                     </FormControl>
                     <TextField
@@ -112,7 +112,7 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
                         onChange={handleQuestionTextChange}
                     />
                     {questionType === 1 && <EditMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} question={question}/>}
-                    {questionType === 2 && <EditLikert thresholdValue={storeThreshold} question={question}/>}
+                    {questionType === 2 && <EditFillBlank fillBlank={storeFillBlankAnswer} question={question}/>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCancel} color="primary">

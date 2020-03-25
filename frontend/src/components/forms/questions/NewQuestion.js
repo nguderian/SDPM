@@ -11,9 +11,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
-import NewLikert from './questions/NewLikert';
-import NewMultipleChoice from './questions/NewMultipleChoice';
-import AlertDialog from '../AlertDialog';
+import NewFillBlank from './NewFillBlank';
+import NewMultipleChoice from './NewMultipleChoice';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -30,7 +29,7 @@ const NewQuestion = ({ open, onClose, add, formType }) => {
     const classes = useStyles();
     const [questionType, setQuestionType] = useState('');
     const [questionText, setQuestionText] = useState('');
-    const [threshold, setThreshold] = useState('');
+    const [fillBlankAnswer, setFillBlankAnswer] = useState('');
     const [isCorrectMCAnswer, setIsCorrectMcAnswer] = useState({
         answer1: false,
         answer2: false,
@@ -74,16 +73,15 @@ const NewQuestion = ({ open, onClose, add, formType }) => {
         // else if(questionType === 'Free Response')
 
         onClose();
-        add(questionType, questionText, threshold, mcAnswers, isCorrectMCAnswer);
+        add(questionType, questionText, fillBlankAnswer, mcAnswers, isCorrectMCAnswer);
     };
 
     const handleQuestionTextChange = event => {
         setQuestionText(event.target.value);
     };
 
-
-    const storeThreshold = value => {
-        setThreshold(value);
+    const storeFillBlankAnswer = value => {
+        setFillBlankAnswer(value);
     };
     
     const storeCorrectMCAnswers = (answerChoice, isCorrect) => {
@@ -113,7 +111,7 @@ const NewQuestion = ({ open, onClose, add, formType }) => {
                             </MenuItem>
                             <MenuItem value={3}>Free Response</MenuItem>
                             <MenuItem value={1}>Multiple Choice</MenuItem>
-                            <MenuItem value={2}>Likert Scale</MenuItem>
+                            <MenuItem value={2}>Fill in the blank</MenuItem>
                         </Select>
                         {questionType === '' ? <FormHelperText error>Question Type is Required</FormHelperText> : null}
                     </FormControl>
@@ -127,7 +125,7 @@ const NewQuestion = ({ open, onClose, add, formType }) => {
                         onChange={handleQuestionTextChange}
                     />
                     {questionType === 1 && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} formType={formType}/>}
-                    {questionType === 2 && <NewLikert thresholdValue={storeThreshold}/>}
+                    {questionType === 2 && <NewFillBlank fillBlank={storeFillBlankAnswer}/>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCancel} color="primary">
