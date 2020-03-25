@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Login from './components/Login';
 import Hello from './components/HelloWorld';
 import CreateQuizContainer from './components/containers/forms/coordinator/CreateQuizContainer';
 import NewQuizContainer from './components/containers/forms/coordinator/NewQuizContainer';
@@ -15,7 +14,6 @@ const routes = (
         <NavBarContainer/>
         <Switch> 
             <Route path='/' exact component={Hello}/>
-            <Route path='/login' exact component={Login}/>
             <Route path='/CreateQuiz' exact component={CreateQuizContainer}/>
             <Route path='/NewQuiz' exact component={NewQuizContainer}/>
             <Route path='/CreateMeeting' exact component={CreateMeetingContainer}/>

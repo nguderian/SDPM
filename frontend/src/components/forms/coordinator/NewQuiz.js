@@ -10,11 +10,13 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import NewQuestion from '../questions/NewQuestion';
-import DeleteQuestion from '../questions/DeleteQuestion';
-import EditQuestion from '../questions/EditQuestion';
+import NewQuestion from './questions/NewQuestion';
+import DeleteQuestion from './questions/DeleteQuestion';
+import EditQuestion from './questions/EditQuestion';
 import FormOrTemplateCreated from '../FormOrTemplateCreated';
 import FormControl from '@material-ui/core/FormControl';
+import FormControllabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -31,6 +33,10 @@ const useStyles = makeStyles(theme => ({
     quizTitle: {
         margin: theme.spacing(1),
         marginTop: theme.spacing(2),
+    },
+    checkBox: {
+        marginTop: theme.spacing(2),
+        marginLeft: theme.spacing(1),
     },
     createButton: {
         margin: theme.spacing(1),
@@ -77,6 +83,8 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
     const [selectedClass, setSelectedClass] = useState('');
     const [instanceType, setInstanceType] = useState('');
     const [assignee, setAssignee] = useState('');
+    const [hasAlertValue, setHasAlertValue] = useState(false);
+    const [alertValue, setAlertValue] = useState(false);
     const [startDateTime, setStartDateTime] = useState(new Date());
     const [endDateTime, setEndDateTime] = useState(new Date());
     const [modificationParameters, setModificationParameters] = useState({
@@ -232,6 +240,14 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
         setEndDateTime(formattedDateTime);
     };
 
+    const handleHasAlertValue = event => {
+        setHasAlertValue(event.target.checked);
+    };
+
+    const handleAlertvalue = event => {
+        setAlertValue(event.target.value)
+    };
+
     async function createForm() {
         let questionsArr = [];
 
@@ -278,9 +294,9 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
         });
 
         let body = {
-            'form_threshold': '', //TODO: Create UI element to capture the "failing grade"
+            'form_threshold': alertValue, 
             "type": 'quiz',
-            "access_level": userType, //TODO: this is actually user type. The assignee goes under the 'code' field for /assignForm
+            "access_level": userType,
             "user_id": userId,
             "title": quizTitle,
             "description": quizDescription,
@@ -382,7 +398,6 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                         <MenuItem value="instance">Instance</MenuItem>
                     </Select>
                 </FormControl>
-                
                 {instanceType === 'instance' && 
                     <Fragment>
                         <FormControl variant="outlined" className={classes.quizDetails}>
@@ -431,7 +446,27 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                     </Fragment>
                 }
             </div>
-            
+            <div style={{ display: 'flex', flexDirection: 'row'}}>
+                <FormControllabel className={classes.checkBox}
+                    control={
+                        <Checkbox 
+                            checked={hasAlertValue}
+                            onChange={handleHasAlertValue}
+                            color='primary'
+                        />
+                    }
+                    label="Receive Alerts?"
+                />
+                {hasAlertValue && 
+                    <form className={classes.quizDetails} noValidate autoComplete='off'>
+                        <TextField 
+                            label='Value from 0 - 100'
+                            variant='outlined'
+                            onChange={handleAlertvalue}
+                        />
+                    </form>
+                }
+            </div>
             <Button className={classes.createButton} variant="contained" color="primary" onClick={handleAddQuestion}>
                 Add Question 
             </Button>

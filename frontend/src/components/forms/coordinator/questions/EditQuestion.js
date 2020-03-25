@@ -82,7 +82,7 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
 
     return (
         <Fragment>
-            <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
+            <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title" disableBackdropClick disableEscapeKeyDown>
                 <DialogTitle id="form-dialog-title">Edit Question</DialogTitle>
                 <DialogContent>
                     <FormControl variant="outlined" className={classes.formControl}>
