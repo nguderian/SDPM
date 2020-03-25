@@ -30,7 +30,7 @@ nconf.defaults({
 app.use(bodyParser.json());
 app.use(cors());
 app.use('/api', apiRoutes);
-
+/*
 // placeholder view for the LTI launch
 app.set('view engine', 'pug');
 app.use(session({
@@ -69,7 +69,7 @@ app.get('/application', (req, res, next) => {
 });
 
 app.post('/launch_lti', lti.handleLaunch);
-
+*/
 
 var server = http.createServer(app);
 app.set('port', nconf.get('http:port'));
