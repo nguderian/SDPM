@@ -17,10 +17,17 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1),
         marginTop: theme.spacing(2),
     },
+    createButton: {
+        margin: theme.spacing(1),
+        textAlign: 'center',
+        marginTop: theme.spacing(2),
+    }
 }));
 
 
 const NewMeeting = ({ userId, userType, token, loggedIn}) => {
+    //TODO: Authorization tokens are dynamic based on each user which needs to be used after login is created
+    //TODO make a dropdown selector + get request for teams and team ids
     const classes = useStyles();
     const [meetingTitle, setMeetingTitle] = useState('');
     const [meetingDescription, setMeetingDescription] = useState('');
@@ -55,6 +62,39 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
         setEndDateTime(formattedDateTime);
     };
 
+    async function createMeeting() {
+        let body = {
+            'type': 'meeting',
+            'access_level': userType,
+            'user_id': userId,
+            'title': meetingTitle,
+            'description': meetingDescription,
+            'start_date': startDateTime,
+            'end_date': endDateTime,
+            'team_id': 1 //TODO: create get request to load all the teams that exist with their associated id
+        }
+
+        let options = {
+            method: 'POST',
+            url: 'http://localhost:3001/api/CreateForm',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+            },
+            data: body
+        }
+
+        let response = await axios(options);
+        console.log(response);
+        let responseOK = response && response.status === 200 && response.statusText === 'OK';
+        if(responseOK) {
+            console.log('meeting made');
+        }
+        else {
+            console.log('something went wrong');
+        }
+    };
+
     return (
         <Fragment>
             <Typography variant='h4' className={classes.pageTitle}>Create a new meeting</Typography>
@@ -82,22 +122,30 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <DateTimePicker 
                         className={classes.meetingTitle}
-                        label="Start"
-                        inputVariant="outlined"
+                        label='Start'
+                        inputVariant='outlined'
                         value={startDateTime}
                         onChange={handleStartDateTimeChange}
                         disablePast={true}
                     />
                     <DateTimePicker 
                         className={classes.meetingTitle}
-                        label="End"
-                        inputVariant="outlined"
+                        label='End'
+                        inputVariant='outlined'
                         value={endDateTime}
                         onChange={handleEndDateTimeChange}
                         disablePast={true}
                     />
-            </MuiPickersUtilsProvider>
+                </MuiPickersUtilsProvider>
             </div>
+            <Button
+                variant='contained'
+                color='primary'
+                onClick={createMeeting}
+                className={classes.createButton}
+            >
+                Create Meeting
+            </Button>
         </Fragment>
     )
 }
