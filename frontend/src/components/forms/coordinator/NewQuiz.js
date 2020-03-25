@@ -11,8 +11,8 @@ import Divider from '@material-ui/core/Divider';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import NewQuestion from '../NewQuestion';
-import DeleteQuestion from '../DeleteQuestion';
-import EditQuestion from '../EditQuestion';
+import DeleteQuestion from '../questions/DeleteQuestion';
+import EditQuestion from '../questions/EditQuestion';
 import FormOrTemplateCreated from '../FormOrTemplateCreated';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -115,6 +115,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
         const tempParams = {...modificationParameters};
         parameters.forEach((parameter, idx) => {
             tempParams[parameter] = values[idx];
+            console.log(tempParams[parameter], values[idx])
         });
         
         setModificationParameters({...tempParams});
@@ -165,6 +166,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
     };
 
     const editQuestion = (shouldEdit, type, text, threshold, mcAnswers, correctMCAnswers) => {
+        console.log(shouldEdit, type, text, threshold, mcAnswers, correctMCAnswers);
         if(shouldEdit) {
             let question = {};
             if (type === 3 || type === 2) {
@@ -185,6 +187,8 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
 
             let arr = [...questions];
             arr[modificationParameters.indexToModify] = question;
+
+            setQuestions(arr);
         }
     };
 
@@ -360,6 +364,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
     
     return (
         <Fragment>
+        {console.log(questions)}
             <Typography variant="h4" className={classes.pageTitle}>Create a New Quiz</Typography>
             <form className={classes.quizTitle} noValidate autoComplete="off">
                 <TextField

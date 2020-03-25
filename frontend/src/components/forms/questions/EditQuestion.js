@@ -10,8 +10,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import EditLikert from './questions/EditLikert';
-import EditMultipleChoice from './questions/EditMultipleChoice';
+import EditLikert from './EditLikert';
+import EditMultipleChoice from './EditMultipleChoice';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
