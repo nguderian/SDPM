@@ -73,6 +73,26 @@ class classes {
         res.send(returnStudents);
 
     }
+
+    static async getTeamsInClass(req, res, next) {
+        const { class_id } = req.body;
+        let returnTeams;
+        let status = {};
+        try {
+            returnTeams = await sequelize.query(
+                'CALL get_all_teams_class(?)',
+                { replacements: [class_id], type: sequelize.QueryTypes.CALL });
+            status.status1 = "All Teams: Success";
+            console.log(status.status1);
+            //console.log(returnStudents);
+            next;
+        } catch (error) {
+            status.status1 = "Failed";
+            next;
+        }
+
+        res.send(returnTeams);
+    }
     
     
 
