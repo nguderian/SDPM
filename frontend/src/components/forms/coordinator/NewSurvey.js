@@ -42,7 +42,17 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1),
         marginTop: theme.spacing(2),
         minWidth: 250
-    }
+    },
+    divider: {
+        margin: theme.spacing(1),
+        marginBottom: theme.spacing(2),
+        marginTop: theme.spacing(2)
+    }, 
+    createButton: {
+        margin: theme.spacing(1),
+        textAlign: 'center',
+        marginTop: theme.spacing(2),
+    },
 }));
 
 const NewSurvey = ({ userId, userType, token, loggedIn }) => {
@@ -71,7 +81,27 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
 
             setClassList(result.data);
         }
+        // TODO: NEEDS FIXING lol 
+        async function getTeams() {
+            const options = {
+                method: 'POST',
+                url: 'http://localhost:3001/api/getAllTeams',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                },
+                data: {
+                    'user_id': '12'
+                }
+            };
+
+            const result = await axios(options);
+            console.log(result)
+
+            setTeams(result.data.team)
+        }
         getClasses()
+        getTeams()
     }, []);
 
     const handleSurveyTitleChange = event => {
@@ -84,6 +114,10 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
 
     const handleClassChange = event => {
         setSelectedClass(event.target.value);
+    };
+
+    async function createSurvey() {
+
     };
 
     //TODO: get request to get all teams from that class
@@ -124,6 +158,16 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
                     </Select>
                 </FormControl>
             </div>
+
+            <Divider className={classes.divider}/>
+
+            <Button 
+                variant='contained'
+                color='primary'
+                onClick={createSurvey}
+                className={classes.createButton}>
+                Create Peer Review
+            </Button>
         </Fragment>
     )
 }
