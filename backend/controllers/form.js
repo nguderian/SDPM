@@ -54,7 +54,7 @@ class form {
             try {
                 returnFormID = await sequelize.query(
                     'CALL insert_form(?,?,?,?,?,?)',
-                    { replacements: [access_level, description, 1, title, type, user_id], type: sequelize.QueryTypes.CALL });
+                    { replacements: [access_level, description, null, title, type, user_id], type: sequelize.QueryTypes.CALL });
                 console.log(returnFormID[0]['LAST_INSERT_ID()']);
                 form_id = returnFormID[0]['LAST_INSERT_ID()'];
                 console.log(form_id);
@@ -69,14 +69,17 @@ class form {
             // Insert the questions for the new form.
             for (let i = 0; i < questions.length; i++) {
                 try {
-
+                    let tmp_question_threshold;
                     if (questions[i].question_threshold === undefined) {
-                        questions[i].question_threshold = 0;
+                        tmp_question_threshold = 0;
+                    }
+                    else {
+                        tmp_question_threshold = questions[i].question_threshold;
                     }
                     let insert = await sequelize.query(
                         'CALL insert_form_question(?,?,?,?,?)',
                         {
-                            replacements: [form_id, questions[i].category_id, questions[i].question_text, questions[i].question_type, 1],
+                            replacements: [form_id, 1, questions[i].question_text, questions[i].question_type, tmp_question_threshold],
                             type: sequelize.QueryTypes.CALL
                         })
                     status.status3 = "Question Insert"
@@ -97,6 +100,7 @@ class form {
             const { access_level, title, user_id, description, questions } = req.body;
             try {
                 let threshold = req.body.form_threshold;
+
                 if (threshold === undefined) {
                     threshold = 0;
                 }
@@ -133,7 +137,7 @@ class form {
 
 
                 if (questions[i].question_threshold === undefined) {
-                    question_threshold_temp = 0;
+                    question_threshold_temp = null;
                 }
                 else {
                     question_threshold_temp = questions[i].question_threshold;
@@ -146,7 +150,7 @@ class form {
                     var returnQuestionID = await sequelize.query(
                         'CALL insert_form_question(?,?,?,?,?)',
                         {
-                            replacements: [form_id, questions[i].category_id, questions[i].question_text, questions[i].question_type, question_threshold_temp],
+                            replacements: [form_id, category_id_temp, questions[i].question_text, questions[i].question_type, question_threshold_temp],
                             type: sequelize.QueryTypes.CALL
                         })
 
@@ -188,7 +192,7 @@ class form {
                 // Insert the form and return is the new ID.
                 returnFormID = await sequelize.query(
                     'CALL insert_form(?,?,?,?,?,?)',
-                    { replacements: [access_level, description, 0, title, type, user_id], type: sequelize.QueryTypes.CALL });
+                    { replacements: [access_level, description, null, title, type, user_id], type: sequelize.QueryTypes.CALL });
 
                 form_id = returnFormID[0]['LAST_INSERT_ID()'];
                 // console.log(form_id);
