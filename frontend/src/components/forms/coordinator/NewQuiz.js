@@ -79,7 +79,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
     const [quizTitle, setQuizTitle] = useState('');
     const [quizDescription, setQuizDescription] = useState('');
     const [questions, setQuestions] = useState([]);
-    const [classesToAssign, setClassesToAssign] = useState([]);
+    const [classList, setClassList] = useState([]);
     const [selectedClass, setSelectedClass] = useState('');
     const [instanceType, setInstanceType] = useState('');
     const [assignee, setAssignee] = useState('');
@@ -95,7 +95,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
     });
     
     useEffect(() => {
-        async function fetchData() {
+        async function getClasses() {
             const options = {
                 method: 'POST',
                 url: 'http://localhost:3001/api/getAllClasses',
@@ -104,16 +104,16 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                     'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
                 }, 
                 data: {
-                    'user_id': 241
+                    'user_id': userId
                 }
             };
     
             // const result = await axios(options).then((result) => console.log(result.data));
             const result = await axios(options);
     
-            setClassesToAssign(result.data);
+            setClassList(result.data);
         }
-        fetchData();
+        getClasses();
     }, []);
 
     // event handlers
@@ -407,9 +407,9 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                                 value={selectedClass}
                                 onChange={handleClassChange}
                             >   
-                                {classesToAssign.map((classToAssign, index) => 
+                                {classList.map((classItem, index) => 
                                     
-                                    <MenuItem key={index} value={classToAssign.class_id}>{classToAssign.name}</MenuItem>
+                                    <MenuItem key={index} value={classItem.class_id}>{classItem.name}</MenuItem>
                                 )}
                             </Select>
                         </FormControl>

@@ -113,15 +113,15 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
                 <ListItemIcon><AssignmentIcon/></ListItemIcon>
                 <ListItemText primary='Assignments'/>
               </ListItem>
-              <ListItem button component={Link} to='/'>
+              <ListItem button component={Link} to='/coordinator/CreateSurvey'>
                 <ListItemIcon><CreateIcon/></ListItemIcon>
                 <ListItemText primary='Create Survey'/>
               </ListItem>
-              <ListItem button component={Link} to='/CreateQuiz'>
+              <ListItem button component={Link} to='/coordinator/CreateQuiz'>
                 <ListItemIcon><CreateIcon/></ListItemIcon>
                 <ListItemText primary='Create Quiz'/>
               </ListItem>
-              <ListItem button component={Link} to='/CreateMeeting'>
+              <ListItem button component={Link} to='/coordinator/CreateMeeting'>
                 <ListItemIcon><CreateIcon/></ListItemIcon>
                 <ListItemText primary='Create Meeting'/>
               </ListItem>

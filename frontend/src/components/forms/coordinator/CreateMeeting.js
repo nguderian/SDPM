@@ -27,7 +27,7 @@ const CreateMeeting = () => {
         <Fragment className={classes.root}>
             <Grid container spacing={3}>
                 <Grid item xs={3}>
-                    <Button className={classes.createButton} variant="contained" color="primary" component={Link} to='/NewMeeting'>
+                    <Button className={classes.createButton} variant="contained" color="primary" component={Link} to='/coordinator/NewMeeting'>
                         Create New
                     </Button>
                 </Grid>

@@ -8,16 +8,24 @@ import NavBarContainer from './components/containers/NavBarContainer';
 import Assignment from './components/forms/Assignment';
 import CreateMeetingContainer from './components/containers/forms/coordinator/CreateMeetingContainer';
 import NewMeetingContainer from './components/containers/forms/coordinator/NewMeetingContainer';
+import CreateSurveyContainer from './components/containers/forms/coordinator/CreateSurveyContainer';
+import NewSurveyContainer from './components/containers/forms/coordinator/NewSurveyCJontainer';
 
 const routes = (
     <Router>
         <NavBarContainer/>
         <Switch> 
             <Route path='/' exact component={Hello}/>
-            <Route path='/CreateQuiz' exact component={CreateQuizContainer}/>
-            <Route path='/NewQuiz' exact component={NewQuizContainer}/>
-            <Route path='/CreateMeeting' exact component={CreateMeetingContainer}/>
-            <Route path='/NewMeeting' exact component={NewMeetingContainer}/>
+
+            {/* form creation */}
+            <Route path='/coordinator/CreateQuiz' exact component={CreateQuizContainer}/>
+            <Route path='/coordinator/NewQuiz' exact component={NewQuizContainer}/>
+            <Route path='/coordinator/CreateMeeting' exact component={CreateMeetingContainer}/>
+            <Route path='/coordinator/NewMeeting' exact component={NewMeetingContainer}/>
+            <Route path='/coordinator/CreateSurvey' exact component={CreateSurveyContainer}/>
+            <Route path='/coordinator/NewSurvey' exact component={NewSurveyContainer}/>
+            
+            {/* completing forms - mainly for students */}
             <Route path='/student/viewAssignments' exact component={ViewAssignmentsContainer}/>
             <Route path='/student/viewAssignments/:id' render={ (props) => <Assignment {...props}/>}/>
         </Switch>
