@@ -256,7 +256,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
             }
 
            
-            if (question.questionType === 3 || question.questionType === 2) {
+            if (question.questionType === 2) {
                 questionObj.answers.push({
                     "answer_text" : question.questionAnswer, 
                     "is_correct" : question.questionAnswer === '' ? 0 : 1
@@ -307,7 +307,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
         
         let newFormId = response.data.form_id;
         if(responseOK) {
-            // console.log(response.data.form_id)
+            console.log(newFormId)
             templateCreated = true;
         }
         else {
@@ -449,6 +449,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                 open={addQuestionOpen} 
                 onClose={() => setAddQuestionOpen(false)}
                 add={addQuestion}
+                formType='quiz'
                 />}
             <Divider className={classes.divider} variant="fullWidth"/>
             <div className={classes.root}>

@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const NewQuestion = ({ open, onClose, add }) => {
+const NewQuestion = ({ open, onClose, add, formType }) => {
     const classes = useStyles();
     const [questionType, setQuestionType] = useState('');
     const [questionText, setQuestionText] = useState('');
@@ -126,7 +126,7 @@ const NewQuestion = ({ open, onClose, add }) => {
                         helperText={questionText === '' ? "Question text is required" : ''} 
                         onChange={handleQuestionTextChange}
                     />
-                    {questionType === 1 && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers}/>}
+                    {questionType === 1 && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} formType={formType}/>}
                     {questionType === 2 && <NewLikert thresholdValue={storeThreshold}/>}
                 </DialogContent>
                 <DialogActions>

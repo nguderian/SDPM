@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { 
-    Typography,
-    FormGroup, 
-    FormControlLabel, 
-    Checkbox, 
-    TextField  
-} from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import TextField from '@material-ui/core/TextField';
+import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles(theme => ({
     root: {
-      flexGrow: 1,
+        flexGrow: 1,
     },
     helperText: {
-      marginTop: theme.spacing(2),
+        marginTop: theme.spacing(1),
+        
     },
     checkBox: {
         marginTop: theme.spacing(1)
-    }
+    },
 }));
 
-const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
+const NewMultipleChoice = ({ possibleAnswers, correctAnswers, formType }) => {
     const classes = useStyles();
     const [isCorrectMCAnswer, setIsCorrectMCAnswer] = useState({
         answer1: false,
@@ -53,55 +53,80 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
         <div className={classes.root}>   
             <Grid container spacing={3}>
                 <Grid item xs={12}>
-                    <Typography className={classes.helperText}>Check off correct answers</Typography>
+                    <Typography className={classes.helperText}>Enter possible answer choices</Typography>
                 </Grid>
-                <Grid item xs={1}>
-                    <FormGroup>
-                        <FormControlLabel
-                            control={<Checkbox checked={answer1} className={classes.checkBox} onChange={handleCheckBoxChange('answer1')} value="isCorrect"/>}
-                        />
-                    </FormGroup>
-                </Grid>
+                {formType !== 'survey' && 
+                    <Grid item xs={12}>
+                        <Typography className={classes.helperText}>Check off correct answers</Typography>
+                    </Grid>
+                }
+
+                {formType !== 'survey' && 
+                    <Grid item xs={1}>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={<Checkbox checked={answer1} className={classes.checkBox} onChange={handleCheckBoxChange('answer1')} value="isCorrect"/>}
+                            />
+                        </FormGroup>
+                    </Grid>
+                }
+                
                 <Grid item xs={11}>
                     <TextField autoFocus id="answer1" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer1')}/>
                 </Grid>
-                <Grid item xs={1}>
-                    <FormGroup>
-                        <FormControlLabel
-                            control={<Checkbox checked={answer2} className={classes.checkBox} onChange={handleCheckBoxChange('answer2')} value="isCorrect"/>}
-                        />
-                    </FormGroup>
-                </Grid>
+
+                {formType !== 'survey' && 
+                    <Grid item xs={1}>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={<Checkbox checked={answer2} className={classes.checkBox} onChange={handleCheckBoxChange('answer2')} value="isCorrect"/>}
+                            />
+                        </FormGroup>
+                    </Grid>
+                }
+                
                 <Grid item xs={11}>
                     <TextField autoFocus id="answer2" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer2')}/>
                 </Grid>
-                <Grid item xs={1}>
-                    <FormGroup>
-                        <FormControlLabel
-                            control={<Checkbox checked={answer3} className={classes.checkBox} onChange={handleCheckBoxChange('answer3')} value="isCorrect"/>}
-                        />
-                    </FormGroup>
-                </Grid>
+                
+                {formType !== 'survey' && 
+                    <Grid item xs={1}>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={<Checkbox checked={answer3} className={classes.checkBox} onChange={handleCheckBoxChange('answer3')} value="isCorrect"/>}
+                            />
+                        </FormGroup>
+                    </Grid>
+                }
+                
                 <Grid item xs={11}>
                     <TextField autoFocus id="answer3" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer3')}/>
                 </Grid>
-                <Grid item xs={1}>
-                    <FormGroup>
-                        <FormControlLabel
-                            control={<Checkbox checked={answer4} className={classes.checkBox} onChange={handleCheckBoxChange('answer4')} value="isCorrect"/>}
-                        />
-                    </FormGroup>
-                </Grid>
+
+                {formType !== 'survey' && 
+                    <Grid item xs={1}>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={<Checkbox checked={answer4} className={classes.checkBox} onChange={handleCheckBoxChange('answer4')} value="isCorrect"/>}
+                            />
+                        </FormGroup>
+                    </Grid>
+                }
+                
                 <Grid item xs={11}>
                     <TextField autoFocus id="answer4" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer4')}/>
                 </Grid>
-                <Grid item xs={1}>
-                    <FormGroup>
-                        <FormControlLabel
-                            control={<Checkbox checked={answer5} className={classes.checkBox} onChange={handleCheckBoxChange('answer5')} value="isCorrect"/>}
-                        />
-                    </FormGroup>
-                </Grid>
+
+                {formType !== 'survey' && 
+                    <Grid item xs={1}>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={<Checkbox checked={answer5} className={classes.checkBox} onChange={handleCheckBoxChange('answer5')} value="isCorrect"/>}
+                            />
+                        </FormGroup>
+                    </Grid>
+                }
+                
                 <Grid item xs={11}>
                     <TextField autoFocus id="answer5" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer5')}/>
                 </Grid>
