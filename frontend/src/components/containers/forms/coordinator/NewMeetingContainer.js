@@ -1,4 +1,4 @@
-import NewMeeting from '../../../forms/coordinator/NewMeeting';
+import NewMeeting from '../../../forms/NewMeeting';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
