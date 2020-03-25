@@ -16,6 +16,22 @@ class form {
         }
     }
 
+    static async takeAttendance(req, res, next) {
+
+        const { instance_id, users } = req.body;
+            try {
+                let meeting = await sequelize.query('CALL meeting_complete(?)',
+                    { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
+                for (let i = 0; i < users.length; i++) {
+                    let insert = await sequelize.query('CALL insert_form_attendance(?,?,?,?)', { replacements: [users[i].did_attend, instance_id, users[i].reason, users[i].user_id], type: sequelize.QueryTypes.CALL });
+                }
+            } catch (error) {
+                console.log(error);
+            }
+            res.send({ status: "Attendance success" });
+        
+    }
+
     static async createForm(req, res, next) {
 
         // Check the form type.
@@ -38,7 +54,7 @@ class form {
             try {
                 returnFormID = await sequelize.query(
                     'CALL insert_form(?,?,?,?,?,?)',
-                    { replacements: [access_level, description, 1, title, type, user_id], type: sequelize.QueryTypes.CALL });
+                    { replacements: [access_level, description, null, title, type, user_id], type: sequelize.QueryTypes.CALL });
                 console.log(returnFormID[0]['LAST_INSERT_ID()']);
                 form_id = returnFormID[0]['LAST_INSERT_ID()'];
                 console.log(form_id);
@@ -53,14 +69,17 @@ class form {
             // Insert the questions for the new form.
             for (let i = 0; i < questions.length; i++) {
                 try {
-
+                    let tmp_question_threshold;
                     if (questions[i].question_threshold === undefined) {
-                        questions[i].question_threshold = 0;
+                        tmp_question_threshold = 0;
+                    }
+                    else {
+                        tmp_question_threshold = questions[i].question_threshold;
                     }
                     let insert = await sequelize.query(
                         'CALL insert_form_question(?,?,?,?,?)',
                         {
-                            replacements: [form_id, questions[i].category_id, questions[i].question_text, questions[i].question_type, 1],
+                            replacements: [form_id, 1, questions[i].question_text, questions[i].question_type, tmp_question_threshold],
                             type: sequelize.QueryTypes.CALL
                         })
                     status.status3 = "Question Insert"
@@ -81,6 +100,7 @@ class form {
             const { access_level, title, user_id, description, questions } = req.body;
             try {
                 let threshold = req.body.form_threshold;
+
                 if (threshold === undefined) {
                     threshold = 0;
                 }
@@ -117,7 +137,7 @@ class form {
 
 
                 if (questions[i].question_threshold === undefined) {
-                    question_threshold_temp = 0;
+                    question_threshold_temp = null;
                 }
                 else {
                     question_threshold_temp = questions[i].question_threshold;
@@ -130,7 +150,7 @@ class form {
                     var returnQuestionID = await sequelize.query(
                         'CALL insert_form_question(?,?,?,?,?)',
                         {
-                            replacements: [form_id, questions[i].category_id, questions[i].question_text, questions[i].question_type, question_threshold_temp],
+                            replacements: [form_id, category_id_temp, questions[i].question_text, questions[i].question_type, question_threshold_temp],
                             type: sequelize.QueryTypes.CALL
                         })
 
@@ -172,7 +192,7 @@ class form {
                 // Insert the form and return is the new ID.
                 returnFormID = await sequelize.query(
                     'CALL insert_form(?,?,?,?,?,?)',
-                    { replacements: [access_level, description, 0, title, type, user_id], type: sequelize.QueryTypes.CALL });
+                    { replacements: [access_level, description, null, title, type, user_id], type: sequelize.QueryTypes.CALL });
 
                 form_id = returnFormID[0]['LAST_INSERT_ID()'];
                 // console.log(form_id);
@@ -303,7 +323,7 @@ class form {
             res.send(status);
 
         }
-
+        /*
         if (type === 'attendance') {
             // Frontend should send instance_id, list of users with
             // user_id, did_attend, and reason.
@@ -320,6 +340,7 @@ class form {
             res.send({ status: "Attendance success" });
 
         }
+        */
 
     }
 
@@ -476,9 +497,9 @@ class form {
                 try {
                     // Submit the survey instance.
                     let callSurvey = await sequelize.query(`CALL submit_quiz(?,?,?,?)`,
-                        { replacements: [results[i].text, instance_id, results[i].question_id, user_id], type: sequelize.QueryTypes.CALL });
+                        { replacements: [results[i].answer_text, instance_id, results[i].question_id, user_id], type: sequelize.QueryTypes.CALL });
                     // res.send({ status: "Success" });
-                    console.log(`Insert ${results[i].question_id} and ${results[i].text}`);
+                    console.log(`Insert ${results[i].question_id} and ${results[i].answer_text}`);
                     status.status2 = "Submit quiz success";
                     next;
                 } catch (error) {
@@ -875,7 +896,7 @@ async function quizGrader(user_id, form_id, instance_id, responses) {
     } catch (error) {
         console.log(error)
     }
-
+   
     // a and b are for lengths.
     var a = keys.length;
     var b = responses.length;
@@ -897,7 +918,7 @@ async function quizGrader(user_id, form_id, instance_id, responses) {
                     case 'multiple_choice':
                         {
 
-                            if (responses[j].text == keys[i].key_text) {
+                            if (responses[j].answer_text == keys[i].key_text) {
                                 correct++;
                             }
                             break;
