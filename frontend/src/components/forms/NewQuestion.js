@@ -11,7 +11,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
-import NewFreeResponse from './questions/NewFreeResponse';
 import NewLikert from './questions/NewLikert';
 import NewMultipleChoice from './questions/NewMultipleChoice';
 import AlertDialog from '../AlertDialog';
@@ -31,7 +30,6 @@ const NewQuestion = ({ open, onClose, add }) => {
     const classes = useStyles();
     const [questionType, setQuestionType] = useState('');
     const [questionText, setQuestionText] = useState('');
-    const [frqAnswers, setFrqAnswers] = useState('');
     const [threshold, setThreshold] = useState('');
     const [isCorrectMCAnswer, setIsCorrectMcAnswer] = useState({
         answer1: false,
@@ -76,16 +74,13 @@ const NewQuestion = ({ open, onClose, add }) => {
         // else if(questionType === 'Free Response')
 
         onClose();
-        add(questionType, questionText, frqAnswers, threshold, mcAnswers, isCorrectMCAnswer);
+        add(questionType, questionText, threshold, mcAnswers, isCorrectMCAnswer);
     };
 
     const handleQuestionTextChange = event => {
         setQuestionText(event.target.value);
     };
 
-    const storeFRQAnswers = answers => {
-        setFrqAnswers(answers);
-    };
 
     const storeThreshold = value => {
         setThreshold(value);
@@ -131,7 +126,6 @@ const NewQuestion = ({ open, onClose, add }) => {
                         helperText={questionText === '' ? "Question text is required" : ''} 
                         onChange={handleQuestionTextChange}
                     />
-                    {questionType === 3 && <NewFreeResponse possibleAnswers={storeFRQAnswers}/>}
                     {questionType === 1 && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers}/>}
                     {questionType === 2 && <NewLikert thresholdValue={storeThreshold}/>}
                 </DialogContent>

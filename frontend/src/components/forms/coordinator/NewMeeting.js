@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(2),
         textAlign: 'center'
     },
-    formTitle: {
+    meetingTitle: {
         margin: theme.spacing(1),
         marginTop: theme.spacing(2),
     },
@@ -22,17 +22,17 @@ const useStyles = makeStyles(theme => ({
 
 const NewMeeting = ({ userId, userType, token, loggedIn}) => {
     const classes = useStyles();
-    const [formTitle, setFormTitle] = useState('');
-    const [formDescription, setFormDescription] = useState('');
+    const [meetingTitle, setMeetingTitle] = useState('');
+    const [meetingDescription, setMeetingDescription] = useState('');
     const [startDateTime, setStartDateTime] = useState(new Date());
     const [endDateTime, setEndDateTime] = useState(new Date());
 
-    const handleFormTitleChange = event => {
-        setFormTitle(event.target.value);
+    const handlemeetingTitleChange = event => {
+        setMeetingTitle(event.target.value);
     };
 
-    const handleFormDescriptionChange = event => {
-        setFormDescription(event.target.value)
+    const handlemeetingDescriptionChange = event => {
+        setMeetingDescription(event.target.value)
     };
 
     const handleStartDateTimeChange = dateTime => {
@@ -59,29 +59,29 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
         <Fragment>
             <Typography variant='h4' className={classes.pageTitle}>Create a new meeting</Typography>
 
-            <form className={classes.formTitle} noValidate autoComplete='off'>
+            <form className={classes.meetingTitle} noValidate autoComplete='off'>
                 <TextField 
-                    error={formTitle === '' ? true : false}
-                    helperText={formTitle === '' ? 'Meeting title is required.' : ''}
+                    error={meetingTitle === '' ? true : false}
+                    helperText={meetingTitle === '' ? 'Meeting title is required.' : ''}
                     label='Meeting Title'
                     variant='outlined'
                     fullWidth={true}
-                    onChange={handleFormTitleChange}
+                    onChange={handlemeetingTitleChange}
                 />
             </form>
-            <form className={classes.formTitle} noValidate autoComplete='off'>
+            <form className={classes.meetingTitle} noValidate autoComplete='off'>
                 <TextField 
                     label='Meeting Description'
                     variant='outlined'
                     fullWidth={true}
-                    onChange={handleFormDescriptionChange}
+                    onChange={handlemeetingDescriptionChange}
                 />
             </form>
 
             <div style={{ display: 'flex', flexDirection: 'row'}}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <DateTimePicker 
-                        className={classes.formTitle}
+                        className={classes.meetingTitle}
                         label="Start"
                         inputVariant="outlined"
                         value={startDateTime}
@@ -89,7 +89,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
                         disablePast={true}
                     />
                     <DateTimePicker 
-                        className={classes.formTitle}
+                        className={classes.meetingTitle}
                         label="End"
                         inputVariant="outlined"
                         value={endDateTime}

@@ -10,7 +10,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import EditFreeResponse from './questions/EditFreeResponse';
 import EditLikert from './questions/EditLikert';
 import EditMultipleChoice from './questions/EditMultipleChoice';
 
@@ -29,7 +28,6 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     const classes = useStyles();
     const [questionType, setQuestionType] = useState(question.questionType);
     const [questionText, setQuestionText] = useState(question.questionText);
-    const [frqAnswers, setFrqAnswers] = useState(question.questionType === 3 ? question.questionAnswer : '');
     const [threshold, setThreshold] = useState(question.questionType === 2 ? question.questionAnswer : '');
     const [isCorrectMCAnswer, setIsCorrectMcAnswer] = React.useState(question.questionType === 1 ? question.correctQuestionAnswers : {
         answer1: false,
@@ -54,13 +52,7 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
 
     const handleConfirm = () => {
         onClose();
-        editQuestion(true, questionType, questionText, frqAnswers, threshold, mcAnswers, isCorrectMCAnswer)
-    };
-
-    const storeFRQAnswers = answers => {
-        if (answers !== null)  {
-            setFrqAnswers(answers);
-        }
+        editQuestion(true, questionType, questionText, threshold, mcAnswers, isCorrectMCAnswer)
     };
 
     const storeThreshold = value => {
@@ -119,7 +111,6 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
                         defaultValue={questionText}
                         onChange={handleQuestionTextChange}
                     />
-                    {questionType === 3 && <EditFreeResponse possibleAnswers={storeFRQAnswers} question={question}/>}
                     {questionType === 1 && <EditMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} question={question}/>}
                     {questionType === 2 && <EditLikert thresholdValue={storeThreshold} question={question}/>}
                 </DialogContent>
