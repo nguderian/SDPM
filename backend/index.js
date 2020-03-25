@@ -30,7 +30,7 @@ nconf.defaults({
 app.use(bodyParser.json());
 app.use(cors());
 app.use('/api', apiRoutes);
-
+/*
 // placeholder view for the LTI launch
 app.set('view engine', 'pug');
 app.use(session({
@@ -40,15 +40,11 @@ app.use(session({
 }));
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
-
 app.set('json spaces', 2);
-
 app.enable('trust proxy');
-
 app.get('/', (req, res, next) => {
   return res.send({status: 'Up'});
 });
-
 app.get('/application', (req, res, next) => {
   if (req.session.userId) {
     console.log('User ID: ' + req.session.userId);
@@ -67,9 +63,24 @@ app.get('/application', (req, res, next) => {
     next(new Error('Session invalid. Please login via LTI to use this application.'));
   }
 });
-
 app.post('/launch_lti', lti.handleLaunch);
-
+*/
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'dev',
+  resave: false,
+  saveUninitialized: true,
+}));
+app.use(bodyParser.urlencoded({extended: false}));
+app.post('/launch_lti', lti.handleLaunch);
+app.get('/application', (req, res, next) => {
+  if (req.session.userId) {
+    console.log('User ID: ' + req.session.userId);
+    console.log('User: ' + req.session.userfullname);
+    console.log('Course: ' + req.session.coursename);
+  } else {
+    next(new Error('Session invalid. Please login via LTI to use this application.'));
+  }
+});
 
 var server = http.createServer(app);
 app.set('port', nconf.get('http:port'));
