@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
 const NewSurvey = ({ userId, userType, token, loggedIn }) => {
     const classes = useStyles();
     const [classList, setClassList] = useState([]);
-    const [selectedClass, setSelectedClass] = useState(null);
+    const [selectedClass, setSelectedClass] = useState('');
     const [teams, setTeams] = useState([]);
     const [selectedTeam, setSelectedTeam] = useState('');
     const [surveyTitle, setSurveyTitle] = useState('');
