@@ -65,6 +65,7 @@ router.post('/getAllStudents', requireAuth, studentController.getAllStudents);
 router.post('/updateStudent', requireAuth, studentController.updateStudent);
 router.post('/getStudentName', requireAuth, studentController.getStudentName);
 router.post('/updateStudentWithTeam', requireAuth, studentController.updateStudentWithTeam);
+router.post('/deleteStudent', requireAuth, studentController.deleteStudent);
 
 // Taking survey routes.
  router.post('/getSurvey', requireAuth, surveyController.getSurvey);

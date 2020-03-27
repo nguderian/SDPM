@@ -88,6 +88,20 @@ class studentInfo {
         }
         res.send(student_name[0]);
     }
+
+    static async deleteStudent(req, res, next) {
+        
+        const {user_id, class_id}   = req.body;
+        let student_name;
+        try{
+            student_name = await sequelize.query('Call delete_student(?,?)',
+            { replacements: [user_id, class_id], types: sequelize.QueryTypes.CALL });
+        }catch(error){
+            console.log("delete student failed");
+            res.send({status: "delete student failed"});
+        }
+        res.send({status : "delete student success"});
+    }
 }
 
 module.exports = studentInfo;
