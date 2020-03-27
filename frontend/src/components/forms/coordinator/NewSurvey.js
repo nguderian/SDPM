@@ -61,6 +61,7 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
     const [selectedClass, setSelectedClass] = useState('');
     const [teams, setTeams] = useState([]);
     const [selectedTeam, setSelectedTeam] = useState('');
+    const [teamMembers, setTeamMembers] = useState([]);
     const [surveyTitle, setSurveyTitle] = useState('');
     const [surveyDescription, setSurveyDescription] = useState('');
 
@@ -107,6 +108,29 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
             getTeams()
         }
     }, [selectedClass]);
+
+    useEffect(() => {
+        if(selectedTeam) {
+            async function getTeamMembers() {
+                const options = {
+                    method: 'POST',
+                    url: 'http://localhost:3001/api/getTeamMembers',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                    },
+                    data: {
+                        'team_id': selectedTeam
+                    }
+                }
+                
+                const result = await axios(options);
+                console.log(result);
+                setTeamMembers(result.data.team_members)
+            }
+            getTeamMembers()
+        }
+    }, [selectedTeam]);
 
     const handleSurveyTitleChange = event => {
         setSurveyTitle(event.target.value);
@@ -179,7 +203,12 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
             </div>
 
             <Divider className={classes.divider}/>
-
+            
+            <div>
+                <Grid container spacing={3}>
+                    
+                </Grid>
+            </div>
             <Button 
                 variant='contained'
                 color='primary'
