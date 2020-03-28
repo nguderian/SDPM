@@ -13,7 +13,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import NewQuestion from './questions/NewQuestion';
 import DeleteQuestion from './questions/DeleteQuestion';
 import EditQuestion from './questions/EditQuestion';
-import FormOrTemplateCreated from '../FormOrTemplateCreated';
+import FormCreated from '../FormCreated';
 import FormControl from '@material-ui/core/FormControl';
 import FormControllabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -28,6 +28,16 @@ import {
 
 import axios from 'axios';
 
+const formatDate = dateTime => {
+    let month = ("0" + (dateTime.getMonth() + 1)).slice(-2);
+    let monthDate = ("0" + dateTime.getDate()).slice(-2);
+    let hours = ("0" + dateTime.getHours()).slice(-2);
+    let minutes = ("0" + dateTime.getMinutes()).slice(-2);
+    let seconds = ("0" + dateTime.getSeconds()).slice(-2);
+    let formattedDateTime = `${dateTime.getFullYear()}-${month}-${monthDate} ${hours}:${minutes}:${seconds}`;
+
+    return formattedDateTime;
+};
 
 const useStyles = makeStyles(theme => ({
     quizTitle: {
@@ -74,6 +84,10 @@ const useStyles = makeStyles(theme => ({
 
 const NewQuiz = ({ userId, userType, token, loggedIn }) => {
     // console.log(userType);
+    let formattedStart = new Date();
+    formattedStart = formatDate(formattedStart);
+    let formattedEnd = new Date();
+    formattedEnd = formatDate(formattedEnd);
     const classes = useStyles();
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
     const [quizTitle, setQuizTitle] = useState('');
@@ -84,9 +98,10 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
     const [instanceType, setInstanceType] = useState('');
     const [assignee, setAssignee] = useState('');
     const [hasAlertValue, setHasAlertValue] = useState(false);
-    const [alertValue, setAlertValue] = useState(false);
-    const [startDateTime, setStartDateTime] = useState(new Date());
-    const [endDateTime, setEndDateTime] = useState(new Date());
+    const [alertValue, setAlertValue] = useState('');
+    const [startDateTime, setStartDateTime] = useState(formattedStart);
+    const [endDateTime, setEndDateTime] = useState(formattedEnd);
+    const [formCreated, setFormCreated] = useState(false);
     const [modificationParameters, setModificationParameters] = useState({
         deleteQuestionOpen: false,
         editQuestionOpen: false,
@@ -221,22 +236,12 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
     };
 
     const handleStartDateTimeChange = dateTime => {
-        let month = ("0" + (dateTime.getMonth() + 1)).slice(-2);
-        let monthDate = ("0" + dateTime.getDate()).slice(-2);
-        let hours = ("0" + dateTime.getHours()).slice(-2);
-        let minutes = ("0" + dateTime.getMinutes()).slice(-2);
-        let seconds = ("0" + dateTime.getSeconds()).slice(-2);
-        let formattedDateTime = `${dateTime.getFullYear()}-${month}-${monthDate} ${hours}:${minutes}:${seconds}`;
+        let formattedDateTime = formatDate(dateTime);
         setStartDateTime(formattedDateTime);
     };
 
     const handleEndDateTimeChange = dateTime => {
-        let month = ("0" + (dateTime.getMonth() + 1)).slice(-2);
-        let monthDate = ("0" + dateTime.getDate()).slice(-2);
-        let hours = ("0" + dateTime.getHours()).slice(-2);
-        let minutes = ("0" + dateTime.getMinutes()).slice(-2);
-        let seconds = ("0" + dateTime.getSeconds()).slice(-2);
-        let formattedDateTime = `${dateTime.getFullYear()}-${month}-${monthDate} ${hours}:${minutes}:${seconds}`;
+        let formattedDateTime = formatDate(dateTime);
         setEndDateTime(formattedDateTime);
     };
 
@@ -246,6 +251,10 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
 
     const handleAlertvalue = event => {
         setAlertValue(event.target.value)
+    };
+
+    const handleCloseFormCreatedDialog = () => {
+        setFormCreated(false)
     };
 
     async function createForm() {
@@ -360,6 +369,8 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                 console.log('something went wrong')
             }
         }
+
+        setFormCreated(true);
     };
 
     
@@ -528,16 +539,16 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                 editQuestion={editQuestion}
                 question={modificationParameters.questionToModify}
             />}
-            {/* {instanceMade && <FormOrTemplateCreated 
-                open={instanceMade}
-                onClose={() => handle}
-                confirmationText="Form Instance Created! What would you like to do?"
+            {formCreated && <FormCreated 
+                open={formCreated}
+                onClose={() => handleCloseFormCreatedDialog()}
+                confirmationText={`${quizTitle} ${instanceType} created!`}
+                createdText='Quiz Created'
+                start={instanceType === 'instance' ? startDateTime : ''}
+                end={instanceType === 'instance' ? endDateTime : ''}
+                assignedClass={instanceType === 'instance' ? classList[selectedClass].name : ''}
+                alertGrade={alertValue}
             />}
-            {templateMade && <FormOrTemplateCreated 
-                open={templateMade}
-                onClose={() => handleCreateDialogClose(false)}
-                confirmationText="Form Template Created! What would you like to do?"
-            />} */}
         </Fragment>
     );
 }
