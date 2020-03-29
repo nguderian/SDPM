@@ -548,6 +548,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                 end={instanceType === 'instance' ? endDateTime : ''}
                 assignedClass={instanceType === 'instance' ? classList[selectedClass].name : ''}
                 alertGrade={alertValue}
+                routeBack='/coordinator/CreateQuiz'
             />}
         </Fragment>
     );

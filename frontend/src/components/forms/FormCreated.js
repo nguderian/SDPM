@@ -22,7 +22,8 @@ const FormCreated = ({
     start,
     end,
     assignedClass,
-    alertGrade
+    alertGrade, 
+    routeBack
  }) => {
     const classes = useStyles();
 
@@ -42,7 +43,7 @@ const FormCreated = ({
                 </DialogContent>
                 
                 <DialogActions>
-                    <Button component={Link} to='/coordinator/CreateQuiz' color="primary">
+                    <Button component={Link} to={routeBack} color="primary">
                         Go to forms
                     </Button>
                 </DialogActions>
