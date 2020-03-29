@@ -732,20 +732,36 @@ class form {
 
     static async getAllForms(req, res, next) {
 
-        const { user_id } = req.body;
+        const { user_id, type } = req.body;
 
         let forms;
+        if (type == undefined)
+        {
 
-        try {
-            // CALL getForm SP
-            forms = await sequelize.query('CALL get_all_forms(?)',
-                {
-                    replacements: [user_id],
-                    type: sequelize.QueryTypes.CALL
-                });
-
-        } catch (error) {
-            res.send({ status: "Get All Forms Failed" });
+            try {
+                // CALL getForm SP
+                forms = await sequelize.query('CALL get_all_forms(?)',
+                    {
+                        replacements: [user_id],
+                        type: sequelize.QueryTypes.CALL
+                    });
+    
+            } catch (error) {
+                res.send({ status: "Get All Forms Failed" });
+            }
+        }
+        else {
+            try {
+                // CALL getForm SP
+                forms = await sequelize.query('CALL get_all_forms_type(?,?)',
+                    {
+                        replacements: [user_id, type],
+                        type: sequelize.QueryTypes.CALL
+                    });
+    
+            } catch (error) {
+                res.send({ status: "Get All Forms Failed" });
+            }
         }
 
         res.send(forms);
