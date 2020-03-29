@@ -374,8 +374,50 @@ class form {
                 res.send({ status: "Could not get survey to take" });
             }
 
+            console.log(returnSurvey);
+
+            var resultForm = {};
+            resultForm.title = returnSurvey[0].title;
+            //resultForm.description = returnSurvey[0].description;
+            resultForm.type = returnSurvey[0].type;
+            resultForm.questions = new Array();
+
+            // going through each JSON
+            for (var i in returnSurvey) {
+
+                if (i == 0) {
+                    var current_question_id = returnSurvey[i].question_id;
+                    var current_question_control = 0;
+                    resultForm.questions.push({
+                        "question_id": returnSurvey[i].question_id,
+                        "question_text": returnSurvey[i].question_text,
+                        //"question_type": returnSurvey[i].question_type
+                    });
+                    //resultForm.questions[current_question_control].answers = new Array();
+
+                }
+
+                if (current_question_id != returnSurvey[i].question_id) {
+
+                    
+                    resultForm.questions.push({
+                        "question_id": returnSurvey[i].question_id,
+                        "question_text": returnSurvey[i].question_text,
+                        //"question_type": returnSurvey[i].question_type
+                    });
+                    current_question_control++;
+                    //resultForm.questions[current_question_control].answers = new Array();
+                    current_question_id = returnSurvey[i].question_id;
+
+                }
+
+
+                /*resultForm.questions[current_question_control].answers.push({
+                    "key_text": returnSurvey[i].key_text
+                });*/
+            }
            
-            res.send({ survey: returnSurvey });
+            res.send({ survey: resultForm });
         }
         else if (formType === 'quiz') {
             let returnQuiz;
@@ -690,20 +732,36 @@ class form {
 
     static async getAllForms(req, res, next) {
 
-        const { user_id } = req.body;
+        const { user_id, type } = req.body;
 
         let forms;
+        if (type == undefined)
+        {
 
-        try {
-            // CALL getForm SP
-            forms = await sequelize.query('CALL get_all_forms(?)',
-                {
-                    replacements: [user_id],
-                    type: sequelize.QueryTypes.CALL
-                });
-
-        } catch (error) {
-            res.send({ status: "Get All Forms Failed" });
+            try {
+                // CALL getForm SP
+                forms = await sequelize.query('CALL get_all_forms(?)',
+                    {
+                        replacements: [user_id],
+                        type: sequelize.QueryTypes.CALL
+                    });
+    
+            } catch (error) {
+                res.send({ status: "Get All Forms Failed" });
+            }
+        }
+        else {
+            try {
+                // CALL getForm SP
+                forms = await sequelize.query('CALL get_all_forms_type(?,?)',
+                    {
+                        replacements: [user_id, type],
+                        type: sequelize.QueryTypes.CALL
+                    });
+    
+            } catch (error) {
+                res.send({ status: "Get All Forms Failed" });
+            }
         }
 
         res.send(forms);
