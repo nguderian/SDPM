@@ -19,5 +19,22 @@ class alerts {
 
     }
 
+    static async setAlertViewed(req, res, next){
+
+        const { alert_id } = req.body;
+        let result;
+
+        try{
+            result = await sequelize.query('CALL alert_viewed(?)',
+            { replacements : [ alert_id ], type : sequelize.QueryTypes.CALL});
+        }catch(error){
+            console.log(error);
+            res.send({ status : "alert failed to update"});
+        }
+
+        res.send({status : "update alert success"});
+
+    }
+
 }
 module.exports = alerts;
