@@ -111,6 +111,7 @@ router.post('/getTeamsInClass', requireAuth, classesControler.getTeamsInClass);
 // Alerts
 router.post('/getUserDashboardAlerts', requireAuth, alertsController.getUserDashboardAlerts);
 router.post('/setAlertViewed', requireAuth, alertsController.setAlertViewed);
+router.post('/getUserAlertsForClass', requireAuth, alertsController.getUserAlertsForClass);
 
 // Testing for the frontend JSON.
 router.post('/frontendTest', requireAuth, frontendTestController.frontendTest);
