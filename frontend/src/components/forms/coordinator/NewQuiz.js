@@ -82,13 +82,16 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const NewQuiz = ({ userId, userType, token, loggedIn }) => {
+const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
     // console.log(userType);
     let formattedStart = new Date();
-    formattedStart = formatDate(formattedStart);
     let formattedEnd = new Date();
+    formattedStart = formatDate(formattedStart);
     formattedEnd = formatDate(formattedEnd);
+
     const classes = useStyles();
+    const { formId } = location.state;
+    // console.log(props);
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
     const [quizTitle, setQuizTitle] = useState('');
     const [quizDescription, setQuizDescription] = useState('');
@@ -108,6 +111,29 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
         indexToModify: null,
         questionToModify: null,
     });
+    
+    useEffect(() => {
+        if(formId !== '') {
+            async function getFormDetails() {
+                const options = {
+                    method: 'POST', 
+                    url: 'http://localhost:3001/api/getForm', 
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                    }, 
+                    data: {
+                        'form_id': formId
+                    }
+                };
+
+                const result = await axios(options);
+                console.log(result);
+                setQuizTitle(result.data.quiz.title);
+            }
+            getFormDetails();
+        }
+    }, [formId]);
     
     useEffect(() => {
         async function getClasses() {
@@ -384,7 +410,8 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                     helperText={quizTitle === '' ? "Quiz Title is required." : ''} 
                     label="Quiz Title" 
                     variant="outlined" 
-                    fullWidth={true} 
+                    fullWidth={true}
+                    value={quizTitle}
                     onChange={handleQuizTitleChange}
                 />
             </form>

@@ -67,7 +67,7 @@ const CreateQuiz = ({ userId, userType, token, logedIn}) => {
 
     return (
         <Fragment className={classes.root}>
-            <Button className={classes.createButton} variant="contained" color="primary" component={Link} to='/coordinator/NewQuiz'>
+            <Button className={classes.createButton} variant="contained" color="primary" component={Link} to={{ pathname: `/coordinator/Quiz/New`, state: { formId: '' }}}>
                 Create New
             </Button>
             
@@ -76,7 +76,7 @@ const CreateQuiz = ({ userId, userType, token, logedIn}) => {
             <List component='nav'>
                 {allForms.map((form, index) =>
                     <Card variant='outlined' key={index} className={classes.templateContainer}>
-                    <CardActionArea component={Link} to='/coordinator/NewQuiz'>
+                    <CardActionArea component={Link} to={{ pathname: `/coordinator/Quiz/${form.title}`, state: { formId: form.form_id }}}>
                         <CardContent>
                             <Typography className={classes.formTitle} color='textSecondary' gutterBottom>
                                 {form.title}

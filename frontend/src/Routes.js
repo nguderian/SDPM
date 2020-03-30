@@ -19,7 +19,7 @@ const routes = (
 
             {/* form creation */}
             <Route path='/coordinator/CreateQuiz' exact component={CreateQuizContainer}/>
-            <Route path='/coordinator/NewQuiz' exact component={NewQuizContainer}/>
+            <Route path='/coordinator/Quiz/:title' render={(props) => <NewQuizContainer {...props} />}/>
             <Route path='/coordinator/CreateMeeting' exact component={CreateMeetingContainer}/>
             <Route path='/coordinator/NewMeeting' exact component={NewMeetingContainer}/>
             <Route path='/coordinator/CreateSurvey' exact component={CreateSurveyContainer}/>
