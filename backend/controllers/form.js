@@ -417,7 +417,7 @@ class form {
 
                     if (type == 'coordinator') {
                         resultForm.questions.push({
-                            "question_id": returnSurvey[i].question_id,
+                            //"question_id": returnSurvey[i].question_id,
                             "question_text": returnSurvey[i].question_text,
                             "question_type": returnSurvey[i].question_type,
                             "question_threshold": returnSurvey[i].question_threshold
