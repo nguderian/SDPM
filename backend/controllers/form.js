@@ -19,17 +19,17 @@ class form {
     static async takeAttendance(req, res, next) {
 
         const { instance_id, users } = req.body;
-            try {
-                let meeting = await sequelize.query('CALL meeting_complete(?)',
-                    { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
-                for (let i = 0; i < users.length; i++) {
-                    let insert = await sequelize.query('CALL insert_form_attendance(?,?,?,?)', { replacements: [users[i].did_attend, instance_id, users[i].reason, users[i].user_id], type: sequelize.QueryTypes.CALL });
-                }
-            } catch (error) {
-                console.log(error);
+        try {
+            let meeting = await sequelize.query('CALL meeting_complete(?)',
+                { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
+            for (let i = 0; i < users.length; i++) {
+                let insert = await sequelize.query('CALL insert_form_attendance(?,?,?,?)', { replacements: [users[i].did_attend, instance_id, users[i].reason, users[i].user_id], type: sequelize.QueryTypes.CALL });
             }
-            res.send({ status: "Attendance success" });
-        
+        } catch (error) {
+            console.log(error);
+        }
+        res.send({ status: "Attendance success" });
+
     }
 
     static async createForm(req, res, next) {
@@ -217,7 +217,7 @@ class form {
                 next;
             }
             status.form_id = form_id;
-            
+
             res.send(status);
 
         }
@@ -347,8 +347,13 @@ class form {
     static async getForm(req, res, next) {
 
         // TODO need to return all info for a form.
-        const { form_id } = req.body;
+        const { form_id, user_id } = req.body;
 
+        let user_type, type;
+        user_type = await sequelize.query('CALL get_user_type(?)',
+            { replacements: [user_id], type: sequelize.QueryTypes.CALL });
+        type = user_type[0].type;
+        console.log(type);
         let returnForm, formType;
 
         // get the form type.
@@ -378,7 +383,7 @@ class form {
 
             var resultForm = {};
             resultForm.title = returnSurvey[0].title;
-            //resultForm.description = returnSurvey[0].description;
+            resultForm.description = returnSurvey[0].description;
             resultForm.type = returnSurvey[0].type;
             resultForm.questions = new Array();
 
@@ -386,25 +391,44 @@ class form {
             for (var i in returnSurvey) {
 
                 if (i == 0) {
+
                     var current_question_id = returnSurvey[i].question_id;
                     var current_question_control = 0;
-                    resultForm.questions.push({
-                        "question_id": returnSurvey[i].question_id,
-                        "question_text": returnSurvey[i].question_text,
-                        //"question_type": returnSurvey[i].question_type
-                    });
+                    if (type == 'coordinator') {
+                        resultForm.questions.push({
+                            //"question_id": returnSurvey[i].question_id,
+                            "question_text": returnSurvey[i].question_text,
+                            "question_type": returnSurvey[i].question_type,
+                            "question_threshold": returnSurvey[i].question_threshold
+                        });
+                    } else if (type == 'student') {
+                        resultForm.questions.push({
+                            "question_id": returnSurvey[i].question_id,
+                            "question_text": returnSurvey[i].question_text,
+                            "question_type": returnSurvey[i].question_type
+                        });
+                    }
                     //resultForm.questions[current_question_control].answers = new Array();
 
                 }
 
                 if (current_question_id != returnSurvey[i].question_id) {
 
-                    
-                    resultForm.questions.push({
-                        "question_id": returnSurvey[i].question_id,
-                        "question_text": returnSurvey[i].question_text,
-                        //"question_type": returnSurvey[i].question_type
-                    });
+
+                    if (type == 'coordinator') {
+                        resultForm.questions.push({
+                            //"question_id": returnSurvey[i].question_id,
+                            "question_text": returnSurvey[i].question_text,
+                            "question_type": returnSurvey[i].question_type,
+                            "question_threshold": returnSurvey[i].question_threshold
+                        });
+                    } else {
+                        resultForm.questions.push({
+                            "question_id": returnSurvey[i].question_id,
+                            "question_text": returnSurvey[i].question_text,
+                            "question_type": returnSurvey[i].question_type
+                        });
+                    }
                     current_question_control++;
                     //resultForm.questions[current_question_control].answers = new Array();
                     current_question_id = returnSurvey[i].question_id;
@@ -416,7 +440,7 @@ class form {
                     "key_text": returnSurvey[i].key_text
                 });*/
             }
-           
+
             res.send({ survey: resultForm });
         }
         else if (formType === 'quiz') {
@@ -433,6 +457,9 @@ class form {
             resultForm.title = returnQuiz[0].title;
             resultForm.description = returnQuiz[0].description;
             resultForm.type = returnQuiz[0].type;
+            if (type == 'coordinator') {
+                resultForm.threshold = returnQuiz[0].form_threshold;
+            }
             resultForm.questions = new Array();
 
             // going through each JSON
@@ -441,33 +468,57 @@ class form {
                 if (i == 0) {
                     var current_question_id = returnQuiz[i].question_id;
                     var current_question_control = 0;
-                    resultForm.questions.push({
-                        "question_id": returnQuiz[i].question_id,
-                        "question_text": returnQuiz[i].question_text,
-                        "question_type": returnQuiz[i].question_type
-                    });
+                    if (type == 'student'){
+                        resultForm.questions.push({
+                            "question_id": returnQuiz[i].question_id,
+                            "question_text": returnQuiz[i].question_text,
+                            "question_type": returnQuiz[i].question_type
+                        });
+                    } else if (type == 'coordinator'){
+                        resultForm.questions.push({
+                           // "question_id": returnQuiz[i].question_id,
+                            "question_text": returnQuiz[i].question_text,
+                            "question_type": returnQuiz[i].question_type
+                        });
+                    }
+                    
                     resultForm.questions[current_question_control].answers = new Array();
 
                 }
 
                 if (current_question_id != returnQuiz[i].question_id) {
 
-                    
-                    resultForm.questions.push({
-                        "question_id": returnQuiz[i].question_id,
-                        "question_text": returnQuiz[i].question_text,
-                        "question_type": returnQuiz[i].question_type
-                    });
+
+                    if (type == 'student'){
+                        resultForm.questions.push({
+                            "question_id": returnQuiz[i].question_id,
+                            "question_text": returnQuiz[i].question_text,
+                            "question_type": returnQuiz[i].question_type
+                        });
+                    } else if (type == 'coordinator'){
+                        resultForm.questions.push({
+                           // "question_id": returnQuiz[i].question_id,
+                            "question_text": returnQuiz[i].question_text,
+                            "question_type": returnQuiz[i].question_type
+                        });
+                    }
                     current_question_control++;
                     resultForm.questions[current_question_control].answers = new Array();
                     current_question_id = returnQuiz[i].question_id;
 
                 }
 
-
-                resultForm.questions[current_question_control].answers.push({
-                    "key_text": returnQuiz[i].key_text
-                });
+                if (type == 'student') {
+                    resultForm.questions[current_question_control].answers.push({
+                        "key_text": returnQuiz[i].key_text
+                    });
+                }
+                else if (type == 'coordinator') {
+                    resultForm.questions[current_question_control].answers.push({
+                        "key_text": returnQuiz[i].key_text,
+                        "is_correct": returnQuiz[i].is_correct
+                    });
+                }
             }
             console.log(resultForm);
             res.send({ quiz: resultForm });
@@ -735,8 +786,7 @@ class form {
         const { user_id, type } = req.body;
 
         let forms;
-        if (type == undefined)
-        {
+        if (type == undefined) {
 
             try {
                 // CALL getForm SP
@@ -745,7 +795,7 @@ class form {
                         replacements: [user_id],
                         type: sequelize.QueryTypes.CALL
                     });
-    
+
             } catch (error) {
                 res.send({ status: "Get All Forms Failed" });
             }
@@ -758,7 +808,7 @@ class form {
                         replacements: [user_id, type],
                         type: sequelize.QueryTypes.CALL
                     });
-    
+
             } catch (error) {
                 res.send({ status: "Get All Forms Failed" });
             }
@@ -846,7 +896,7 @@ class form {
 
             let studentList;
             // Get all students who fit the current criteria.
-            const { form_id, start_date, end_date, class_id  } = req.body;
+            const { form_id, start_date, end_date, class_id } = req.body;
             try {
                 studentList = await sequelize.query('CALL get_all_students_class(?)', { replacements: [class_id], type: sequelize.QueryTypes.CALL });
                 next;
@@ -954,7 +1004,7 @@ async function quizGrader(user_id, form_id, instance_id, responses) {
     } catch (error) {
         console.log(error)
     }
-   
+
     // a and b are for lengths.
     var a = keys.length;
     var b = responses.length;
