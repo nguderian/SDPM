@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import { FormControl, FormGroup, FormControlLabel, Checkbox, TextField } from '@material-ui/core';
 
@@ -17,11 +17,11 @@ const EditLikert = ({ thresholdValue, question }) => {
     const classes = useStyles();
     let previousThreshold = '';
     let hadThreshold = false;
-    if(question.questionType === 'Likert Scale') {
+    if(question.questionType === 2) {
         hadThreshold = question.questionAnswer === '' ? false : true;
         previousThreshold = question.questionAnswer;
     }
-    const [hasThreshold, setHasThreshold] = React.useState(hadThreshold);
+    const [hasThreshold, setHasThreshold] = useState(hadThreshold);
 
     // event handlers
     const handleCheckboxChange = event => {

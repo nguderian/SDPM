@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useRef } from 'react';
+import React, { useState, Fragment } from 'react';
 import { makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -33,14 +33,14 @@ const NewQuestion = ({ open, onClose, add }) => {
     const [questionText, setQuestionText] = useState('');
     const [frqAnswers, setFrqAnswers] = useState('');
     const [threshold, setThreshold] = useState('');
-    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = React.useState({
+    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = useState({
         answer1: false,
         answer2: false,
         answer3: false,
         answer4: false, 
         answer5: false
     });
-    const [mcAnswers, setMCAnswers] = React.useState({
+    const [mcAnswers, setMCAnswers] = useState({
         answer1: '',
         answer2: '', 
         answer3: '', 
@@ -48,9 +48,7 @@ const NewQuestion = ({ open, onClose, add }) => {
         answer5: ''
     });
     const [openAlertDialog, setOpenAlertDialog] = useState('false');
-    const inputLabel = React.useRef(null);
-    const [labelWidth, setLabelWidth] = React.useState(0);
-
+    
     // event handlers
     const handleQuestionTypeChange = event => {
         setQuestionType(event.target.value);
@@ -107,15 +105,13 @@ const NewQuestion = ({ open, onClose, add }) => {
                 <DialogTitle id="form-dialog-title">Add Question</DialogTitle>
                 <DialogContent>
                     <FormControl variant="outlined" className={classes.formControl} error={questionType === '' ? true : false}>
-                        <InputLabel ref={inputLabel} id="Question Type">
+                        <InputLabel>
                             Question Type
                         </InputLabel>
-                        <Select variant = 'standard'
-                            labelId="Question Type"
-                            id="Question Selector"
+                        <Select 
+                            label="Question Type"
                             value={questionType}
                             onChange={handleQuestionTypeChange}
-                            labelWidth={labelWidth}
                         >
                             <MenuItem value="">
                                 <em>None</em>

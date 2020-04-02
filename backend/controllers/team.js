@@ -26,7 +26,7 @@ class teamInfo {
 
     static async createTeam(req,res,next){
 
-        const { user_id, project_name, description, sd1_semester, sd1_year, sd2_semester, sd2_year } = req.body;
+        const { user_id, project_name, description, class_id, sponsor_name, sponsor_company, sponsor_email } = req.body;
         let user_type;
 
         // Check to see if user_id is type coordinator
@@ -55,7 +55,7 @@ class teamInfo {
         // Insert team.
         try{
             let result = await sequelize.query('CALL insert_team(?,?,?,?,?,?,?)',
-            { replacements : [description, project_name, sd1_semester, sd1_year, sd2_semester, sd2_year, user_id],
+            { replacements : [description, project_name, user_id, sponsor_name, sponsor_company, sponsor_email, class_id],
             type : sequelize.QueryTypes.CALL});
             newTeamID = result[0]['LAST_INSERT_ID()'];
         }catch(error){

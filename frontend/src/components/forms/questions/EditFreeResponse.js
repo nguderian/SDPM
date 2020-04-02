@@ -1,5 +1,5 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core';
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { FormControl, FormGroup, FormControlLabel, Checkbox, TextField } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -16,11 +16,11 @@ const EditFreeResponse = ({ possibleAnswers, question }) => {
     const classes = useStyles();
     let hasCorrect = false;
     let previousAnswer = '';
-    if(question.questionType === 'Free Response') {
+    if(question.questionType === 3) {
         hasCorrect = question.questionAnswer === '' ? false : true;
         previousAnswer = question.questionAnswer;
     }
-    const [hasAnswer, setHasAnswer] = React.useState(hasCorrect);
+    const [hasAnswer, setHasAnswer] = useState(hasCorrect);
 
     // event handlers
     const handleCheckboxChange = event => {

@@ -5,6 +5,7 @@ const passport = require('passport');
 const multer = require('multer');
 const requireAuth = passport.authenticate('jwt', { session: false });
 
+
 // Controllers
 const loginController = require('../controllers/login');
 const studentController = require('../controllers/student');
@@ -16,6 +17,7 @@ const formController = require('../controllers/form');
 const frontendTestController = require('../controllers/frontendTest');
 const csvUploadController = require('../controllers/csvUpload');
 const alertsController = require('../controllers/alerts');
+const classesControler = require('../controllers/classes');
 
 const csvTypes = [
     'text/plain',
@@ -63,6 +65,7 @@ router.post('/getAllStudents', requireAuth, studentController.getAllStudents);
 router.post('/updateStudent', requireAuth, studentController.updateStudent);
 router.post('/getStudentName', requireAuth, studentController.getStudentName);
 router.post('/updateStudentWithTeam', requireAuth, studentController.updateStudentWithTeam);
+router.post('/deleteStudent', requireAuth, studentController.deleteStudent);
 
 // Taking survey routes.
  router.post('/getSurvey', requireAuth, surveyController.getSurvey);
@@ -92,10 +95,18 @@ router.post('/getInstances', requireAuth, formController.getInstances);
 router.post('/assignForm', requireAuth, formController.assignForm);
 router.post('/getAttendance', requireAuth, formController.getAttendance);
 router.post('/getQuestionTypes', requireAuth, formController.getQuestionTypes);
+router.post('/takeAttendance', requireAuth, formController.takeAttendance);
 
 // CSV Upload
 router.post('/studentUpload', requireAuth, upload.single('file'), csvUploadController.uploadStudentCSV);
 router.post('/teamUpload', requireAuth, upload.single('file'), csvUploadController.uploadTeamCSV);
+
+// Classes 
+router.post('/insertClass', requireAuth, classesControler.insertClass);
+router.post('/getAllClasses', requireAuth, classesControler.getAllClasses);
+router.post('/getStudentsInClass', requireAuth, classesControler.getStudentsInClass);
+router.post('/getTeamsInClass', requireAuth, classesControler.getTeamsInClass);
+
 
 // Alerts
 router.post('/getUserDashboardAlerts', requireAuth, alertsController.getUserDashboardAlerts);
