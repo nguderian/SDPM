@@ -93,15 +93,22 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
     const { formId } = location.state;
     // console.log(props);
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
-    const [quizTitle, setQuizTitle] = useState('');
-    const [quizDescription, setQuizDescription] = useState('');
-    const [questions, setQuestions] = useState([]);
+    const [quiz, setQuiz] = useState(
+        {
+            title: '',
+            description: '',
+            hasAlertValue: false,
+            alertValue: '',
+            questions: [],
+        }
+    );
+    
+    // const [questions, setQuestions] = useState([]);
     const [classList, setClassList] = useState([]);
     const [selectedClass, setSelectedClass] = useState('');
     const [instanceType, setInstanceType] = useState('');
     const [assignee, setAssignee] = useState('');
-    const [hasAlertValue, setHasAlertValue] = useState(false);
-    const [alertValue, setAlertValue] = useState('');
+    
     const [startDateTime, setStartDateTime] = useState(formattedStart);
     const [endDateTime, setEndDateTime] = useState(formattedEnd);
     const [formCreated, setFormCreated] = useState(false);
@@ -123,13 +130,68 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
                     }, 
                     data: {
-                        'form_id': formId
+                        'form_id': formId,
+                        'user_id': userId
                     }
                 };
 
                 const result = await axios(options);
-                console.log(result);
-                setQuizTitle(result.data.quiz.title);
+                const quiz = result.data.quiz;
+                
+                let arr = [];
+
+                quiz.questions.forEach((quizQuestion, index) => {
+                    let question = {};
+                    
+                    if(quizQuestion.question_type === 'fill_blank' || quizQuestion.question_type === 'free_response') {
+                        question = {
+                            questionType: quizQuestion.question_type,
+                            questionText: quizQuestion.question_text,
+                            questionAnswer: quizQuestion.question_type === 'fill_blank' ? quizQuestion.answers[0].key_text : ''
+                        }
+                    }
+                    else if (quizQuestion.question_type === 'multiple_choice') {
+                        let mcAnswers = {
+                            answer1: '',
+                            answer2: '', 
+                            answer3: '', 
+                            answer4: '',
+                            answer5: ''
+                        };
+                        let correctMCAnswers = {
+                            answer1: false,
+                            answer2: false,
+                            answer3: false,
+                            answer4: false, 
+                            answer5: false
+                        };
+
+                        quizQuestion.answers.forEach((answer, index) => 
+                            {
+                                mcAnswers[`answer${index+1}`] = answer.key_text;
+                                correctMCAnswers[`answer${index+1}`] = answer.is_correct === 1 ? true : false;
+                            }
+                        );
+
+                        question = {
+                            questionType: quizQuestion.question_type,
+                            questionText: quizQuestion.question_text,
+                            questionAnswer: mcAnswers,
+                            correctQuestionAnswers: correctMCAnswers
+                        }
+                    }
+
+                    arr.push(question);
+                });
+
+                console.log(arr);
+                setQuiz({ 
+                    ['title']: quiz.title, 
+                    ['description']: quiz.description, 
+                    ['alertValue']: quiz.threshold, 
+                    ['hasAlertValue']: quiz.threshold === '' ? false : true,
+                    ['questions']: arr,
+                });
             }
             getFormDetails();
         }
@@ -160,9 +222,9 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
     // event handlers
     const handleModificationParameters = (parameters, values) => {
         const tempParams = {...modificationParameters};
+        console.log(values, parameters);
         parameters.forEach((parameter, idx) => {
             tempParams[parameter] = values[idx];
-            console.log(tempParams[parameter], values[idx])
         });
         
         setModificationParameters({...tempParams});
@@ -173,11 +235,11 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
     };
 
     const handleQuizTitleChange = event => {
-        setQuizTitle(event.target.value);
+        setQuiz({ ...quiz, ['title']: event.target.value });
     };
 
     const handleQuizDescriptionChange = event => {
-        setQuizDescription(event.target.value)
+        setQuiz({ ...quiz, ['description']: event.target.value });
     };
 
     const handleClassChange = event => {
@@ -186,11 +248,11 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
 
     const addQuestion = (type, text, fillBlankAnswer, mcAnswers, correctMCAnswers) => {
         let question = {};
-        if (type === 3 || type === 2) {
+        if (type === 'fill_blank' || type === 'free_response') {
             question = {
                 questionType: type, 
                 questionText: text,
-                questionAnswer: type === 2 ? fillBlankAnswer : ''
+                questionAnswer: type === 'fill_blank' ? fillBlankAnswer : ''
             }
         }
         else {
@@ -201,14 +263,19 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 correctQuestionAnswers: correctMCAnswers
             }
         }
-        setQuestions(questions.concat(question));
+        // setQuestions(questions.concat(question));
+        let arr = quiz['questions'];
+        arr = arr.concat(question);
+        console.log(arr);
+        setQuiz({ ...quiz, ['questions']: arr })
     };
 
     const deleteQuestion = (shouldDelete) => {
         if(shouldDelete) {
-            let arr = [...questions]; // make a copy of our state
+            let arr = [...quiz['questions']]; // make a copy of our state
             arr.splice(modificationParameters.indexToModify, 1);
-            setQuestions(arr);
+            // setQuestions(arr);
+            setQuiz({ ...quiz, ['questions']: arr })
         }
     };
 
@@ -216,7 +283,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
         // console.log(shouldEdit, type, text, fillBlankAnswer, mcAnswers, correctMCAnswers);
         if(shouldEdit) {
             let question = {};
-            if (type === 3 || type === 2) {
+            if (type === 'free_response' || type === 'fill_blank') {
                 question = {
                     questionType: type, 
                     questionText: text,
@@ -232,10 +299,11 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 }
             }
 
-            let arr = [...questions];
+            let arr = quiz['questions'];
             arr[modificationParameters.indexToModify] = question;
 
-            setQuestions(arr);
+            // setQuestions(arr);
+            setQuiz({ ...quiz, ['questions']: arr })
         }
     };
 
@@ -249,7 +317,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
     const handleEditQuestionClick = (index) => {
         handleModificationParameters(
             ["editQuestionOpen", "indexToModify", "questionToModify"],
-            [true, index, questions[index]]
+            [true, index, quiz['questions'][index]]
         );
     };
 
@@ -272,11 +340,11 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
     };
 
     const handleHasAlertValue = event => {
-        setHasAlertValue(event.target.checked);
+        setQuiz({ ...quiz, ['hasAlertValue']: event.target.checked });
     };
 
     const handleAlertvalue = event => {
-        setAlertValue(event.target.value)
+        setQuiz({ ...quiz, ['alertValue']: event.target.value });
     };
 
     const handleCloseFormCreatedDialog = () => {
@@ -286,7 +354,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
     async function createForm() {
         let questionsArr = [];
 
-        questions.forEach((question, index) => {
+        quiz['questions'].forEach((question, index) => {
             let questionObj = {
                 "question_text": null,
                 "question_type": null,
@@ -295,24 +363,15 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
 
             questionObj.category_id = 2;
             questionObj.question_text = question.questionText;
-            if(question.questionType === 1) {
-                questionObj.question_type = "multiple_choice";
-            }
-            else if(question.questionType === 2) {
-                questionObj.question_type = "fill_blank"
-            }
-            else if(question.questionType === 3) {
-                questionObj.question_type = "free_response"
-            }
-
+            questionObj.question_type = question.questionType;
            
-            if (question.questionType === 2) {
+            if (question.questionType === 'fill_blank') {
                 questionObj.answers.push({
                     "answer_text" : question.questionAnswer, 
                     "isCorrect" : 1
                 });
             }
-            else if (question.questionType === 3) {
+            else if (question.questionType === 'multiple_choice') {
                const keys = Object.keys(question.questionAnswer);
 
                keys.forEach((key, index) => {
@@ -329,12 +388,12 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
         });
 
         let body = {
-            'form_threshold': alertValue, 
+            'form_threshold': quiz['alertValue'], 
             "type": 'quiz',
             "access_level": userType,
             "user_id": userId,
-            "title": quizTitle,
-            "description": quizDescription,
+            "title": quiz['title'],
+            "description": quiz['description'],
             questions: questionsArr
         }
 
@@ -402,16 +461,16 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
     
     return (
         <Fragment>
-        {/* {console.log(questions)} */}
+        {console.log(quiz)}
             <Typography variant="h4" className={classes.pageTitle}>Create a New Quiz</Typography>
             <form className={classes.quizTitle} noValidate autoComplete="off">
                 <TextField
-                    error={quizTitle === '' ? true : false} 
-                    helperText={quizTitle === '' ? "Quiz Title is required." : ''} 
+                    error={quiz['title'] === '' ? true : false} 
+                    helperText={quiz['title'] === '' ? "Quiz Title is required." : ''} 
                     label="Quiz Title" 
                     variant="outlined" 
                     fullWidth={true}
-                    value={quizTitle}
+                    value={quiz['title']}
                     onChange={handleQuizTitleChange}
                 />
             </form>
@@ -420,6 +479,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                     label="Quiz Description"
                     variant="outlined"
                     fullWidth={true}
+                    value={quiz['description']}
                     onChange={handleQuizDescriptionChange}
                 />
             </form>
@@ -488,19 +548,20 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 <FormControllabel className={classes.checkBox}
                     control={
                         <Checkbox 
-                            checked={hasAlertValue}
+                            checked={quiz['hasAlertValue']}
                             onChange={handleHasAlertValue}
                             color='primary'
                         />
                     }
                     label="Receive Alerts?"
                 />
-                {hasAlertValue && 
+                {quiz['hasAlertValue'] && 
                     <form className={classes.quizDetails} noValidate autoComplete='off'>
                         <TextField 
                             label='Value from 0 - 100'
                             variant='outlined'
                             onChange={handleAlertvalue}
+                            value={quiz['alertValue']}
                         />
                     </form>
                 }
@@ -517,14 +578,14 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
             <Divider className={classes.divider} variant="fullWidth"/>
             <div className={classes.root}>
                 <Grid container spacing={3}>
-                    {questions.map((question, index) => 
+                    {quiz['questions'].map((question, index) => 
                         <Grid item xs={4} key={index}>
                             <Card className={classes.questionCard} variant="outlined">
                                 <CardContent>
                                     <Typography className={classes.questionTitle} color="textSecondary" gutterBottom>
-                                        {question.questionType === 3 && 'Free Response'}
-                                        {question.questionType === 2 && 'Fill in the blank'}
-                                        {question.questionType === 1 && 'Multiple Choice'}
+                                        {question.questionType === 'free_response' && 'Free Response'}
+                                        {question.questionType === 'fill_blank' && 'Fill in the blank'}
+                                        {question.questionType === 'multiple_choice' && 'Multiple Choice'}
                                     </Typography>
                                     <Typography>{question.questionText}</Typography>
                                 </CardContent>
@@ -569,12 +630,12 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
             {formCreated && <FormCreated 
                 open={formCreated}
                 onClose={() => handleCloseFormCreatedDialog()}
-                confirmationText={`${quizTitle} ${instanceType} created!`}
+                confirmationText={`${quiz['title']} ${instanceType} created!`}
                 createdText='Quiz Created'
                 start={instanceType === 'instance' ? startDateTime : ''}
                 end={instanceType === 'instance' ? endDateTime : ''}
                 assignedClass={instanceType === 'instance' ? classList[selectedClass].name : ''}
-                alertGrade={alertValue}
+                alertGrade={quiz['alertValue']}
                 routeBack='/coordinator/CreateQuiz'
             />}
         </Fragment>

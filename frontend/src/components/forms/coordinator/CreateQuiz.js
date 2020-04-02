@@ -78,10 +78,11 @@ const CreateQuiz = ({ userId, userType, token, logedIn}) => {
                     <Card variant='outlined' key={index} className={classes.templateContainer}>
                     <CardActionArea component={Link} to={{ pathname: `/coordinator/Quiz/${form.title}`, state: { formId: form.form_id }}}>
                         <CardContent>
-                            <Typography className={classes.formTitle} color='textSecondary' gutterBottom>
+                            <Typography color='textSecondary' gutterBottom>
                                 {form.title}
                             </Typography>
-                            <Typography>{form.description}</Typography>
+                            <Typography className={classes.formTitle}>{form.description}</Typography>
+                            <Typography>{form.form_id}</Typography>
                         </CardContent>
                     </CardActionArea>
                         

@@ -44,7 +44,6 @@ const NewQuestion = ({ open, onClose, add, formType }) => {
         answer4: '',
         answer5: ''
     });
-    const [openAlertDialog, setOpenAlertDialog] = useState('false');
     
     // event handlers
     const handleQuestionTypeChange = event => {
@@ -53,10 +52,6 @@ const NewQuestion = ({ open, onClose, add, formType }) => {
 
     const handleCancel = () => {
         onClose();
-    };
-
-    const handleAlertDialog = () => {
-        setOpenAlertDialog(false);
     };
 
     const handleConfirm = () => {
@@ -109,9 +104,9 @@ const NewQuestion = ({ open, onClose, add, formType }) => {
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            <MenuItem value={3}>Free Response</MenuItem>
-                            <MenuItem value={1}>Multiple Choice</MenuItem>
-                            <MenuItem value={2}>Fill in the blank</MenuItem>
+                            <MenuItem value={'free_response'}>Free Response</MenuItem>
+                            <MenuItem value={'multiple_choice'}>Multiple Choice</MenuItem>
+                            <MenuItem value={'fill_blank'}>Fill in the blank</MenuItem>
                         </Select>
                         {questionType === '' ? <FormHelperText error>Question Type is Required</FormHelperText> : null}
                     </FormControl>
@@ -124,8 +119,8 @@ const NewQuestion = ({ open, onClose, add, formType }) => {
                         helperText={questionText === '' ? "Question text is required" : ''} 
                         onChange={handleQuestionTextChange}
                     />
-                    {questionType === 1 && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} formType={formType}/>}
-                    {questionType === 2 && <NewFillBlank fillBlank={storeFillBlankAnswer}/>}
+                    {questionType === 'multiple_choice' && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} formType={formType}/>}
+                    {questionType === 'fill_blank' && <NewFillBlank fillBlank={storeFillBlankAnswer}/>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCancel} color="primary">

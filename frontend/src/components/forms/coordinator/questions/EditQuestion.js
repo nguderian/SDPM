@@ -28,15 +28,15 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     const classes = useStyles();
     const [questionType, setQuestionType] = useState(question.questionType);
     const [questionText, setQuestionText] = useState(question.questionText);
-    const [fillBlankAnswer, setFillBlankAnswer] = useState(question.questionType === 2 ? question.questionAnswer : '');
-    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = React.useState(question.questionType === 1 ? question.correctQuestionAnswers : {
+    const [fillBlankAnswer, setFillBlankAnswer] = useState(question.questionType === 'fill_blank' ? question.questionAnswer : '');
+    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = React.useState(question.questionType === 'multiple_choice' ? question.correctQuestionAnswers : {
         answer1: false,
         answer2: false,
         answer3: false,
         answer4: false, 
         answer5: false
     });
-    const [mcAnswers, setMCAnswers] = React.useState(question.questionType === 1 ? question.questionAnswer : {
+    const [mcAnswers, setMCAnswers] = React.useState(question.questionType === 'multiple_choice' ? question.questionAnswer : {
         answer1: '',
         answer2: '', 
         answer3: '', 
@@ -97,9 +97,9 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            <MenuItem value={3}>Free Response</MenuItem>
-                            <MenuItem value={1}>Multiple Choice</MenuItem>
-                            <MenuItem value={2}>Fill in the blank</MenuItem>
+                            <MenuItem value={'free_response'}>Free Response</MenuItem>
+                            <MenuItem value={'multiple_choice'}>Multiple Choice</MenuItem>
+                            <MenuItem value={'fill_blank'}>Fill in the blank</MenuItem>
                         </Select>
                     </FormControl>
                     <TextField
@@ -111,8 +111,8 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
                         defaultValue={questionText}
                         onChange={handleQuestionTextChange}
                     />
-                    {questionType === 1 && <EditMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} question={question}/>}
-                    {questionType === 2 && <EditFillBlank fillBlank={storeFillBlankAnswer} question={question}/>}
+                    {questionType === 'multiple_choice' && <EditMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} question={question}/>}
+                    {questionType === 'fill_blank' && <EditFillBlank fillBlank={storeFillBlankAnswer} question={question}/>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCancel} color="primary">
