@@ -37,7 +37,6 @@ const useStyles = makeStyles(theme => ({
 const CreateQuiz = ({ userId, userType, token, logedIn}) => {
     const classes = useStyles();
     const [allForms, setAllForms] = useState([]);
-    const [page, setPage] = useState(1);
 
     useEffect(() => {
         async function getAllForms() {
@@ -60,10 +59,6 @@ const CreateQuiz = ({ userId, userType, token, logedIn}) => {
         }
         getAllForms();
     }, [])
-
-    const handlePageChange = (event, value) => {
-        setPage(value);
-    };
 
     return (
         <Fragment className={classes.root}>

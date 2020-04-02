@@ -83,7 +83,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
-    // console.log(userType);
     let formattedStart = new Date();
     let formattedEnd = new Date();
     formattedStart = formatDate(formattedStart);
@@ -91,7 +90,6 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
 
     const classes = useStyles();
     const { formId } = location.state;
-    // console.log(props);
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
     const [quiz, setQuiz] = useState(
         {
@@ -211,7 +209,6 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 }
             };
     
-            // const result = await axios(options).then((result) => console.log(result.data));
             const result = await axios(options);
     
             setClassList(result.data);
@@ -222,7 +219,6 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
     // event handlers
     const handleModificationParameters = (parameters, values) => {
         const tempParams = {...modificationParameters};
-        console.log(values, parameters);
         parameters.forEach((parameter, idx) => {
             tempParams[parameter] = values[idx];
         });
@@ -263,10 +259,9 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 correctQuestionAnswers: correctMCAnswers
             }
         }
-        // setQuestions(questions.concat(question));
+
         let arr = quiz['questions'];
         arr = arr.concat(question);
-        console.log(arr);
         setQuiz({ ...quiz, ['questions']: arr })
     };
 
@@ -274,13 +269,11 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
         if(shouldDelete) {
             let arr = [...quiz['questions']]; // make a copy of our state
             arr.splice(modificationParameters.indexToModify, 1);
-            // setQuestions(arr);
             setQuiz({ ...quiz, ['questions']: arr })
         }
     };
 
     const editQuestion = (shouldEdit, type, text, fillBlankAnswer, mcAnswers, correctMCAnswers) => {
-        // console.log(shouldEdit, type, text, fillBlankAnswer, mcAnswers, correctMCAnswers);
         if(shouldEdit) {
             let question = {};
             if (type === 'free_response' || type === 'fill_blank') {
@@ -302,7 +295,6 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
             let arr = quiz['questions'];
             arr[modificationParameters.indexToModify] = question;
 
-            // setQuestions(arr);
             setQuiz({ ...quiz, ['questions']: arr })
         }
     };
@@ -461,7 +453,6 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
     
     return (
         <Fragment>
-        {console.log(quiz)}
             <Typography variant="h4" className={classes.pageTitle}>Create a New Quiz</Typography>
             <form className={classes.quizTitle} noValidate autoComplete="off">
                 <TextField
