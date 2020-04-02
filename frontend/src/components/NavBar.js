@@ -19,7 +19,6 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import CreateIcon from '@material-ui/icons/Create';
 import SearchIcon from '@material-ui/icons/Search';
 
-
 const useStyles = makeStyles(theme => ({
     root: {
       flexGrow: 1,
@@ -47,7 +46,6 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
     const logged = loggedIn;
 
     // console.log(user_id, loggedIn, userType);
-
 
     const [state, setState] = useState({
       left: false
@@ -112,9 +110,21 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
                 <ListItemIcon><AssignmentIcon/></ListItemIcon>
                 <ListItemText primary='Assignments'/>
               </ListItem>
-              <ListItem button component={Link} to='/CreateForm'>
+              <ListItem button component={Link} to='/coordinator/CreateSurvey'>
                 <ListItemIcon><CreateIcon/></ListItemIcon>
-                <ListItemText primary='Create Form'/>
+                <ListItemText primary='Create Peer Review'/>
+              </ListItem>
+              <ListItem button component={Link} to='/coordinator/CreateQuiz'>
+                <ListItemIcon><CreateIcon/></ListItemIcon>
+                <ListItemText primary='Create Quiz'/>
+              </ListItem>
+              <ListItem button component={Link} to='/meeting/CreateMeeting'>
+                <ListItemIcon><CreateIcon/></ListItemIcon>
+                <ListItemText primary='Create Meeting'/>
+              </ListItem>
+              <ListItem button component={Link} to='/'>
+                <ListItemIcon><CreateIcon/></ListItemIcon>
+                <ListItemText primary='Take Attendance'/>
               </ListItem>
               <ListItem button component={Link} to='/'>
                 <ListItemIcon><SearchIcon/></ListItemIcon>

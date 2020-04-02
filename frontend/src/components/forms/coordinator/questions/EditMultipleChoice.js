@@ -21,14 +21,14 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
+const EditMultipleChoice = ({ possibleAnswers, correctAnswers, question }) => {
     const classes = useStyles();
-    const [isCorrectMCAnswer, setIsCorrectMCAnswer] = useState({
+    const [isCorrectMCAnswer, setIsCorrectMCAnswer] = useState(question.questionType === 'multiple_choice' ? question.correctQuestionAnswers : {
         answer1: false,
         answer2: false,
         answer3: false,
-        answer4: false, 
-        answer5: false
+        answer4: false,
+        answer5: false,
     });
 
     // event handlers
@@ -63,7 +63,7 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer1" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer1')}/>
+                    <TextField autoFocus id="answer1" label="Enter Answer" variant="outlined" fullWidth defaultValue={question.questionAnswer.answer1} onChange={handleTextFieldChange('answer1')}/>
                 </Grid>
                 <Grid item xs={1}>
                     <FormGroup>
@@ -73,7 +73,7 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer2" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer2')}/>
+                    <TextField autoFocus id="answer2" label="Enter Answer" variant="outlined" fullWidth defaultValue={question.questionAnswer.answer2} onChange={handleTextFieldChange('answer2')}/>
                 </Grid>
                 <Grid item xs={1}>
                     <FormGroup>
@@ -83,7 +83,7 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer3" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer3')}/>
+                    <TextField autoFocus id="answer3" label="Enter Answer" variant="outlined" fullWidth defaultValue={question.questionAnswer.answer3} onChange={handleTextFieldChange('answer3')}/>
                 </Grid>
                 <Grid item xs={1}>
                     <FormGroup>
@@ -93,7 +93,7 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer4" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer4')}/>
+                    <TextField autoFocus id="answer4" label="Enter Answer" variant="outlined" fullWidth defaultValue={question.questionAnswer.answer4} onChange={handleTextFieldChange('answer4')}/>
                 </Grid>
                 <Grid item xs={1}>
                     <FormGroup>
@@ -103,7 +103,7 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer5" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer5')}/>
+                    <TextField autoFocus id="answer5" label="Enter Answer" variant="outlined" fullWidth defaultValue={question.questionAnswer.answer5} onChange={handleTextFieldChange('answer5')}/>
                 </Grid>
             </Grid>
         </div>
@@ -112,4 +112,4 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
 }
 
 
-export default NewMultipleChoice;
+export default EditMultipleChoice;

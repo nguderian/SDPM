@@ -1,14 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Login from './components/Login';
 import Hello from './components/HelloWorld';
-import CreateFormContainer from './components/containers/forms/CreateFormContainer';
-import NewFormContainer from './components/containers/forms/NewFormContainer';
+import CreateQuizContainer from './components/containers/forms/coordinator/CreateQuizContainer';
+import NewQuizContainer from './components/containers/forms/coordinator/NewQuizContainer';
 import ViewAssignmentsContainer from './components/containers/forms/ViewAssignmentsContainer';
 import NavBarContainer from './components/containers/NavBarContainer';
 import AdminClassPage from './components/AdminClassPage';
 import Home from './components/Home';
 import Assignment from './components/forms/Assignment';
+import CreateMeetingContainer from './components/containers/forms/coordinator/CreateMeetingContainer';
+import NewMeetingContainer from './components/containers/forms/coordinator/NewMeetingContainer';
+import CreateSurveyContainer from './components/containers/forms/coordinator/CreateSurveyContainer';
+import NewSurveyContainer from './components/containers/forms/coordinator/NewSurveyCJontainer';
 
 const routes = (
     <Router>
@@ -16,9 +19,21 @@ const routes = (
         <Switch> 
             <Route path='/' exact component={Home}/>
             <Route path='/login' exact component={Login}/>
-            <Route path='/CreateForm' exact component={CreateFormContainer}/>
-            <Route path='/NewForm' exact component={NewFormContainer}/>
             <Route path='/AdminClassPage' exact component={AdminClassPage}/>
+
+            {/* quiz creation */}
+            <Route path='/coordinator/CreateQuiz' exact component={CreateQuizContainer}/>
+            <Route path='/coordinator/Quiz/:title' render={(props) => <NewQuizContainer {...props} />}/>
+            
+            {/* survey creation */}
+            <Route path='/coordinator/CreateSurvey' exact component={CreateSurveyContainer}/>
+            <Route path='/coordinator/NewSurvey' exact component={NewSurveyContainer}/>
+            
+            {/* meeting creation */}
+            <Route path='/meeting/CreateMeeting' exact component={CreateMeetingContainer}/>
+            <Route path='/meeting/:title'  render={(props) => <NewMeetingContainer {...props} />}/>
+
+            {/* completing forms - mainly for students */}
             <Route path='/student/viewAssignments' exact component={ViewAssignmentsContainer}/>
             <Route path='/student/viewAssignments/:id' render={ (props) => <Assignment {...props}/>}/>
         </Switch>

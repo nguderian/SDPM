@@ -14,11 +14,11 @@ import routes from './Routes'
 // we can add more to local storage but for now its just
 // user_id,loggedIn boolean, token, and type
 const initialState =  (localStorage['redux-store']) ? JSON.parse(localStorage['redux-store']) : ({
-    user_id:'ta840968',
-    token:'',
+    userId: 241,
+    token:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE',
     loggedIn:true,
-    userType:'sponsor',
-    ip_address:'10.171.204.179'
+    userType:'coordinator',
+    ipAddress:'10.171.204.179'
 })
 
 const store = createStore(currentUser, initialState)
