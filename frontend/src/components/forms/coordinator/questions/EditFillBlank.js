@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
 const EditFillBlank = ({ fillBlank, question }) => {
     const classes = useStyles();
     let previousAnswer = '';
-    if(question.questionType === 2) {
+    if(question.questionType === 'fill_blank') {
         previousAnswer = question.questionAnswer;
     }
 

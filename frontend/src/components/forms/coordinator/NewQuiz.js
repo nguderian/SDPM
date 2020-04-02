@@ -13,7 +13,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import NewQuestion from './questions/NewQuestion';
 import DeleteQuestion from './questions/DeleteQuestion';
 import EditQuestion from './questions/EditQuestion';
-import FormOrTemplateCreated from '../FormOrTemplateCreated';
+import FormCreated from '../FormCreated';
 import FormControl from '@material-ui/core/FormControl';
 import FormControllabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -28,6 +28,16 @@ import {
 
 import axios from 'axios';
 
+const formatDate = dateTime => {
+    let month = ("0" + (dateTime.getMonth() + 1)).slice(-2);
+    let monthDate = ("0" + dateTime.getDate()).slice(-2);
+    let hours = ("0" + dateTime.getHours()).slice(-2);
+    let minutes = ("0" + dateTime.getMinutes()).slice(-2);
+    let seconds = ("0" + dateTime.getSeconds()).slice(-2);
+    let formattedDateTime = `${dateTime.getFullYear()}-${month}-${monthDate} ${hours}:${minutes}:${seconds}`;
+
+    return formattedDateTime;
+};
 
 const useStyles = makeStyles(theme => ({
     quizTitle: {
@@ -48,10 +58,10 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(2),
         textAlign: 'center'
     },
-    root: {
+    questionList: {
         flexGrow: 1,
-        maxHeight: 300,
-        overflow: 'auto'
+        maxHeight: 400,
+        overflowY: 'scroll'
     },
     questionCard: {
         minWidth: 275,
@@ -72,27 +82,118 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const NewQuiz = ({ userId, userType, token, loggedIn }) => {
-    // console.log(userType);
+const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
+    let formattedStart = new Date();
+    let formattedEnd = new Date();
+    formattedStart = formatDate(formattedStart);
+    formattedEnd = formatDate(formattedEnd);
+
     const classes = useStyles();
+    const { formId } = location.state;
     const [addQuestionOpen, setAddQuestionOpen] = useState(false);
-    const [quizTitle, setQuizTitle] = useState('');
-    const [quizDescription, setQuizDescription] = useState('');
-    const [questions, setQuestions] = useState([]);
+    const [quiz, setQuiz] = useState(
+        {
+            title: '',
+            description: '',
+            hasAlertValue: false,
+            alertValue: '',
+            questions: [],
+        }
+    );
+    
+    // const [questions, setQuestions] = useState([]);
     const [classList, setClassList] = useState([]);
     const [selectedClass, setSelectedClass] = useState('');
     const [instanceType, setInstanceType] = useState('');
     const [assignee, setAssignee] = useState('');
-    const [hasAlertValue, setHasAlertValue] = useState(false);
-    const [alertValue, setAlertValue] = useState(false);
-    const [startDateTime, setStartDateTime] = useState(new Date());
-    const [endDateTime, setEndDateTime] = useState(new Date());
+    
+    const [startDateTime, setStartDateTime] = useState(formattedStart);
+    const [endDateTime, setEndDateTime] = useState(formattedEnd);
+    const [formCreated, setFormCreated] = useState(false);
     const [modificationParameters, setModificationParameters] = useState({
         deleteQuestionOpen: false,
         editQuestionOpen: false,
         indexToModify: null,
         questionToModify: null,
     });
+    
+    useEffect(() => {
+        if(formId !== '') {
+            async function getFormDetails() {
+                const options = {
+                    method: 'POST', 
+                    url: 'http://localhost:3001/api/getForm', 
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                    }, 
+                    data: {
+                        'form_id': formId,
+                        'user_id': userId
+                    }
+                };
+
+                const result = await axios(options);
+                const quiz = result.data.quiz;
+                
+                let arr = [];
+
+                quiz.questions.forEach((quizQuestion, index) => {
+                    let question = {};
+                    
+                    if(quizQuestion.question_type === 'fill_blank' || quizQuestion.question_type === 'free_response') {
+                        question = {
+                            questionType: quizQuestion.question_type,
+                            questionText: quizQuestion.question_text,
+                            questionAnswer: quizQuestion.question_type === 'fill_blank' ? quizQuestion.answers[0].key_text : ''
+                        }
+                    }
+                    else if (quizQuestion.question_type === 'multiple_choice') {
+                        let mcAnswers = {
+                            answer1: '',
+                            answer2: '', 
+                            answer3: '', 
+                            answer4: '',
+                            answer5: ''
+                        };
+                        let correctMCAnswers = {
+                            answer1: false,
+                            answer2: false,
+                            answer3: false,
+                            answer4: false, 
+                            answer5: false
+                        };
+
+                        quizQuestion.answers.forEach((answer, index) => 
+                            {
+                                mcAnswers[`answer${index+1}`] = answer.key_text;
+                                correctMCAnswers[`answer${index+1}`] = answer.is_correct === 1 ? true : false;
+                            }
+                        );
+
+                        question = {
+                            questionType: quizQuestion.question_type,
+                            questionText: quizQuestion.question_text,
+                            questionAnswer: mcAnswers,
+                            correctQuestionAnswers: correctMCAnswers
+                        }
+                    }
+
+                    arr.push(question);
+                });
+
+                console.log(arr);
+                setQuiz({ 
+                    ['title']: quiz.title, 
+                    ['description']: quiz.description, 
+                    ['alertValue']: quiz.threshold, 
+                    ['hasAlertValue']: quiz.threshold === '' ? false : true,
+                    ['questions']: arr,
+                });
+            }
+            getFormDetails();
+        }
+    }, [formId]);
     
     useEffect(() => {
         async function getClasses() {
@@ -108,7 +209,6 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                 }
             };
     
-            // const result = await axios(options).then((result) => console.log(result.data));
             const result = await axios(options);
     
             setClassList(result.data);
@@ -121,7 +221,6 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
         const tempParams = {...modificationParameters};
         parameters.forEach((parameter, idx) => {
             tempParams[parameter] = values[idx];
-            console.log(tempParams[parameter], values[idx])
         });
         
         setModificationParameters({...tempParams});
@@ -132,11 +231,11 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
     };
 
     const handleQuizTitleChange = event => {
-        setQuizTitle(event.target.value);
+        setQuiz({ ...quiz, ['title']: event.target.value });
     };
 
     const handleQuizDescriptionChange = event => {
-        setQuizDescription(event.target.value)
+        setQuiz({ ...quiz, ['description']: event.target.value });
     };
 
     const handleClassChange = event => {
@@ -145,11 +244,11 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
 
     const addQuestion = (type, text, fillBlankAnswer, mcAnswers, correctMCAnswers) => {
         let question = {};
-        if (type === 3 || type === 2) {
+        if (type === 'fill_blank' || type === 'free_response') {
             question = {
                 questionType: type, 
                 questionText: text,
-                questionAnswer: type === 2 ? fillBlankAnswer : ''
+                questionAnswer: type === 'fill_blank' ? fillBlankAnswer : ''
             }
         }
         else {
@@ -160,22 +259,24 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                 correctQuestionAnswers: correctMCAnswers
             }
         }
-        setQuestions(questions.concat(question));
+
+        let arr = quiz['questions'];
+        arr = arr.concat(question);
+        setQuiz({ ...quiz, ['questions']: arr })
     };
 
     const deleteQuestion = (shouldDelete) => {
         if(shouldDelete) {
-            let arr = [...questions]; // make a copy of our state
+            let arr = [...quiz['questions']]; // make a copy of our state
             arr.splice(modificationParameters.indexToModify, 1);
-            setQuestions(arr);
+            setQuiz({ ...quiz, ['questions']: arr })
         }
     };
 
     const editQuestion = (shouldEdit, type, text, fillBlankAnswer, mcAnswers, correctMCAnswers) => {
-        // console.log(shouldEdit, type, text, fillBlankAnswer, mcAnswers, correctMCAnswers);
         if(shouldEdit) {
             let question = {};
-            if (type === 3 || type === 2) {
+            if (type === 'free_response' || type === 'fill_blank') {
                 question = {
                     questionType: type, 
                     questionText: text,
@@ -191,10 +292,10 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                 }
             }
 
-            let arr = [...questions];
+            let arr = quiz['questions'];
             arr[modificationParameters.indexToModify] = question;
 
-            setQuestions(arr);
+            setQuiz({ ...quiz, ['questions']: arr })
         }
     };
 
@@ -208,7 +309,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
     const handleEditQuestionClick = (index) => {
         handleModificationParameters(
             ["editQuestionOpen", "indexToModify", "questionToModify"],
-            [true, index, questions[index]]
+            [true, index, quiz['questions'][index]]
         );
     };
 
@@ -221,37 +322,31 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
     };
 
     const handleStartDateTimeChange = dateTime => {
-        let month = ("0" + (dateTime.getMonth() + 1)).slice(-2);
-        let monthDate = ("0" + dateTime.getDate()).slice(-2);
-        let hours = ("0" + dateTime.getHours()).slice(-2);
-        let minutes = ("0" + dateTime.getMinutes()).slice(-2);
-        let seconds = ("0" + dateTime.getSeconds()).slice(-2);
-        let formattedDateTime = `${dateTime.getFullYear()}-${month}-${monthDate} ${hours}:${minutes}:${seconds}`;
+        let formattedDateTime = formatDate(dateTime);
         setStartDateTime(formattedDateTime);
     };
 
     const handleEndDateTimeChange = dateTime => {
-        let month = ("0" + (dateTime.getMonth() + 1)).slice(-2);
-        let monthDate = ("0" + dateTime.getDate()).slice(-2);
-        let hours = ("0" + dateTime.getHours()).slice(-2);
-        let minutes = ("0" + dateTime.getMinutes()).slice(-2);
-        let seconds = ("0" + dateTime.getSeconds()).slice(-2);
-        let formattedDateTime = `${dateTime.getFullYear()}-${month}-${monthDate} ${hours}:${minutes}:${seconds}`;
+        let formattedDateTime = formatDate(dateTime);
         setEndDateTime(formattedDateTime);
     };
 
     const handleHasAlertValue = event => {
-        setHasAlertValue(event.target.checked);
+        setQuiz({ ...quiz, ['hasAlertValue']: event.target.checked });
     };
 
     const handleAlertvalue = event => {
-        setAlertValue(event.target.value)
+        setQuiz({ ...quiz, ['alertValue']: event.target.value });
+    };
+
+    const handleCloseFormCreatedDialog = () => {
+        setFormCreated(false)
     };
 
     async function createForm() {
         let questionsArr = [];
 
-        questions.forEach((question, index) => {
+        quiz['questions'].forEach((question, index) => {
             let questionObj = {
                 "question_text": null,
                 "question_type": null,
@@ -260,24 +355,15 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
 
             questionObj.category_id = 2;
             questionObj.question_text = question.questionText;
-            if(question.questionType === 1) {
-                questionObj.question_type = "multiple_choice";
-            }
-            else if(question.questionType === 2) {
-                questionObj.question_type = "fill_blank"
-            }
-            else if(question.questionType === 3) {
-                questionObj.question_type = "free_response"
-            }
-
+            questionObj.question_type = question.questionType;
            
-            if (question.questionType === 2) {
+            if (question.questionType === 'fill_blank') {
                 questionObj.answers.push({
                     "answer_text" : question.questionAnswer, 
                     "isCorrect" : 1
                 });
             }
-            else if (question.questionType === 3) {
+            else if (question.questionType === 'multiple_choice') {
                const keys = Object.keys(question.questionAnswer);
 
                keys.forEach((key, index) => {
@@ -294,12 +380,12 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
         });
 
         let body = {
-            'form_threshold': alertValue, 
+            'form_threshold': quiz['alertValue'], 
             "type": 'quiz',
             "access_level": userType,
             "user_id": userId,
-            "title": quizTitle,
-            "description": quizDescription,
+            "title": quiz['title'],
+            "description": quiz['description'],
             questions: questionsArr
         }
 
@@ -360,20 +446,22 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                 console.log('something went wrong')
             }
         }
+
+        setFormCreated(true);
     };
 
     
     return (
         <Fragment>
-        {/* {console.log(questions)} */}
             <Typography variant="h4" className={classes.pageTitle}>Create a New Quiz</Typography>
             <form className={classes.quizTitle} noValidate autoComplete="off">
                 <TextField
-                    error={quizTitle === '' ? true : false} 
-                    helperText={quizTitle === '' ? "Quiz Title is required." : ''} 
+                    error={quiz['title'] === '' ? true : false} 
+                    helperText={quiz['title'] === '' ? "Quiz Title is required." : ''} 
                     label="Quiz Title" 
                     variant="outlined" 
-                    fullWidth={true} 
+                    fullWidth={true}
+                    value={quiz['title']}
                     onChange={handleQuizTitleChange}
                 />
             </form>
@@ -382,6 +470,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                     label="Quiz Description"
                     variant="outlined"
                     fullWidth={true}
+                    value={quiz['description']}
                     onChange={handleQuizDescriptionChange}
                 />
             </form>
@@ -450,19 +539,20 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                 <FormControllabel className={classes.checkBox}
                     control={
                         <Checkbox 
-                            checked={hasAlertValue}
+                            checked={quiz['hasAlertValue']}
                             onChange={handleHasAlertValue}
                             color='primary'
                         />
                     }
                     label="Receive Alerts?"
                 />
-                {hasAlertValue && 
+                {quiz['hasAlertValue'] && 
                     <form className={classes.quizDetails} noValidate autoComplete='off'>
                         <TextField 
                             label='Value from 0 - 100'
                             variant='outlined'
                             onChange={handleAlertvalue}
+                            value={quiz['alertValue']}
                         />
                     </form>
                 }
@@ -477,16 +567,16 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                 formType='quiz'
                 />}
             <Divider className={classes.divider} variant="fullWidth"/>
-            <div className={classes.root}>
+            <div className={classes.questionList}>
                 <Grid container spacing={3}>
-                    {questions.map((question, index) => 
+                    {quiz['questions'].map((question, index) => 
                         <Grid item xs={4} key={index}>
                             <Card className={classes.questionCard} variant="outlined">
                                 <CardContent>
                                     <Typography className={classes.questionTitle} color="textSecondary" gutterBottom>
-                                        {question.questionType === 3 && 'Free Response'}
-                                        {question.questionType === 2 && 'Fill in the blank'}
-                                        {question.questionType === 1 && 'Multiple Choice'}
+                                        {question.questionType === 'free_response' && 'Free Response'}
+                                        {question.questionType === 'fill_blank' && 'Fill in the blank'}
+                                        {question.questionType === 'multiple_choice' && 'Multiple Choice'}
                                     </Typography>
                                     <Typography>{question.questionText}</Typography>
                                 </CardContent>
@@ -528,16 +618,17 @@ const NewQuiz = ({ userId, userType, token, loggedIn }) => {
                 editQuestion={editQuestion}
                 question={modificationParameters.questionToModify}
             />}
-            {/* {instanceMade && <FormOrTemplateCreated 
-                open={instanceMade}
-                onClose={() => handle}
-                confirmationText="Form Instance Created! What would you like to do?"
+            {formCreated && <FormCreated 
+                open={formCreated}
+                onClose={() => handleCloseFormCreatedDialog()}
+                confirmationText={`${quiz['title']} ${instanceType} created!`}
+                createdText='Quiz Created'
+                start={instanceType === 'instance' ? startDateTime : ''}
+                end={instanceType === 'instance' ? endDateTime : ''}
+                assignedClass={instanceType === 'instance' ? classList[selectedClass].name : ''}
+                alertGrade={quiz['alertValue']}
+                routeBack='/coordinator/CreateQuiz'
             />}
-            {templateMade && <FormOrTemplateCreated 
-                open={templateMade}
-                onClose={() => handleCreateDialogClose(false)}
-                confirmationText="Form Template Created! What would you like to do?"
-            />} */}
         </Fragment>
     );
 }

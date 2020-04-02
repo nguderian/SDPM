@@ -22,7 +22,7 @@ const DeleteQuestion = ({ open, onClose, deleteQuestion }) => {
     return (
         <div>
             <Dialog open={open} onClose={onClose} aria-labelledby="simple-dialog-title" disableBackdropClick disableEscapeKeyDown>
-                <DialogTitle id="simple-dialog-title"></DialogTitle>
+                <DialogTitle id="simple-dialog-title">Delete question</DialogTitle>
                     <DialogContent>
                         <Typography>Would you like to delete this question?</Typography>
                     </DialogContent>

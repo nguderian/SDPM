@@ -13,7 +13,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import NewQuestion from './questions/NewQuestion';
 import DeleteQuestion from './questions/DeleteQuestion';
 import EditQuestion from './questions/EditQuestion';
-import FormOrTemplateCreated from '../FormOrTemplateCreated';
+// import FormOrTemplateCreated from '../FormOrTemplateCreated';
 import FormControl from '@material-ui/core/FormControl';
 import FormControllabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -53,6 +53,18 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'center',
         marginTop: theme.spacing(2),
     },
+    questionCard: {
+        minWidth: 275,
+        margin: theme.spacing(1)
+    },
+    studentList: {
+        flexGrow: 1,
+        maxHeight: 300,
+        overflow: 'auto'
+    },
+    questionTitle: {
+        fontSize: 14
+    },
 }));
 
 const NewSurvey = ({ userId, userType, token, loggedIn }) => {
@@ -61,8 +73,10 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
     const [selectedClass, setSelectedClass] = useState('');
     const [teams, setTeams] = useState([]);
     const [selectedTeam, setSelectedTeam] = useState('');
+    const [teamMembers, setTeamMembers] = useState([]);
     const [surveyTitle, setSurveyTitle] = useState('');
     const [surveyDescription, setSurveyDescription] = useState('');
+    const [questions, setQuestions] = useState([]);
 
     useEffect(() => {
         async function getClasses() {
@@ -108,6 +122,47 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
         }
     }, [selectedClass]);
 
+    useEffect(() => {
+        if(selectedTeam) {
+            async function getTeamMembers() {
+                const options = {
+                    method: 'POST',
+                    url: 'http://localhost:3001/api/getTeamMembers',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                    },
+                    data: {
+                        'team_id': selectedTeam
+                    }
+                }
+                
+                const result = await axios(options);
+                console.log(result);
+                setTeamMembers(result.data.team_members)
+            }
+            getTeamMembers()
+        }
+    }, [selectedTeam]);
+
+    // useEffect(() => {
+    //     if(teamMembers) {
+    //         function createQuestions() {
+    //             let questions = [];
+    //             teamMembers.map((teamMember, index) => 
+    //                 questions.push({
+    //                     'question_text': `Participation grade ${teamMember.first_name}?`,
+    //                     'question_type': 'likert',
+    //                     'question_threshold': 3
+    //                 })
+    //             )
+    //             console.log(questions);
+    //             setQuestions(questions);
+    //         }
+    //         createQuestions()
+    //     }
+    // }, [teamMembers]);
+
     const handleSurveyTitleChange = event => {
         setSurveyTitle(event.target.value);
     };
@@ -125,7 +180,7 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
     };
 
     async function createSurvey() {
-
+        let questionsArr = [];
     };
 
     return (
@@ -179,7 +234,23 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
             </div>
 
             <Divider className={classes.divider}/>
-
+            
+            <div classname={classes.studentList}>
+                <Grid container spacing={3}>
+                    {teamMembers.map((teamMember, index) =>
+                        <Grid item xs={4} key={index}>
+                            <Card className={classes.questionCard} variant='outlined'>
+                                <CardContent>
+                                    <Typography classname={classes.questionTitle} color='textSecondary' gutterBottom>
+                                        {`${teamMember.first_name}  ${teamMember.last_name}`}
+                                    </Typography>
+                                    <Typography>{`Participation grade ${teamMember.first_name}?`}</Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    )}
+                </Grid>
+            </div>
             <Button 
                 variant='contained'
                 color='primary'

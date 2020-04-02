@@ -18,9 +18,6 @@ import ClassIcon from '@material-ui/icons/Class';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CreateIcon from '@material-ui/icons/Create';
 import SearchIcon from '@material-ui/icons/Search';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import Collapse from '@material-ui/core/Collapse';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -121,7 +118,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
                 <ListItemIcon><CreateIcon/></ListItemIcon>
                 <ListItemText primary='Create Quiz'/>
               </ListItem>
-              <ListItem button component={Link} to='/coordinator/CreateMeeting'>
+              <ListItem button component={Link} to='/meeting/CreateMeeting'>
                 <ListItemIcon><CreateIcon/></ListItemIcon>
                 <ListItemText primary='Create Meeting'/>
               </ListItem>
