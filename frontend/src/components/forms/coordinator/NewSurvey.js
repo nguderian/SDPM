@@ -85,7 +85,7 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
                 url: 'http://localhost:3001/api/getAllClasses',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                    'Authorization': token
                 }, 
                 data: {
                     'user_id': userId
@@ -107,7 +107,7 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
                     url: 'http://localhost:3001/api/getTeamsInClass',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                        'Authorization': token
                     },
                     data: {
                         'class_id': selectedClass
