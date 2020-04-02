@@ -17,14 +17,18 @@ const routes = (
         <Switch> 
             <Route path='/' exact component={Hello}/>
 
-            {/* form creation */}
+            {/* quiz creation */}
             <Route path='/coordinator/CreateQuiz' exact component={CreateQuizContainer}/>
             <Route path='/coordinator/Quiz/:title' render={(props) => <NewQuizContainer {...props} />}/>
-            <Route path='/coordinator/CreateMeeting' exact component={CreateMeetingContainer}/>
-            <Route path='/coordinator/NewMeeting' exact component={NewMeetingContainer}/>
+            
+            {/* survey creation */}
             <Route path='/coordinator/CreateSurvey' exact component={CreateSurveyContainer}/>
             <Route path='/coordinator/NewSurvey' exact component={NewSurveyContainer}/>
             
+            {/* meeting creation */}
+            <Route path='/meeting/CreateMeeting' exact component={CreateMeetingContainer}/>
+            <Route path='/meeting/:title'  render={(props) => <NewMeetingContainer {...props} />}/>
+
             {/* completing forms - mainly for students */}
             <Route path='/student/viewAssignments' exact component={ViewAssignmentsContainer}/>
             <Route path='/student/viewAssignments/:id' render={ (props) => <Assignment {...props}/>}/>

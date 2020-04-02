@@ -29,17 +29,31 @@ const useStyles = makeStyles(theme => ({
         marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2)
     },
-    formTitle: {
+    quizTitle: {
         fontSize: 14
-    }, 
+    },
+    formListWrapper: {
+        height: '100%',
+        width: '100%',
+        overflow: 'hidden'
+    },
+    quizList: {
+        flexGrow: 1,
+        maxHeight: 500,
+        overflowY: 'scroll',
+        // border: '2px solid gray',
+        // borderRadius: '5px',
+        marginLeft: theme.spacing(7),
+        marginRight: theme.spacing(7)
+    }
 }));
   
-const CreateQuiz = ({ userId, userType, token, logedIn}) => {
+const CreateQuiz = ({ userId, userType, token, loggedIn }) => {
     const classes = useStyles();
-    const [allForms, setAllForms] = useState([]);
+    const [allQuizzes, setAllQuizzes] = useState([]);
 
     useEffect(() => {
-        async function getAllForms() {
+        async function getAllQuizzes() {
             const options = {
                 method: 'POST',
                 url: 'http://localhost:3001/api/getAllForms',
@@ -55,35 +69,41 @@ const CreateQuiz = ({ userId, userType, token, logedIn}) => {
 
             let result = await axios(options);
             console.log(result);
-            setAllForms(result.data);
+            setAllQuizzes(result.data);
         }
-        getAllForms();
+        getAllQuizzes();
     }, [])
 
     return (
-        <Fragment className={classes.root}>
+        <div className={classes.root}>
             <Button className={classes.createButton} variant="contained" color="primary" component={Link} to={{ pathname: `/coordinator/Quiz/New`, state: { formId: '' }}}>
                 Create New
             </Button>
             
             <Typography className={classes.templateText} variant='h5'>Quiz Templates</Typography>
             <Divider className={classes.templateContainer}/>
-            <List component='nav'>
-                {allForms.map((form, index) =>
-                    <Card variant='outlined' key={index} className={classes.templateContainer}>
-                    <CardActionArea component={Link} to={{ pathname: `/coordinator/Quiz/${form.title}`, state: { formId: form.form_id }}}>
-                        <CardContent>
-                            <Typography color='textSecondary' gutterBottom>
-                                {form.title}
-                            </Typography>
-                            <Typography className={classes.formTitle}>{form.description}</Typography>
-                            <Typography>{form.form_id}</Typography>
-                        </CardContent>
-                    </CardActionArea>
-                        
-                    </Card>
-                )}
-            </List>
+            
+            <div className={classes.quizList}>
+                <List component='nav'>
+                    {allQuizzes.map((quiz, index) =>
+                        <Card variant='outlined' key={index} className={classes.templateContainer}>
+                        <CardActionArea component={Link} to={{ pathname: `/coordinator/Quiz/${quiz.title}`, state: { formId: quiz.form_id }}}>
+                            <CardContent>
+                                <Typography color='textSecondary' gutterBottom>
+                                    {quiz.title}
+                                </Typography>
+                                <Typography className={classes.quizTitle}>{quiz.description}</Typography>
+                                <Typography>{quiz.form_id}</Typography>
+                            </CardContent>
+                        </CardActionArea>
+                            
+                        </Card>
+                    )}
+                </List>
+            </div>
+            
+            
+            
             {/* <Pagination 
                 page={page}
                 count={10}
@@ -103,7 +123,7 @@ const CreateQuiz = ({ userId, userType, token, logedIn}) => {
             )}
             
             </Pagination> */}
-        </Fragment>
+        </div>
     );
 }
 export default CreateQuiz;

@@ -58,10 +58,10 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(2),
         textAlign: 'center'
     },
-    root: {
+    questionList: {
         flexGrow: 1,
-        maxHeight: 300,
-        overflow: 'auto'
+        maxHeight: 400,
+        overflowY: 'scroll'
     },
     questionCard: {
         minWidth: 275,
@@ -567,7 +567,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 formType='quiz'
                 />}
             <Divider className={classes.divider} variant="fullWidth"/>
-            <div className={classes.root}>
+            <div className={classes.questionList}>
                 <Grid container spacing={3}>
                     {quiz['questions'].map((question, index) => 
                         <Grid item xs={4} key={index}>
