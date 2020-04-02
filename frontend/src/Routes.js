@@ -8,8 +8,8 @@ import NavBarContainer from './components/containers/NavBarContainer';
 import AdminClassPage from './components/AdminClassPage';
 import Home from './components/Home';
 import Assignment from './components/forms/Assignment';
-import CreateMeetingContainer from './components/containers/forms/coordinator/CreateMeetingContainer';
-import NewMeetingContainer from './components/containers/forms/coordinator/NewMeetingContainer';
+import CreateMeetingContainer from './components/containers/forms/student/CreateMeetingContainer';
+import NewMeetingContainer from './components/containers/forms/student/NewMeetingContainer';
 import CreateSurveyContainer from './components/containers/forms/coordinator/CreateSurveyContainer';
 import NewSurveyContainer from './components/containers/forms/coordinator/NewSurveyCJontainer';
 
@@ -18,7 +18,6 @@ const routes = (
         <NavBarContainer/>
         <Switch> 
             <Route path='/' exact component={Home}/>
-            <Route path='/login' exact component={Login}/>
             <Route path='/AdminClassPage' exact component={AdminClassPage}/>
 
             {/* quiz creation */}

@@ -1,4 +1,4 @@
-import CreateMeeting from '../../../forms/CreateMeeting';
+import CreateMeeting from '../../../forms/student/CreateMeeting';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
