@@ -11,7 +11,7 @@ function callback(result){
     };
 }
 
-//canvas.getCoursesofUser(callback, '35'); //users: 35, 40, 36, 39
-//canvas.getStudentsinCourse(callback, '1'); //courses: 1, 2
-//canvas.getGroupsinCourse(callback, '1'); //courses: 1, 2
-//canvas.getUsersinGroup(callback, '1'); // groups: 1, 2
+canvas.getCoursesofUser(callback, 35); //users: 35, 40, 36, 39
+canvas.getStudentsinCourse(callback, 1); //courses: 1, 2
+canvas.getGroupsinCourse(callback, 1); //courses: 1, 2
+canvas.getUsersinGroup(callback, 1); // groups: 1, 2
