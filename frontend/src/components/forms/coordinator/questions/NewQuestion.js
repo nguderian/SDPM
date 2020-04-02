@@ -9,10 +9,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
-import EditFreeResponse from './questions/EditFreeResponse';
-import EditLikert from './questions/EditLikert';
-import EditMultipleChoice from './questions/EditMultipleChoice';
+import NewFillBlank from './NewFillBlank';
+import NewMultipleChoice from './NewMultipleChoice';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -25,20 +25,19 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const EditQuestion = ({ open, onClose, editQuestion, question }) => {
+const NewQuestion = ({ open, onClose, add, formType }) => {
     const classes = useStyles();
-    const [questionType, setQuestionType] = useState(question.questionType);
-    const [questionText, setQuestionText] = useState(question.questionText);
-    const [frqAnswers, setFrqAnswers] = useState(question.questionType === 3 ? question.questionAnswer : '');
-    const [threshold, setThreshold] = useState(question.questionType === 2 ? question.questionAnswer : '');
-    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = React.useState(question.questionType === 1 ? question.correctQuestionAnswers : {
+    const [questionType, setQuestionType] = useState('');
+    const [questionText, setQuestionText] = useState('');
+    const [fillBlankAnswer, setFillBlankAnswer] = useState('');
+    const [isCorrectMCAnswer, setIsCorrectMcAnswer] = useState({
         answer1: false,
         answer2: false,
         answer3: false,
         answer4: false, 
         answer5: false
     });
-    const [mcAnswers, setMCAnswers] = React.useState(question.questionType === 1 ? question.questionAnswer : {
+    const [mcAnswers, setMCAnswers] = useState({
         answer1: '',
         answer2: '', 
         answer3: '', 
@@ -47,53 +46,53 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     });
     
     // event handlers
+    const handleQuestionTypeChange = event => {
+        setQuestionType(event.target.value);
+    };
+
     const handleCancel = () => {
         onClose();
-        editQuestion(false, question);
     };
 
     const handleConfirm = () => {
+        // if(questionType === null) {
+        //     // render alert dialog with appropriate text
+        //     setOpenAlertDialog(true);
+        //     return (
+        //         <AlertDialog open={openAlertDialog} onClose={handleAlertDialog} alertMessage="You must choose a question type"/>
+        //     )
+        // }
+        // else if(questionText === '') {
+            
+        // }
+        // else if(questionType === 'Free Response')
+
         onClose();
-        editQuestion(true, questionType, questionText, frqAnswers, threshold, mcAnswers, isCorrectMCAnswer)
-    };
-
-    const storeFRQAnswers = answers => {
-        if (answers !== null)  {
-            setFrqAnswers(answers);
-        }
-    };
-
-    const storeThreshold = value => {
-        if (value !== null) {
-            setThreshold(value);
-        }
-    };
-
-    // event handlers
-    const handleQuestionTypeChange = event => {
-        setQuestionType(event.target.value);
+        add(questionType, questionText, fillBlankAnswer, mcAnswers, isCorrectMCAnswer);
     };
 
     const handleQuestionTextChange = event => {
         setQuestionText(event.target.value);
     };
 
+    const storeFillBlankAnswer = value => {
+        setFillBlankAnswer(value);
+    };
+    
     const storeCorrectMCAnswers = (answerChoice, isCorrect) => {
         setIsCorrectMcAnswer({ ...isCorrectMCAnswer, [answerChoice]: isCorrect });
     };
 
     const storeMCAnswers = (answerChoice, value) => {
-        if(value !== null) {
-            setMCAnswers({ ...mcAnswers, [answerChoice]: value});
-        }
+        setMCAnswers({ ...mcAnswers, [answerChoice]: value});
     };
 
     return (
         <Fragment>
-            <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Edit Question</DialogTitle>
+            <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title" disableBackdropClick disableEscapeKeyDown>
+                <DialogTitle id="form-dialog-title">Add Question</DialogTitle>
                 <DialogContent>
-                    <FormControl variant="outlined" className={classes.formControl}>
+                    <FormControl variant="outlined" className={classes.formControl} error={questionType === '' ? true : false}>
                         <InputLabel>
                             Question Type
                         </InputLabel>
@@ -105,23 +104,23 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            <MenuItem value={3}>Free Response</MenuItem>
-                            <MenuItem value={1}>Multiple Choice</MenuItem>
-                            <MenuItem value={2}>Likert Scale</MenuItem>
+                            <MenuItem value={'free_response'}>Free Response</MenuItem>
+                            <MenuItem value={'multiple_choice'}>Multiple Choice</MenuItem>
+                            <MenuItem value={'fill_blank'}>Fill in the blank</MenuItem>
                         </Select>
+                        {questionType === '' ? <FormHelperText error>Question Type is Required</FormHelperText> : null}
                     </FormControl>
                     <TextField
                         className={classes.questionInput}
-                        autoFocus
                         id="name"
                         label="Enter Question Text"
                         fullWidth
-                        defaultValue={questionText}
+                        error={questionText === '' ? true : false} 
+                        helperText={questionText === '' ? "Question text is required" : ''} 
                         onChange={handleQuestionTextChange}
                     />
-                    {questionType === 3 && <EditFreeResponse possibleAnswers={storeFRQAnswers} question={question}/>}
-                    {questionType === 1 && <EditMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} question={question}/>}
-                    {questionType === 2 && <EditLikert thresholdValue={storeThreshold} question={question}/>}
+                    {questionType === 'multiple_choice' && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} formType={formType}/>}
+                    {questionType === 'fill_blank' && <NewFillBlank fillBlank={storeFillBlankAnswer}/>}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCancel} color="primary">
@@ -136,4 +135,4 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     );
 }
 
-export default EditQuestion;
+export default NewQuestion;
