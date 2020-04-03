@@ -71,9 +71,6 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
     const classes = useStyles();
     const [classList, setClassList] = useState([]);
     const [selectedClass, setSelectedClass] = useState('');
-    const [teams, setTeams] = useState([]);
-    const [selectedTeam, setSelectedTeam] = useState('');
-    const [teamMembers, setTeamMembers] = useState([]);
     const [surveyTitle, setSurveyTitle] = useState('');
     const [surveyDescription, setSurveyDescription] = useState('');
     const [questions, setQuestions] = useState([]);
@@ -98,52 +95,6 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
         }
         getClasses()
     }, []);
-
-    useEffect(() => {
-        if(selectedClass) {
-            async function getTeams() {
-                const options = {
-                    method: 'POST',
-                    url: 'http://localhost:3001/api/getTeamsInClass',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': token
-                    },
-                    data: {
-                        'class_id': selectedClass
-                    }
-                };
-    
-                const result = await axios(options);
-                console.log(result);
-                setTeams(result.data);
-            }
-            getTeams()
-        }
-    }, [selectedClass]);
-
-    useEffect(() => {
-        if(selectedTeam) {
-            async function getTeamMembers() {
-                const options = {
-                    method: 'POST',
-                    url: 'http://localhost:3001/api/getTeamMembers',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
-                    },
-                    data: {
-                        'team_id': selectedTeam
-                    }
-                }
-                
-                const result = await axios(options);
-                console.log(result);
-                setTeamMembers(result.data.team_members)
-            }
-            getTeamMembers()
-        }
-    }, [selectedTeam]);
 
     // useEffect(() => {
     //     if(teamMembers) {
@@ -173,10 +124,6 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
 
     const handleClassChange = event => {
         setSelectedClass(event.target.value);
-    };
-
-    const handleTeamChange = event => {
-        setSelectedTeam(event.target.value);
     };
 
     async function createSurvey() {
@@ -219,38 +166,10 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
                     </Select>
                 </FormControl>
 
-                <FormControl variant='outlined' className={classes.surveyDetails}>
-                    <InputLabel>Teams</InputLabel>
-                    <Select
-                        label="Team"
-                        value={selectedTeam}
-                        onChange={handleTeamChange}
-                    >   
-                        {teams.map((team, index) => 
-                            <MenuItem key={index} value={team.team_id}>{team.project_name}</MenuItem>
-                        )}
-                    </Select>
-                </FormControl>
             </div>
 
             <Divider className={classes.divider}/>
             
-            <div classname={classes.studentList}>
-                <Grid container spacing={3}>
-                    {teamMembers.map((teamMember, index) =>
-                        <Grid item xs={4} key={index}>
-                            <Card className={classes.questionCard} variant='outlined'>
-                                <CardContent>
-                                    <Typography classname={classes.questionTitle} color='textSecondary' gutterBottom>
-                                        {`${teamMember.first_name}  ${teamMember.last_name}`}
-                                    </Typography>
-                                    <Typography>{`Participation grade ${teamMember.first_name}?`}</Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    )}
-                </Grid>
-            </div>
             <Button 
                 variant='contained'
                 color='primary'
