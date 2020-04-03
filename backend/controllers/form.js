@@ -468,20 +468,20 @@ class form {
                 if (i == 0) {
                     var current_question_id = returnQuiz[i].question_id;
                     var current_question_control = 0;
-                    if (type == 'student'){
+                    if (type == 'student') {
                         resultForm.questions.push({
                             "question_id": returnQuiz[i].question_id,
                             "question_text": returnQuiz[i].question_text,
                             "question_type": returnQuiz[i].question_type
                         });
-                    } else if (type == 'coordinator'){
+                    } else if (type == 'coordinator') {
                         resultForm.questions.push({
-                           // "question_id": returnQuiz[i].question_id,
+                            // "question_id": returnQuiz[i].question_id,
                             "question_text": returnQuiz[i].question_text,
                             "question_type": returnQuiz[i].question_type
                         });
                     }
-                    
+
                     resultForm.questions[current_question_control].answers = new Array();
 
                 }
@@ -489,15 +489,15 @@ class form {
                 if (current_question_id != returnQuiz[i].question_id) {
 
 
-                    if (type == 'student'){
+                    if (type == 'student') {
                         resultForm.questions.push({
                             "question_id": returnQuiz[i].question_id,
                             "question_text": returnQuiz[i].question_text,
                             "question_type": returnQuiz[i].question_type
                         });
-                    } else if (type == 'coordinator'){
+                    } else if (type == 'coordinator') {
                         resultForm.questions.push({
-                           // "question_id": returnQuiz[i].question_id,
+                            // "question_id": returnQuiz[i].question_id,
                             "question_text": returnQuiz[i].question_text,
                             "question_type": returnQuiz[i].question_type
                         });
@@ -850,15 +850,26 @@ class form {
     // This will also grab any instances assigned to the that user's team_id.
     static async getInstances(req, res, next) {
 
-        const { user_id } = req.body;
+        const { user_id, type } = req.body;
         let instanceList;
-
-        try {
-            instanceList = await sequelize.query('CALL get_user_instances(?)',
-                { replacements: [user_id], type: sequelize.QueryTypes.CALL });
-        } catch (error) {
-            console.log(error);
-            res.send({ status: "Get Instances Failed" });
+        if (type == undefined) {
+            try {
+                instanceList = await sequelize.query('CALL get_user_instances(?)',
+                    { replacements: [user_id], type: sequelize.QueryTypes.CALL });
+            } catch (error) {
+                console.log(error);
+                res.send({ status: "Get Instances Failed" });
+            }
+        }
+        else 
+        {
+            try {
+                instanceList = await sequelize.query('CALL get_user_type_instances(?,?)',
+                    { replacements: [user_id,type], type: sequelize.QueryTypes.CALL });
+            } catch (error) {
+                console.log(error);
+                res.send({ status: "Get Instances Failed" });
+            }
         }
 
         res.send(instanceList);
