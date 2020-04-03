@@ -9,8 +9,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
+import FormCreated from '../FormCreated';
 import axios from 'axios';
-
 
 const formatDate = dateTime => {
     let month = ("0" + (dateTime.getMonth() + 1)).slice(-2);
@@ -47,8 +47,6 @@ const useStyles = makeStyles(theme => ({
 
 
 const NewMeeting = ({ userId, userType, token, loggedIn}) => {
-    //TODO: Authorization tokens are dynamic based on each user which needs to be used after login is created
-    //TODO make a dropdown selector + get request for teams and team ids
     let formattedStart = new Date();
     formattedStart = formatDate(formattedStart);
     let formattedEnd = new Date();
@@ -62,6 +60,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
     const [selectedClass, setSelectedClass] = useState('');
     const [teams, setTeams] = useState([]);
     const [selectedTeam, setSelectedTeam] = useState('');
+    const [formCreated, setFormCreated] = useState(false);
 
     useEffect(() => {
         if(userType === 'coordinator') {
@@ -71,7 +70,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
                     url: 'http://localhost:3001/api/getAllClasses',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                        'Authorization': token
                     }, 
                     data: {
                         'user_id': userId
@@ -93,7 +92,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
                     url: 'http://localhost:3001/api/getTeamsInClass',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                        'Authorization': token
                     },
                     data: {
                         'class_id': selectedClass
@@ -134,6 +133,10 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
         setSelectedTeam(event.target.value);
     };
 
+    const handleCloseFormCreatedDialog = () => {
+        setFormCreated(false)
+    };
+
     async function createMeeting() {
         let body = {
             'type': 'meeting',
@@ -143,7 +146,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
             'description': meetingDescription,
             'start_date': startDateTime,
             'end_date': endDateTime,
-            'team_id': 1 //TODO: create get request to load all the teams that exist with their associated id
+            'team_id': selectedTeam
         }
 
         let options = {
@@ -151,7 +154,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
             url: 'http://localhost:3001/api/CreateForm',
             headers: {
                 'Accept': 'application/json',
-                'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                'Authorization': token
             },
             data: body
         }
@@ -159,12 +162,17 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
         let response = await axios(options);
         console.log(response);
         let responseOK = response && response.status === 200 && response.statusText === 'OK';
+        let success = true;
         if(responseOK) {
             console.log('meeting made');
+            success = success && true;
         }
         else {
             console.log('something went wrong');
+            success = success && true;
         }
+
+        setFormCreated(success);
     };
 
     return (
@@ -247,6 +255,17 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
             >
                 Create Meeting
             </Button>
+            {formCreated && <FormCreated 
+                open={formCreated}
+                onClose={() => handleCloseFormCreatedDialog()}
+                confirmationText={`${meetingTitle} created!`}
+                createdText='Meeting Created'
+                start={startDateTime}
+                end={endDateTime}
+                assigned={`${selectedTeam} of ${selectedClass}`}
+                alertGrade=''
+                routeBack='/meeting/CreateMeeting'
+            />}
         </Fragment>
     )
 }
