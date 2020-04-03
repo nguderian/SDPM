@@ -629,7 +629,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 createdText='Quiz Created'
                 start={instanceType === 'instance' ? startDateTime : ''}
                 end={instanceType === 'instance' ? endDateTime : ''}
-                assigned={instanceType === 'instance' ? classList[selectedClass].name : ''}
+                assigned={instanceType === 'instance' ? selectedClass : ''}
                 alertGrade={quiz['alertValue']}
                 routeBack='/coordinator/CreateQuiz'
             />}
