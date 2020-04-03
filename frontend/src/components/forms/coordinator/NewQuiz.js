@@ -125,7 +125,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                     url: 'http://localhost:3001/api/getForm', 
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                        'Authorization': token
                     }, 
                     data: {
                         'form_id': formId,
@@ -202,7 +202,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 url: 'http://localhost:3001/api/getAllClasses',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                    'Authorization': token
                 }, 
                 data: {
                     'user_id': userId
@@ -394,7 +394,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
             url: 'http://localhost:3001/api/createForm',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                'Authorization': token
             },
             data: body
         };
@@ -403,14 +403,16 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
         let response = await axios(options);
         console.log(response);
         let responseOK = response && response.status === 200 && response.statusText === 'OK';
-        
+        let success = true;
         let newFormId = response.data.form_id;
         if(responseOK) {
-            console.log(newFormId)
+            console.log(newFormId);
+            success = success && true;
         }
         else {
             // send alert showing error and what the error was
-            console.log('something went wrong')
+            console.log('something went wrong');
+            success = success && false;
         }
 
         if(instanceType === 'instance') {
@@ -427,7 +429,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 url: 'http://localhost:3001/api/assignForm',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRhbnZpciIsImlhdCI6MTU4NDQ5OTEwNiwiZXhwIjoxNTg3MDkxMTA2fQ.smBUubIYJmf7Zefbr2pWf-wl-Uoqnmh598DA4IYnhfE'
+                    'Authorization': token
                 },
                 data: body
             };
@@ -438,16 +440,18 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
             let responseOK = response && response.status === 200 && response.statusText === 'OK';
             
             if(responseOK) {
-                console.log('successful instance created')
+                console.log('successful instance created');
+                success = success && true;
                 
             }
             else {
                 // send alert showing error and what the error was
-                console.log('something went wrong')
+                console.log('something went wrong');
+                success = success && false;
             }
         }
 
-        setFormCreated(true);
+        setFormCreated(success);
     };
 
     
@@ -625,7 +629,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 createdText='Quiz Created'
                 start={instanceType === 'instance' ? startDateTime : ''}
                 end={instanceType === 'instance' ? endDateTime : ''}
-                assignedClass={instanceType === 'instance' ? classList[selectedClass].name : ''}
+                assigned={instanceType === 'instance' ? classList[selectedClass].name : ''}
                 alertGrade={quiz['alertValue']}
                 routeBack='/coordinator/CreateQuiz'
             />}

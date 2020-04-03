@@ -21,7 +21,7 @@ const FormCreated = ({
     createdText,
     start,
     end,
-    assignedClass,
+    assigned,
     alertGrade, 
     routeBack
  }) => {
@@ -35,9 +35,9 @@ const FormCreated = ({
                     <Typography className={classes.confirmationDetails}>{confirmationText}</Typography>
                     <Typography className={classes.confirmationDetails}>{`Start: ${start}`}</Typography>
                     <Typography className={classes.confirmationDetails}>{`End: ${end}`}</Typography>
-                    <Typography className={classes.confirmationDetails}>{`Assigned to: ${assignedClass}`}</Typography>
+                    <Typography className={classes.confirmationDetails}>{`Assigned to: ${assigned}`}</Typography>
                     {alertGrade === '' ? 
-                        <Typography className={classes.confirmationDetails}>{`You will not receive alerts for this quiz`}</Typography>
+                        <Typography className={classes.confirmationDetails}>{`You will not receive alerts for this form`}</Typography>
                         : <Typography className={classes.confirmationDetails}>{`You will receive alerts for grades lower than: ${alertGrade}`}</Typography>
                     }
                 </DialogContent>

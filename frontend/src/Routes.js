@@ -5,9 +5,11 @@ import CreateQuizContainer from './components/containers/forms/coordinator/Creat
 import NewQuizContainer from './components/containers/forms/coordinator/NewQuizContainer';
 import ViewAssignmentsContainer from './components/containers/forms/ViewAssignmentsContainer';
 import NavBarContainer from './components/containers/NavBarContainer';
+import AdminClassPage from './components/AdminClassPage';
+import Home from './components/Home';
 import Assignment from './components/forms/Assignment';
-import CreateMeetingContainer from './components/containers/forms/coordinator/CreateMeetingContainer';
-import NewMeetingContainer from './components/containers/forms/coordinator/NewMeetingContainer';
+import CreateMeetingContainer from './components/containers/forms/student/CreateMeetingContainer';
+import NewMeetingContainer from './components/containers/forms/student/NewMeetingContainer';
 import CreateSurveyContainer from './components/containers/forms/coordinator/CreateSurveyContainer';
 import NewSurveyContainer from './components/containers/forms/coordinator/NewSurveyCJontainer';
 
@@ -15,7 +17,8 @@ const routes = (
     <Router>
         <NavBarContainer/>
         <Switch> 
-            <Route path='/' exact component={Hello}/>
+            <Route path='/' exact component={Home}/>
+            <Route path='/AdminClassPage' exact component={AdminClassPage}/>
 
             {/* quiz creation */}
             <Route path='/coordinator/CreateQuiz' exact component={CreateQuizContainer}/>
