@@ -81,6 +81,14 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
                 <ListItemIcon><AssignmentIcon/></ListItemIcon>
                 <ListItemText primary='Assignments'/>
               </ListItem>
+              <ListItem button component={Link} to='/student/Meeting/CreateMeeting'>
+                <ListItemIcon><CreateIcon/></ListItemIcon>
+                <ListItemText primary='Meetings'/>
+              </ListItem>
+              <ListItem button component={Link} to='/'>
+                <ListItemIcon><CreateIcon/></ListItemIcon>
+                <ListItemText primary='Take Attendance'/>
+              </ListItem>
               <ListItem button component={Link} to='/NewForm'>
                 <ListItemIcon><SettingsIcon/></ListItemIcon>
                 <ListItemText primary='Settings'/>
@@ -113,14 +121,6 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
               <ListItem button component={Link} to='/coordinator/Quiz/CreateQuiz'>
                 <ListItemIcon><CreateIcon/></ListItemIcon>
                 <ListItemText primary='Create Quiz'/>
-              </ListItem>
-              <ListItem button component={Link} to='/student/Meeting/CreateMeeting'>
-                <ListItemIcon><CreateIcon/></ListItemIcon>
-                <ListItemText primary='Create Meeting'/>
-              </ListItem>
-              <ListItem button component={Link} to='/'>
-                <ListItemIcon><CreateIcon/></ListItemIcon>
-                <ListItemText primary='Take Attendance'/>
               </ListItem>
               <ListItem button component={Link} to='/'>
                 <ListItemIcon><SearchIcon/></ListItemIcon>
