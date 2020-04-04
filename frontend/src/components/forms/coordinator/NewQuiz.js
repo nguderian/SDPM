@@ -331,11 +331,11 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
         setEndDateTime(formattedDateTime);
     };
 
-    const handleHasAlertValue = event => {
+    const handleHasAlertValueChange = event => {
         setQuiz({ ...quiz, ['hasAlertValue']: event.target.checked });
     };
 
-    const handleAlertvalue = event => {
+    const handleAlertValueChange = event => {
         setQuiz({ ...quiz, ['alertValue']: event.target.value });
     };
 
@@ -544,7 +544,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                     control={
                         <Checkbox 
                             checked={quiz['hasAlertValue']}
-                            onChange={handleHasAlertValue}
+                            onChange={handleHasAlertValueChange}
                             color='primary'
                         />
                     }
@@ -555,7 +555,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                         <TextField 
                             label='Value from 0 - 100'
                             variant='outlined'
-                            onChange={handleAlertvalue}
+                            onChange={handleAlertValueChange}
                             value={quiz['alertValue']}
                         />
                     </form>
