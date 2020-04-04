@@ -264,7 +264,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
                 end={endDateTime}
                 assigned={`${selectedTeam} of ${selectedClass}`}
                 alertGrade=''
-                routeBack='/meeting/CreateMeeting'
+                routeBack='/student/Meeting/CreateMeeting'
             />}
         </Fragment>
     )
