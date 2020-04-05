@@ -6,6 +6,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import TakeFillBlank from './questions/TakeFillBlank';
 import TakeMultipleChoice from './questions/TakeMultipleChoice';
+import Button from '@material-ui/core/Button';
+import FormSubmitted from '../../common/FormSubmitted';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme =>({
@@ -23,7 +25,7 @@ const useStyles = makeStyles(theme =>({
         borderRadius: '5px',
         marginTop: theme.spacing(2),
         flexGrow: 1,
-        maxHeight: '60%',
+        maxHeight: '70%',
         overflowY: 'scroll'
     },
     questionCard: {
@@ -31,23 +33,33 @@ const useStyles = makeStyles(theme =>({
         marginRight: theme.spacing(7),
         marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2)
+    }, 
+    quizDetail: {
+        marginLeft: theme.spacing(3),
+        marginRight: theme.spacing(3),
+        marginBottom: theme.spacing(2),
+        marginTop: theme.spacing(2)
+    }, 
+    submitButton: {
+        textAlign: 'center',
+        marginTop: theme.spacing(2)
     }
 }));
 
 
 const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
     const classes = useStyles();
-    const { formId } = location.state;
+    const { formId, instanceId } = location.state;
     const [quiz, setQuiz] = useState({
         title: '',
         description: '',
         questions: [],
         answers: []
     });
+    const [submitted, setSubmitted] = useState(true);
 
     useEffect(() => {
         async function getQuiz() {
-            console.log(formId, userId);
             const options = {
                 method: 'POST', 
                 url: 'http://localhost:3001/api/getForm', 
@@ -84,11 +96,49 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
         getQuiz()
     }, [])
 
-    
     const captureAnswer = (answer, index) => {
         quiz.answers[index].answer_text = answer;
         setQuiz({ ...quiz })
     };
+
+    const handleCloseSubmittedDialog = () => {
+        setSubmitted(false);
+    };
+
+    async function submitQuiz () {
+        const body = {
+            "form_id": formId,
+            "instance_id": instanceId,
+            "user_id": userId,
+            "results": quiz['answers']
+        };
+
+        const options = {
+            method: 'POST', 
+            url: 'http://localhost:3001/api/submitForm',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }, 
+            data: body
+        };
+
+        console.log(options);
+        let response = await axios(options);
+        console.log(response);
+        let responseOK = response && response.status === 200 && response.statusText === 'OK';
+        let success = true;
+        if(responseOK) {
+            success = success && true;
+            console.log('form Submitted!');
+        }
+        else {
+            success = success && false;
+            console.log('something went wrong');
+        }
+
+        setSubmitted(success);
+    }
 
     return(
         <Fragment>
@@ -99,9 +149,9 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 <TextField
                     disabled
                     variant='outlined'
-                    fullWidth={true}
                     value={quiz['description']}
                     multiline={true}
+                    fullWidth={true}
                 />
             </form>
 
@@ -128,6 +178,23 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
                     </Card>
                 )}
             </div>
+            <div className={classes.submitButton}>
+                <Button 
+                    variant='contained' 
+                    color='primary'
+                    onClick={submitQuiz}
+                >
+                    Submit
+                </Button>
+            </div>              
+            
+            {submitted && <FormSubmitted 
+                open={submitted}
+                onClose={() => handleCloseSubmittedDialog()}
+                confirmationText={`${quiz['title']} submitted!`}
+                submittedText='Quiz Submitted'
+                routeBack='/student/Quiz/ViewQuizzes'
+            />}
         </Fragment>
         
     );

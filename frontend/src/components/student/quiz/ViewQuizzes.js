@@ -79,7 +79,7 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                 <List component='nav'>
                     {allQuizzes.map((quiz, index) => 
                         <Card variant='outlined' key={index} className={classes.quizCard}>
-                            <CardActionArea component={Link} to={{ pathname: `/student/Quiz/${quiz.title}`, state: { formId: quiz.form_id }}}>
+                            <CardActionArea component={Link} to={{ pathname: `/student/Quiz/${quiz.title}`, state: { formId: quiz.form_id, instanceId: quiz.instance_id }}}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {quiz.title}
