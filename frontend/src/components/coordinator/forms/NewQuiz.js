@@ -559,7 +559,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 {quiz['hasAlertValue'] &&
                     <Slider 
                         className={classes.slider}
-                        defaultValue={40}
+                        defaultValue={quiz['alertValue']}
                         valueLabelDisplay='on'
                         min={0}
                         max={100}
