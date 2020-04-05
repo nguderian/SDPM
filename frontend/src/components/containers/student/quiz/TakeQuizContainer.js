@@ -1,5 +1,5 @@
-import ViewAssignments from '../../student/ViewAssignments';
-import {onLogin} from '../../../storeConfig/actions';
+import TakeQuiz from '../../../student/quiz/TakeQuiz';
+import {onLogin} from '../../../../storeConfig/actions';
 import {connect} from 'react-redux';
 
 const mapStateToProps = state =>{
@@ -22,6 +22,6 @@ const mapStateToProps = state =>{
 //     }
 // }
 
-const ViewAssignmentsContainer =  connect(mapStateToProps)(ViewAssignments);
+const TakeQuizContainer =  connect(mapStateToProps)(TakeQuiz);
 
-export default ViewAssignmentsContainer;
+export default TakeQuizContainer;
