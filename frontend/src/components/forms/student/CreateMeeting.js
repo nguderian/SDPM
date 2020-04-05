@@ -72,7 +72,7 @@ const CreateMeeting = ({ userId, userType, token, loggedIn }) => {
 
     return (
         <div className={classes.root}>
-            <Button className={classes.createButton} variant="contained" color="primary" component={Link} to={{ pathname: '/meeting/NewMeeting', state: { formId: '' }}}>
+            <Button className={classes.createButton} variant="contained" color="primary" component={Link} to={{ pathname: '/student/Meeting/NewMeeting', state: { formId: '' }}}>
                 Create New
             </Button>
             <Typography className={classes.templateText} variant='h5'>Meeting Templates</Typography>

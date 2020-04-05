@@ -20,6 +20,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import Slider from '@material-ui/core/Slider';
 import DateFnsUtils from '@date-io/date-fns'
 import { 
     MuiPickersUtilsProvider,
@@ -79,6 +80,11 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1),
         marginTop: theme.spacing(2),
         minWidth: 250
+    },
+    slider: {
+        width: '15%',
+        marginTop: theme.spacing(2),
+        marginLeft: theme.spacing(1),
     }
 }));
 
@@ -331,12 +337,12 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
         setEndDateTime(formattedDateTime);
     };
 
-    const handleHasAlertValue = event => {
+    const handleHasAlertValueChange = event => {
         setQuiz({ ...quiz, ['hasAlertValue']: event.target.checked });
     };
 
-    const handleAlertvalue = event => {
-        setQuiz({ ...quiz, ['alertValue']: event.target.value });
+    const handleAlertValueChange = (event, value) => {
+        setQuiz({ ...quiz, ['alertValue']: value });
     };
 
     const handleCloseFormCreatedDialog = () => {
@@ -544,21 +550,21 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                     control={
                         <Checkbox 
                             checked={quiz['hasAlertValue']}
-                            onChange={handleHasAlertValue}
+                            onChange={handleHasAlertValueChange}
                             color='primary'
                         />
                     }
                     label="Receive Alerts?"
                 />
-                {quiz['hasAlertValue'] && 
-                    <form className={classes.quizDetails} noValidate autoComplete='off'>
-                        <TextField 
-                            label='Value from 0 - 100'
-                            variant='outlined'
-                            onChange={handleAlertvalue}
-                            value={quiz['alertValue']}
-                        />
-                    </form>
+                {quiz['hasAlertValue'] &&
+                    <Slider 
+                        className={classes.slider}
+                        defaultValue={40}
+                        valueLabelDisplay='on'
+                        min={0}
+                        max={100}
+                        onChange={(event, value) => handleAlertValueChange(event, value) }
+                    />
                 }
             </div>
             <Button className={classes.createButton} variant="contained" color="primary" onClick={handleAddQuestion}>
@@ -629,9 +635,9 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 createdText='Quiz Created'
                 start={instanceType === 'instance' ? startDateTime : ''}
                 end={instanceType === 'instance' ? endDateTime : ''}
-                assigned={instanceType === 'instance' ? classList[selectedClass].name : ''}
+                assigned={instanceType === 'instance' ? selectedClass : ''}
                 alertGrade={quiz['alertValue']}
-                routeBack='/coordinator/CreateQuiz'
+                routeBack='/coordinator/Quiz/CreateQuiz'
             />}
         </Fragment>
     );

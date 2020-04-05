@@ -51,7 +51,7 @@ const CreateSurvey = ({ userId, userType, token, loggedIn }) => {
         <div className={classes.root}>
             <Grid container spacing={3}>
                 <Grid item xs={3}>
-                    <Button className={classes.createButton} variant="contained" color="primary" component={Link} to='/coordinator/NewSurvey'>
+                    <Button className={classes.createButton} variant="contained" color="primary" component={Link} to='/coordinator/Survey/NewSurvey'>
                         Create New
                     </Button>
                 </Grid>

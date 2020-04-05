@@ -21,16 +21,16 @@ const routes = (
             <Route path='/AdminClassPage' exact component={AdminClassPage}/>
 
             {/* quiz creation */}
-            <Route path='/coordinator/CreateQuiz' exact component={CreateQuizContainer}/>
+            <Route path='/coordinator/Quiz/CreateQuiz' exact component={CreateQuizContainer}/>
             <Route path='/coordinator/Quiz/:title' render={(props) => <NewQuizContainer {...props} />}/>
             
             {/* survey creation */}
-            <Route path='/coordinator/CreateSurvey' exact component={CreateSurveyContainer}/>
-            <Route path='/coordinator/NewSurvey' exact component={NewSurveyContainer}/>
+            <Route path='/coordinator/Survey/CreateSurvey' exact component={CreateSurveyContainer}/>
+            <Route path='/coordinator/Survey/NewSurvey' exact component={NewSurveyContainer}/>
             
             {/* meeting creation */}
-            <Route path='/meeting/CreateMeeting' exact component={CreateMeetingContainer}/>
-            <Route path='/meeting/:title'  render={(props) => <NewMeetingContainer {...props} />}/>
+            <Route path='/student/Meeting/CreateMeeting' exact component={CreateMeetingContainer}/>
+            <Route path='/student/Meeting/:title'  render={(props) => <NewMeetingContainer {...props} />}/>
 
             {/* completing forms - mainly for students */}
             <Route path='/student/viewAssignments' exact component={ViewAssignmentsContainer}/>

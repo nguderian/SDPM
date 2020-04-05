@@ -151,7 +151,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
 
         let options = {
             method: 'POST',
-            url: 'http://localhost:3001/api/CreateForm',
+            url: 'http://localhost:3001/api/createForm',
             headers: {
                 'Accept': 'application/json',
                 'Authorization': token
@@ -264,7 +264,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
                 end={endDateTime}
                 assigned={`${selectedTeam} of ${selectedClass}`}
                 alertGrade=''
-                routeBack='/meeting/CreateMeeting'
+                routeBack='/student/Meeting/CreateMeeting'
             />}
         </Fragment>
     )
