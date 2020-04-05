@@ -4,6 +4,8 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import TakeFillBlank from './questions/TakeFillBlank';
+import TakeMultipleChoice from './questions/TakeMultipleChoice';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme =>({
@@ -61,7 +63,7 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
 
             const result = await axios(options); 
             const quiz = result.data.quiz;
-            console.log(quiz);
+            
             let arr = [];
 
             quiz.questions.forEach(question => {
@@ -71,8 +73,7 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 };
                 arr.push(obj);
             });
-
-            console.log(arr);
+            
             setQuiz({
                 ['title']: quiz.title,
                 ['description']: quiz.description,
@@ -83,8 +84,15 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
         getQuiz()
     }, [])
 
+    
+    const captureAnswer = (answer, index) => {
+        quiz.answers[index].answer_text = answer;
+        setQuiz({ ...quiz })
+    };
+
     return(
         <Fragment>
+            {console.log(quiz)}
             <Typography variant="h4" className={classes.pageTitle}>{quiz['title']}</Typography>
 
             <form className={classes.quizDetail} noValidate autoComplete='off'>
@@ -102,6 +110,20 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
                     <Card variant='outlined' key={index} className={classes.questionCard}>
                         <CardContent>
                             <Typography>{question.question_text}</Typography>
+                            {question.question_type === 'multiple_choice' && 
+                                <TakeMultipleChoice 
+                                    question={question}
+                                    handleChange={captureAnswer}
+                                    index={index}
+                                />
+                            }
+                            {question.question_type === 'fill_blank' && 
+                                <TakeFillBlank 
+                                    question={question}
+                                    handleChange={captureAnswer}
+                                    index={index}
+                                />
+                            }
                         </CardContent>
                     </Card>
                 )}
