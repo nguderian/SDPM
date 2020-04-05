@@ -1,4 +1,4 @@
-import ViewAssignments from '../../student/ViewAssignments';
+import ViewQuizzes from '../../student/quiz/ViewQuizzes';
 import {onLogin} from '../../../storeConfig/actions';
 import {connect} from 'react-redux';
 
@@ -22,6 +22,6 @@ const mapStateToProps = state =>{
 //     }
 // }
 
-const ViewAssignmentsContainer =  connect(mapStateToProps)(ViewAssignments);
+const ViewQuizzesContainer =  connect(mapStateToProps)(ViewQuizzes);
 
-export default ViewAssignmentsContainer;
+export default ViewQuizzesContainer;

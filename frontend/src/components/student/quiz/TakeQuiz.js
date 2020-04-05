@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme =>({
 }));
 
 
-const Assignment = ({ match, location }) => {
+const TakeQuiz = ({ match, location }) => {
     const classes = useStyles();
     const { form } = location.state;
     
@@ -34,4 +34,4 @@ const Assignment = ({ match, location }) => {
     );
 }
 
-export default Assignment;
+export default TakeQuiz;
