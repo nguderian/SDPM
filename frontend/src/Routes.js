@@ -1,17 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Hello from './components/HelloWorld';
-import CreateQuizContainer from './components/containers/forms/coordinator/CreateQuizContainer';
-import NewQuizContainer from './components/containers/forms/coordinator/NewQuizContainer';
-import ViewAssignmentsContainer from './components/containers/forms/ViewAssignmentsContainer';
+import CreateQuizContainer from './components/containers/coordinator/forms/CreateQuizContainer';
+import NewQuizContainer from './components/containers/coordinator/forms/NewQuizContainer';
+import ViewAssignmentsContainer from './components/containers/student/ViewAssignmentsContainer';
 import NavBarContainer from './components/containers/NavBarContainer';
 import AdminClassPage from './components/AdminClassPage';
 import Home from './components/Home';
-import Assignment from './components/forms/Assignment';
-import CreateMeetingContainer from './components/containers/forms/student/CreateMeetingContainer';
-import NewMeetingContainer from './components/containers/forms/student/NewMeetingContainer';
-import CreateSurveyContainer from './components/containers/forms/coordinator/CreateSurveyContainer';
-import NewSurveyContainer from './components/containers/forms/coordinator/NewSurveyCJontainer';
+import Assignment from './components/student/Assignment';
+import CreateMeetingContainer from './components/containers/student/CreateMeetingContainer';
+import NewMeetingContainer from './components/containers/student/NewMeetingContainer';
+import CreateSurveyContainer from './components/containers/coordinator/forms/CreateSurveyContainer';
+import NewSurveyContainer from './components/containers/coordinator/forms/NewSurveyCJontainer';
 
 const routes = (
     <Router>

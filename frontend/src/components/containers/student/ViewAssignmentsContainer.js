@@ -1,4 +1,4 @@
-import ViewAssignments from '../../forms/ViewAssignments';
+import ViewAssignments from '../../student/ViewAssignments';
 import {onLogin} from '../../../storeConfig/actions';
 import {connect} from 'react-redux';
 
