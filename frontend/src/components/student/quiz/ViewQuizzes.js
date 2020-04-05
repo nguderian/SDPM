@@ -21,17 +21,12 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(2),
         textAlign: 'center'
     },
-    root: {
-        flexGrow: 1,
-        height: '100vh',
-        overflow: 'auto'
-    },
     quizList: {
         flexGrow: 1,
         maxHeight: '40%',
         overflowY: 'scroll',
-        // border: '2px solid gray',
-        // borderRadius: '5px',
+        border: '1px solid gray',
+        borderRadius: '5px',
         marginLeft: theme.spacing(7),
         marginRight: theme.spacing(7)
     },
@@ -40,6 +35,10 @@ const useStyles = makeStyles(theme => ({
         marginRight: theme.spacing(7),
         marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2)
+    }, 
+    detailText: {
+        marginLeft: theme.spacing(7),
+        marginBottom: theme.spacing(2)
     }
 }))
 
@@ -75,20 +74,24 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
         <div>
             <Typography variant="h4" className={classes.pageTitle}>Quizzes</Typography>
             <Divider className={classes.divider} variant="fullWidth"/>
-            <List component='nav'>
-                {allQuizzes.map((quiz, index) => 
-                    <Card variant='outlined' key={index} className={classes.quizCard}>
-                        <CardActionArea component={Link} to={{ pathname: `/student/Quiz/${quiz.title}`, state: { formId: quiz.form_id }}}>
-                            <CardContent>
-                                <Typography color='textSecondary' gutterBottom>
-                                    {quiz.title}
-                                </Typography>
-                                <Typography>{quiz.description}</Typography>
-                            </CardContent>
-                        </CardActionArea>
-                    </Card>
-                )}
-            </List>
+            <Typography className={classes.detailText} variant='h5'>Upcoming</Typography>
+            <div className={classes.quizList}>
+                <List component='nav'>
+                    {allQuizzes.map((quiz, index) => 
+                        <Card variant='outlined' key={index} className={classes.quizCard}>
+                            <CardActionArea component={Link} to={{ pathname: `/student/Quiz/${quiz.title}`, state: { formId: quiz.form_id }}}>
+                                <CardContent>
+                                    <Typography color='textSecondary' gutterBottom>
+                                        {quiz.title}
+                                    </Typography>
+                                    <Typography>{quiz.description}</Typography>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    )}
+                </List>
+            </div>
+            
         </div>
         
     );

@@ -77,7 +77,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
                 <ListItemIcon><ClassIcon/></ListItemIcon>
                 <ListItemText primary='Class'/>
               </ListItem>
-              <ListItem button component={Link} to='/student/viewAssignments'>
+              <ListItem button component={Link} to='/student/Quiz/ViewQuizzes'>
                 <ListItemIcon><AssignmentIcon/></ListItemIcon>
                 <ListItemText primary='Assignments'/>
               </ListItem>

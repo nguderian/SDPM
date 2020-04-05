@@ -2,11 +2,11 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import CreateQuizContainer from './components/containers/coordinator/forms/CreateQuizContainer';
 import NewQuizContainer from './components/containers/coordinator/forms/NewQuizContainer';
-import ViewQuizzesContainer from './components/containers/student/ViewQuizzesContainer';
+import ViewQuizzesContainer from './components/containers/student/quiz/ViewQuizzesContainer';
 import NavBarContainer from './components/containers/NavBarContainer';
 import AdminClassPage from './components/AdminClassPage';
 import Home from './components/Home';
-import TakeQuiz from './components/student/quiz/TakeQuiz';
+import TakeQuizContainer from './components/containers/student/quiz/TakeQuizContainer';
 import CreateMeetingContainer from './components/containers/student/CreateMeetingContainer';
 import NewMeetingContainer from './components/containers/student/NewMeetingContainer';
 import CreateSurveyContainer from './components/containers/coordinator/forms/CreateSurveyContainer';
@@ -32,8 +32,8 @@ const routes = (
             <Route path='/student/Meeting/:title'  render={(props) => <NewMeetingContainer {...props} />}/>
 
             {/* complete a quiz */}
-            <Route path='/student/Quiz/viewQuizzes' exact component={ViewQuizzesContainer}/>
-            <Route path='/student/Quiz/:title' render={ (props) => <TakeQuiz {...props}/>}/>
+            <Route path='/student/Quiz/ViewQuizzes' exact component={ViewQuizzesContainer}/>
+            <Route path='/student/Quiz/:title' render={ (props) => <TakeQuizContainer {...props}/>}/>
         </Switch>
     </Router>
 )
