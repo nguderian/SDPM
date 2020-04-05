@@ -10,10 +10,10 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import NewQuestion from './questions/NewQuestion';
+import NewQuestion from './questions/NewQuestion'
 import DeleteQuestion from './questions/DeleteQuestion';
 import EditQuestion from './questions/EditQuestion';
-import FormCreated from '../FormCreated';
+import FormCreated from '../../FormCreated';
 import FormControl from '@material-ui/core/FormControl';
 import FormControllabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
