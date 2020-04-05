@@ -6,7 +6,7 @@ import ViewAssignmentsContainer from './components/containers/student/ViewAssign
 import NavBarContainer from './components/containers/NavBarContainer';
 import AdminClassPage from './components/AdminClassPage';
 import Home from './components/Home';
-import Assignment from './components/student/Assignment';
+import Assignment from './components/student/quiz/Assignment';
 import CreateMeetingContainer from './components/containers/student/CreateMeetingContainer';
 import NewMeetingContainer from './components/containers/student/NewMeetingContainer';
 import CreateSurveyContainer from './components/containers/coordinator/forms/CreateSurveyContainer';
