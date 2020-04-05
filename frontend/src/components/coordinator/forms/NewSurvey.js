@@ -2,30 +2,12 @@ import React, { useState, Fragment, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import NewQuestion from './questions/NewQuestion';
-import DeleteQuestion from './questions/DeleteQuestion';
-import EditQuestion from './questions/EditQuestion';
-// import FormOrTemplateCreated from '../FormOrTemplateCreated';
 import FormControl from '@material-ui/core/FormControl';
-import FormControllabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import DateFnsUtils from '@date-io/date-fns'
-import { 
-    MuiPickersUtilsProvider,
-    DateTimePicker
-} from '@material-ui/pickers/';
-
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({

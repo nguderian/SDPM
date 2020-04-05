@@ -1,4 +1,4 @@
-import NewQuiz from '../../../forms/coordinator/NewQuiz';
+import CreateSurvey from '../../../coordinator/forms/CreateSurvey';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
@@ -11,6 +11,6 @@ const mapStateToProps = state => {
     }
 }
 
-const NewQuizContainer = connect(mapStateToProps)(NewQuiz);
+const CreateSurveyContainer = connect(mapStateToProps)(CreateSurvey);
 
-export default NewQuizContainer;
+export default CreateSurveyContainer;
