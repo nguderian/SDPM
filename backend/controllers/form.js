@@ -167,6 +167,11 @@ class form {
                             status.status2 = " Insert Answer Key";
                         }
                     }
+                    else {
+                        await sequelize.query('CALL insert_answer_key(?,?,?)',
+                                { replacements: ["", question_id, 
+                                    1], type: sequelize.QueryTypes.CALL });
+                    }
                 } catch (error) {
                     console.log(error);
                     status.status2 = "Failed";
