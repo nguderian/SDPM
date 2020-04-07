@@ -7,8 +7,8 @@ import NavBarContainer from './components/containers/NavBarContainer';
 import AdminClassPage from './components/AdminClassPage';
 import Home from './components/Home';
 import TakeQuizContainer from './components/containers/student/quiz/TakeQuizContainer';
-import CreateMeetingContainer from './components/containers/student/CreateMeetingContainer';
-import NewMeetingContainer from './components/containers/student/NewMeetingContainer';
+import CreateMeetingContainer from './components/containers/student/meeting/CreateMeetingContainer';
+import NewMeetingContainer from './components/containers/student/meeting/NewMeetingContainer';
 import CreateSurveyContainer from './components/containers/coordinator/forms/CreateSurveyContainer';
 import NewSurveyContainer from './components/containers/coordinator/forms/NewSurveyCJontainer';
 
