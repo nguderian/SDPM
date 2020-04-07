@@ -56,7 +56,7 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
         questions: [],
         answers: []
     });
-    const [submitted, setSubmitted] = useState(true);
+    const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
         async function getQuiz() {
@@ -109,7 +109,7 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
         const body = {
             "form_id": formId,
             "instance_id": instanceId,
-            "user_id": userId,
+            "student_id": userId,
             "results": quiz['answers']
         };
 

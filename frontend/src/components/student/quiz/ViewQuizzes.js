@@ -6,9 +6,9 @@ import List from '@material-ui/core/List';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
-import axios from 'axios';
+import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
-
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
     divider: {
@@ -39,6 +39,16 @@ const useStyles = makeStyles(theme => ({
     detailText: {
         marginLeft: theme.spacing(7),
         marginBottom: theme.spacing(2)
+    }, 
+    classSelector: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginLeft: theme.spacing(7),
+        marginBottom: theme.spacing(2), 
+        flexGrow: 1
+    }, 
+    classButton: {
+        marginRight: theme.spacing(2)
     }
 }))
 
@@ -46,40 +56,77 @@ const useStyles = makeStyles(theme => ({
 const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
     const classes = useStyles();
     const [allQuizzes, setAllQuizzes] = useState([]);
+    const [classList, setAllClasses] = useState([]);
 
     useEffect(() => {
-        async function getAllQuizzes() {
+        async function getAllClasses() {
             const options = {
                 method: 'POST',
-                url: 'http://localhost:3001/api/getInstances',
+                url: 'http://localhost:3001/api/getAllClasses',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': token
                 },
                 data: {
                     'user_id': userId,
-                    'type': 'quiz'
-                }
+                },
             };
 
             let result = await axios(options);
             console.log(result);
-            setAllQuizzes(result.data)
+            setAllClasses(result.data);
         }
-        getAllQuizzes();
-    }, []);
+        getAllClasses();
+    }, [])
 
-    
+    async function getAllQuizzes(studentId) {
+        const options = {
+            method: 'POST',
+            url: 'http://localhost:3001/api/getInstances',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                'student_id': studentId,
+                'type': 'quiz'
+            }
+        };
+
+        let result = await axios(options);
+        console.log(result);
+        setAllQuizzes(result.data);
+    };
+
     return (
         <div>
-            <Typography variant="h4" className={classes.pageTitle}>Quizzes</Typography>
+            <Typography variant="h4" className={classes.pageTitle}>Assignments</Typography>
             <Divider className={classes.divider} variant="fullWidth"/>
+            <div className={classes.classSelector}>
+                {classList.map((classItem, index) => 
+                    <Button 
+                        key={index}
+                        variant='outlined'
+                        color={classItem.is_active === 1 ? 'primary': 'secondary'}
+                        onClick={() => getAllQuizzes(classItem.student_id)}
+                    >
+                        {classItem.name}
+                    </Button>
+                )}
+            </div>
             <Typography className={classes.detailText} variant='h5'>Upcoming</Typography>
             <div className={classes.quizList}>
                 <List component='nav'>
+                    {allQuizzes.length === 0 &&
+                        <Card variant='elevation' className={classes.quizCard}>
+                            <CardContent>
+                                <Typography>No results. Please select a class</Typography>
+                            </CardContent>
+                        </Card>
+                    }
                     {allQuizzes.map((quiz, index) => 
                         <Card variant='outlined' key={index} className={classes.quizCard}>
-                            <CardActionArea component={Link} to={{ pathname: `/student/Quiz/${quiz.title}`, state: { formId: quiz.form_id, instanceId: quiz.instance_id }}}>
+                            <CardActionArea component={Link} to={{ pathname: `/student/Quiz/${quiz.title}`, state: { formId: quiz.form_id, instanceId: quiz.instance_id  }}}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {quiz.title}
@@ -89,6 +136,7 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                             </CardActionArea>
                         </Card>
                     )}
+                    
                 </List>
             </div>
             
