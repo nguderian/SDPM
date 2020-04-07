@@ -27,8 +27,8 @@ const useStyles = makeStyles(theme => ({
     }, 
     createButton: {
       marginLeft: theme.spacing(7),
-      marginBottom: theme.spacing(2),
-      width: '7%'
+      marginTop: theme.spacing(1),
+      height: '7%',
     },
     meetingList: {
         flexGrow: 1,
@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
         borderRadius: '5px',
         marginLeft: theme.spacing(7),
         marginRight: theme.spacing(7), 
-        marginBottom: theme.spacing(2)
+        marginBottom: theme.spacing(7)
     }, 
     pageTitle: {
         margin: theme.spacing(1),
@@ -62,7 +62,8 @@ const useStyles = makeStyles(theme => ({
     },
     options: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
+        marginBottom: theme.spacing(2)
     }
 }));
 
