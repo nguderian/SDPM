@@ -119,7 +119,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
                 <ListItemIcon><HomeIcon/></ListItemIcon>
                 <ListItemText primary='Home'/>
               </ListItem>
-              <ListItem button component={Link} to='/'>
+              <ListItem button component={Link} to='/coordinator/ViewClasses'>
                 <ListItemIcon><ClassIcon/></ListItemIcon>
                 <ListItemText primary='Class'/>
               </ListItem>

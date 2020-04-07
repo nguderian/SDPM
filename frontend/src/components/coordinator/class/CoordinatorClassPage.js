@@ -169,7 +169,5 @@ export default function MaterialTableDemo() {
   Update Roster
   </Button>
   </div>
-
-
   );
 }

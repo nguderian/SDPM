@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment, useEffect, useState } from 'react';
 import ReactDOM from "react-dom";
 import MaterialTable from "material-table";
 import { forwardRef } from 'react';
@@ -20,6 +20,7 @@ import ViewColumn from '@material-ui/icons/ViewColumn';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import axios from 'axios';
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -40,6 +41,30 @@ const tableIcons = {
   ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
+/*const updateTable = ({}) => {
+    useEffect(() => {
+        async function getAllNotifications() {
+            const options = {
+                method: 'POST',
+                url: 'http://localhost:3001/api/getUserDashboardAlerts',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                }, 
+                data: {
+                    'user_id': userId,
+                    'type': 'survey'
+                }
+            };
+
+            let result = await axios(options);
+            console.log(result);
+            setAllSurveys(result.data);
+        }
+        getAllSurveys();
+    }, []);
+}
+*/
 class Home extends Component {
     render() {
         return (
