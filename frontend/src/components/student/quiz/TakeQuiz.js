@@ -49,14 +49,14 @@ const useStyles = makeStyles(theme =>({
 
 const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
     const classes = useStyles();
-    const { formId, instanceId } = location.state;
+    const { formId, instanceId, studentId } = location.state;
     const [quiz, setQuiz] = useState({
         title: '',
         description: '',
         questions: [],
         answers: []
     });
-    const [submitted, setSubmitted] = useState(true);
+    const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
         async function getQuiz() {
@@ -109,7 +109,7 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
         const body = {
             "form_id": formId,
             "instance_id": instanceId,
-            "user_id": userId,
+            "student_id": studentId,
             "results": quiz['answers']
         };
 
