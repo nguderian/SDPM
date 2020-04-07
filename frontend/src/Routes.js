@@ -7,7 +7,7 @@ import NavBarContainer from './components/containers/NavBarContainer';
 import AdminClassPage from './components/AdminClassPage';
 import Home from './components/Home';
 import TakeQuizContainer from './components/containers/student/quiz/TakeQuizContainer';
-import CreateMeetingContainer from './components/containers/student/meeting/CreateMeetingContainer';
+import ViewMeetingsContainer from './components/containers/student/meeting/ViewMeetingsContainer';
 import NewMeetingContainer from './components/containers/student/meeting/NewMeetingContainer';
 import CreateSurveyContainer from './components/containers/coordinator/forms/CreateSurveyContainer';
 import NewSurveyContainer from './components/containers/coordinator/forms/NewSurveyCJontainer';
@@ -28,7 +28,7 @@ const routes = (
             <Route path='/coordinator/Survey/NewSurvey' exact component={NewSurveyContainer}/>
             
             {/* meeting creation */}
-            <Route path='/student/Meeting/CreateMeeting' exact component={CreateMeetingContainer}/>
+            <Route path='/student/Meeting/CreateMeeting' exact component={ViewMeetingsContainer}/>
             <Route path='/student/Meeting/:title'  render={(props) => <NewMeetingContainer {...props} />}/>
 
             {/* complete a quiz */}

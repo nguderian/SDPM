@@ -69,30 +69,32 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
             onKeyDown={toggleDrawer(side, false)}
           >
             <List>
+
               <ListItem button component={Link} to='/'>
                 <ListItemIcon><HomeIcon/></ListItemIcon>
                 <ListItemText primary='Home'/>
               </ListItem>
+
               <ListItem button component={Link} to='/'>
                 <ListItemIcon><ClassIcon/></ListItemIcon>
                 <ListItemText primary='Class'/>
               </ListItem>
+
               <ListItem button component={Link} to='/student/Quiz/ViewQuizzes'>
                 <ListItemIcon><AssignmentIcon/></ListItemIcon>
                 <ListItemText primary='Assignments'/>
               </ListItem>
+
               <ListItem button component={Link} to='/student/Meeting/CreateMeeting'>
                 <ListItemIcon><CreateIcon/></ListItemIcon>
                 <ListItemText primary='Meetings'/>
               </ListItem>
-              <ListItem button component={Link} to='/'>
-                <ListItemIcon><CreateIcon/></ListItemIcon>
-                <ListItemText primary='Take Attendance'/>
-              </ListItem>
+  
               <ListItem button component={Link} to='/NewForm'>
                 <ListItemIcon><SettingsIcon/></ListItemIcon>
                 <ListItemText primary='Settings'/>
               </ListItem>
+              
             </List>
           </div>
         )
