@@ -18,7 +18,6 @@ const routes = (
         <NavBarContainer/>
         <Switch> 
             <Route path='/' exact component={Home}/>
-            <Route path='/login' exact component={Login}/>
             <Route path='/AdminClassPage' exact component={AdminClassPage}/>
 
             {/* quiz creation */}
