@@ -6,7 +6,7 @@ const nconf = require('nconf');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session');
-const lti = require('./lti/lti');
+const lti = require('./canvas/lti');
 
 const app = express();
 

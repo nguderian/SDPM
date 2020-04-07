@@ -1,13 +1,13 @@
 const { sequelize } = require('../models/');
 const parse = require('csv-parse');
-const parser = parse({delimiter: ','});
+const parser = parse({ delimiter: ',' });
 const csv = require('fast-csv');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 var mailer = require('./mailer');
 
-async function insertStudents(NID, last_name, first_name, email, sd1_term, sd1_year, class_id, res) {
+async function insertStudents(NID, last_name, first_name, email, class_id, res) {
     let new_user_id;
     let type = 'student';
 
@@ -23,29 +23,45 @@ async function insertStudents(NID, last_name, first_name, email, sd1_term, sd1_y
 
     // insert the new user.
     try {
-        let result = await sequelize.query(`CALL insert_user(?,?,?,?,?,?);`, 
-            {replacements:[NID, hash, type, last_name, first_name, email], type: sequelize.QueryTypes.CALL});
+
+        let check = await sequelize.query(`CALL get_username(?);`,
+            { replacements: [NID], type: sequelize.QueryTypes.CALL });
+
+        if (check !== undefined) {
+            new_user_id = check[0].user_id;
+        } else {
+            let result = await sequelize.query(`CALL insert_user(?,?,?,?,?,?);`,
+                { replacements: [NID, hash, type, last_name, first_name, email], type: sequelize.QueryTypes.CALL });
             new_user_id = result[0]['LAST_INSERT_ID()'];
+        }
+
     }
-    catch(error) {
+    catch (error) {
         console.log(error);
-        if(error.parent.code === 'ER_DUP_ENTRY')
-            res.send({ err : "Duplicate" });
+        if (error.parent.code === 'ER_DUP_ENTRY')
+            res.send({ err: "Duplicate" });
         else
-            res.send({ status : "Unkown error" });
+            res.send({ status: "Unkown error" });
     }
 
-    // Insert student
-    try {
-        await sequelize.query('CALL insert_student(?,?,?,?,?,?,?,?)',
-            {replacements : [1, sd1_term, sd1_year, "spring", 2020, 0, new_user_id, class_id], type : sequelize.QueryTypes.CALL});
-    }
-    catch(error) {
-        res.send({ status: "Insert error" });
-        console.log(error);
-    }
+    let checkClass = await sequelize.query(`CALL check_student_class(?,?);`,
+        { replacements: [new_user_id, class_id], type: sequelize.QueryTypes.CALL });
 
-    mailer.sendEmail(email, "New Account Created", "Your username is: " + NID +  "\nYour temporary password is: " + tmp_pass);
+    if (checkClass == undefined) {
+        // Insert student
+        try {
+            await sequelize.query('CALL insert_student(?,?)',
+                { replacements: [new_user_id, class_id], type: sequelize.QueryTypes.CALL });
+            mailer.sendEmail(email, "New Account Created", "Your username is: " + NID + "\nYour temporary password is: " + tmp_pass);
+        }
+        catch (error) {
+            res.send({ status: "Insert error" });
+            console.log(error);
+        }
+    }
+    else {
+        console.log("Student already in this class: " + NID);
+    }
 }
 
 async function insertTeams(teams, students, user_id, res) {
@@ -56,17 +72,19 @@ async function insertTeams(teams, students, user_id, res) {
     // The index of teamID will correspond to the team number that is in the csv
     // Since there is no team 0, I have set that to null.
 
-    for(let i = 0; i < teams.length; i++) {
+    for (let i = 0; i < teams.length; i++) {
         // Insert team
         try {
             let result = await sequelize.query('CALL insert_team(?,?,?,?,?,?,?)',
-                {replacements: [teams[i][2], teams[i][1], teams[i][3], teams[i][4], teams[i][5], teams[i][6], user_id],
-                type: sequelize.QueryTypes.CALL});
+                {
+                    replacements: [teams[i][2], teams[i][1], teams[i][3], teams[i][4], teams[i][5], teams[i][6], user_id],
+                    type: sequelize.QueryTypes.CALL
+                });
             newTeamID = result[0]['LAST_INSERT_ID()'];
             teamID.push(newTeamID);
             // console.log(newTeamID);
         }
-        catch(error) {
+        catch (error) {
             console.log(error);
             // res.send({status: "create team failed"});
         }
@@ -74,7 +92,7 @@ async function insertTeams(teams, students, user_id, res) {
 
     // console.log(teamID);
 
-    for(let i = 0; i < students.length; i++) {
+    for (let i = 0; i < students.length; i++) {
         let student_id;
         let studentTeamNum = students[i][3];
         // console.log('Team Num:', studentTeamNum);
@@ -84,19 +102,23 @@ async function insertTeams(teams, students, user_id, res) {
         try {
             let result = await sequelize.query(
                 'SELECT student_id FROM students INNER JOIN users ON students.user_id = users.user_id WHERE users.user_id = (SELECT user_id FROM users WHERE username = ?)',
-                {replacements: [students[i][2]], 
-                type: sequelize.QueryTypes.SELECT});
+                {
+                    replacements: [students[i][2]],
+                    type: sequelize.QueryTypes.SELECT
+                });
             student_id = result[0]['student_id'];
         }
-        catch(error) {
+        catch (error) {
             console.log(error);
         }
 
         // Insert student 
         try {
             await sequelize.query('CALL update_student_with_team(?,?)',
-                {replacements: [student_id, team_id],
-                type: sequelize.QueryTypes.CALL});
+                {
+                    replacements: [student_id, team_id],
+                    type: sequelize.QueryTypes.CALL
+                });
         }
         catch (error) {
             console.log(error);
@@ -107,10 +129,10 @@ async function insertTeams(teams, students, user_id, res) {
 class csvUpload {
     static uploadStudentCSV(req, res, next) {
         const { file } = req.file;
-        const { sd1_term, sd1_year, class_id } = req.body;
+        const { class_id } = req.body;
 
         const students = [];
-        
+
         csv.parseFile(req.file.path)
             .on('data', (csvRow) => {
                 students.push(csvRow)
@@ -118,10 +140,10 @@ class csvUpload {
             .on('end', () => {
                 // Index # -> name
                 // 3 -> NID, 4 -> last name, 5 -> first name, 7 -> email
-                for(let i = 1; i < students.length; i++) {
-                    insertStudents(students[i][2], students[i][3], students[i][4], students[i][6], sd1_term, sd1_year, class_id, res);
+                for (let i = 1; i < students.length; i++) {
+                    insertStudents(students[i][2], students[i][3], students[i][4], students[i][6], class_id, res);
                 }
-                res.json('Upload Successful');     
+                res.json('Upload Successful');
             });
     }
 
@@ -147,29 +169,29 @@ class csvUpload {
                 // The first row to indicate students will be
                 // First Name, Last Name, NID, Team Number
 
-                for(let i = 1; i < csvData.length; i++) {
-                    if(csvData[i][0] === '') continue;
+                for (let i = 1; i < csvData.length; i++) {
+                    if (csvData[i][0] === '') continue;
 
-                    if(csvData[i][0] === 'First Name') {
+                    if (csvData[i][0] === 'First Name') {
                         isStudent = true;
                         continue;
                     }
 
-                    if(isStudent === false) {
+                    if (isStudent === false) {
                         // insertTeam(csvData[i], user_id, res); 
                         // console.log(result);
                         // teamID.push(result[0]['LAST_INSERT_ID()']);
                         teams.push(csvData[i]);
                     }
-                    else if(isStudent === true) {
+                    else if (isStudent === true) {
                         students.push(csvData[i]);
                         // insertStudentToTeam(csvData[i]);
-                    }        
+                    }
                 }
 
                 insertTeams(teams, students, user_id, res);
                 res.json('Upload Successful');
-            });        
+            });
     }
 }
 

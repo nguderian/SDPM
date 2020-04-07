@@ -36,18 +36,44 @@ class classes {
         let status = {};
         let returnClasses;
 
-        try {
-            returnClasses = await sequelize.query(
-                'CALL get_all_classes_coordinator(?)',
-                { replacements: [user_id], type: sequelize.QueryTypes.CALL });
-            status.status1 = "All classes";
-            console.log(returnClasses);
-            next;
-        } catch (error) {
-            console.log(class_id);
-            status.status1 = "Failed";
-            next;
+        let userType = await sequelize.query(
+            'CALL get_user_type(?)',
+            { replacements: [user_id], type: sequelize.QueryTypes.CALL });
+        let type = userType[0].type;
+
+        if (type == "student") {
+            try {
+                returnClasses = await sequelize.query(
+                    'CALL get_all_classes_student(?)',
+                    { replacements: [user_id], type: sequelize.QueryTypes.CALL });
+                status.status1 = "All classes";
+                console.log(returnClasses);
+                next;
+            } catch (error) {
+                console.log(class_id);
+                status.status1 = "Failed";
+                next;
+            }
         }
+        else if (type == "coordinator") {
+            try {
+                returnClasses = await sequelize.query(
+                    'CALL get_all_classes_coordinator(?)',
+                    { replacements: [user_id], type: sequelize.QueryTypes.CALL });
+                status.status1 = "All classes";
+                console.log(returnClasses);
+                next;
+            } catch (error) {
+                console.log(class_id);
+                status.status1 = "Failed";
+                next;
+            }
+        }
+        else {
+            res.send("Not found.");
+        }
+
+        
 
         res.send(returnClasses);
 
@@ -57,6 +83,7 @@ class classes {
         const { class_id } = req.body;
         let returnStudents;
         let status = {};
+
         try {
             returnStudents = await sequelize.query(
                 'CALL get_all_students_class(?)',
@@ -69,8 +96,11 @@ class classes {
             status.status1 = "Failed";
             next;
         }
-
-        res.send(returnStudents);
+        if (returnStudents[0] == null)
+            res.send({"result": "No students found"});
+        else {
+            res.send(returnStudents);
+        }
 
     }
 
