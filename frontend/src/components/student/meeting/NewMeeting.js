@@ -56,56 +56,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
     const [meetingDescription, setMeetingDescription] = useState('');
     const [startDateTime, setStartDateTime] = useState(formattedStart);
     const [endDateTime, setEndDateTime] = useState(formattedEnd);
-    const [classList, setClassList] = useState([]);
-    const [selectedClass, setSelectedClass] = useState('');
-    const [teams, setTeams] = useState([]);
-    const [selectedTeam, setSelectedTeam] = useState('');
     const [formCreated, setFormCreated] = useState(false);
-
-    useEffect(() => {
-        if(userType === 'coordinator') {
-            async function getAllClasses() {
-                const options = {
-                    method: 'POST',
-                    url: 'http://localhost:3001/api/getAllClasses',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': token
-                    }, 
-                    data: {
-                        'user_id': userId
-                    }
-                };
-
-                const result = await axios(options);
-                setClassList(result.data);
-            }
-            getAllClasses();
-        }
-    }, []);
-
-    useEffect(() => {
-        if(selectedClass) {
-            async function getTeams() {
-                const options = {
-                    method: 'POST',
-                    url: 'http://localhost:3001/api/getTeamsInClass',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': token
-                    },
-                    data: {
-                        'class_id': selectedClass
-                    }
-                };
-    
-                const result = await axios(options);
-                console.log(result);
-                setTeams(result.data);
-            }
-            getTeams()
-        }
-    }, [selectedClass]);
 
     const handlemeetingTitleChange = event => {
         setMeetingTitle(event.target.value);
@@ -125,14 +76,6 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
         setEndDateTime(formattedDateTime);
     };
 
-    const handleClassChange = event => {
-        setSelectedClass(event.target.value);
-    };
-
-    const handleTeamChange = event => {
-        setSelectedTeam(event.target.value);
-    };
-
     const handleCloseFormCreatedDialog = () => {
         setFormCreated(false)
     };
@@ -146,7 +89,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
             'description': meetingDescription,
             'start_date': startDateTime,
             'end_date': endDateTime,
-            'team_id': selectedTeam
+            'team_id': 1
         }
 
         let options = {
@@ -217,36 +160,8 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
                         disablePast={true}
                     />
                 </MuiPickersUtilsProvider>
-                {userType === 'coordinator' && 
-                    <Fragment>
-                        <FormControl variant='outlined' className={classes.meetingDetails}>
-                            <InputLabel>Class</InputLabel>
-                            <Select
-                                label="Class"
-                                value={selectedClass}
-                                onChange={handleClassChange}
-                            >   
-                                {classList.map((classItem, index) => 
-                                    <MenuItem key={index} value={classItem.class_id}>{classItem.name}</MenuItem>
-                                )}
-                            </Select>
-                        </FormControl>
-                        <FormControl variant='outlined' className={classes.meetingDetails}>
-                            <InputLabel>Teams</InputLabel>
-                            <Select
-                                label="Team"
-                                value={selectedTeam}
-                                onChange={handleTeamChange}
-                            >   
-                                {teams.map((team, index) => 
-                                    <MenuItem key={index} value={team.team_id}>{team.project_name}</MenuItem>
-                                )}
-                            </Select>
-                        </FormControl>
-                    </Fragment>
-                }
-                
             </div>
+
             <Button
                 variant='contained'
                 color='primary'
@@ -255,6 +170,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
             >
                 Create Meeting
             </Button>
+            
             {formCreated && <FormCreated 
                 open={formCreated}
                 onClose={() => handleCloseFormCreatedDialog()}
@@ -262,7 +178,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
                 createdText='Meeting Created'
                 start={startDateTime}
                 end={endDateTime}
-                assigned={`${selectedTeam} of ${selectedClass}`}
+                assigned='Your team'
                 alertGrade=''
                 routeBack='/student/Meeting/CreateMeeting'
             />}
