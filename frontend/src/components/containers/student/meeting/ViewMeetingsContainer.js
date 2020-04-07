@@ -1,4 +1,4 @@
-import CreateMeeting from '../../student/CreateMeeting';
+import ViewMeetings from '../../../student/meeting/ViewMeetings';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
@@ -11,6 +11,6 @@ const mapStateToProps = state => {
     }
 }
 
-const CreateMeetingContainer = connect(mapStateToProps)(CreateMeeting);
+const ViewMeetingsContainer = connect(mapStateToProps)(ViewMeetings);
 
-export default CreateMeetingContainer;
+export default ViewMeetingsContainer;
