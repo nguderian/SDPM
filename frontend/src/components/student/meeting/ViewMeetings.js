@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -12,6 +11,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import CompleteForm from '../../common/CompleteForm';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -27,8 +27,8 @@ const useStyles = makeStyles(theme => ({
     }, 
     createButton: {
       marginLeft: theme.spacing(7),
-      marginBottom: theme.spacing(2),
-      width: '7%'
+      marginTop: theme.spacing(1),
+      height: '7%',
     },
     meetingList: {
         flexGrow: 1,
@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
         borderRadius: '5px',
         marginLeft: theme.spacing(7),
         marginRight: theme.spacing(7), 
-        marginBottom: theme.spacing(2)
+        marginBottom: theme.spacing(7)
     }, 
     pageTitle: {
         margin: theme.spacing(1),
@@ -62,7 +62,8 @@ const useStyles = makeStyles(theme => ({
     },
     options: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
+        marginBottom: theme.spacing(2)
     }
 }));
 
@@ -71,6 +72,10 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
     const [allMeetings, setAllMeetings] = useState([]);
     const [classList, setClassList] = useState([]);
     const [studentId, setStudentId] = useState('');
+    const [meetingToShow, setMeetingToShow] = useState({
+        showMeeting: false,
+        meetingAtIndex: ''
+    });
 
     useEffect(() => {
         async function getAllClasses() {
@@ -121,8 +126,12 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
         setStudentId(event.target.value);   
     };
 
+    const handleMeetingCardClick = index => {
+        setMeetingToShow({ showMeeting: true, meetingAtIndex: allMeetings[index] });
+    };
+
     return (
-        <div>
+        <Fragment>
             <Typography variant="h4" className={classes.pageTitle}>Meetings</Typography>
             <Divider className={classes.divider} variant="fullWidth"/>
             <div className={classes.options}>
@@ -156,7 +165,8 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
                     }
                     {allMeetings.map((meeting, index) => 
                         <Card variant='outlined' key={index} className={classes.meetingCard}>
-                            <CardActionArea component={Link} to={{ pathname: `/student/Meeting/${meeting.title}`, state: { formId: meeting.form_id, instanceId: meeting.instance_id, studentId: studentId }}}>
+                            {/* <CardActionArea component={Link} to={{ pathname: `/student/Meeting/${meeting.title}`, state: { formId: meeting.form_id, instanceId: meeting.instance_id, studentId: studentId }}}> */}
+                            <CardActionArea onClick={() => handleMeetingCardClick(index)}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {meeting.title}
@@ -194,7 +204,23 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
                     )}
                 </List>
             </div>
-        </div>
+
+            {meetingToShow['showMeeting'] && <CompleteForm 
+                open={meetingToShow['showMeeting']}
+                onClose={() => setMeetingToShow({ showMeeting: false, meetingAtIndex: '' })}
+                formTitle={meetingToShow['quizAtIndex'].title}
+                formDescription={meetingToShow['quizAtIndex'].description}
+                buttonText='Take Attendance'
+                routeForward={{
+                    pathname: `/student/Meeting/${meetingToShow['meetingAtIndex'].title}`,
+                    state: {
+                        formId: meetingToShow['meetingAtIndex'].form_id, 
+                        instanceId: meetingToShow['meetingAtIndex'].instance_id, 
+                        studentId: studentId 
+                    }
+                }}
+            />}
+        </Fragment>
     )
 }
 
