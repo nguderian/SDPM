@@ -37,6 +37,9 @@ const CompleteForm = ({
                     <Button component={Link} to={routeForward} color='primary'>
                         {buttonText}
                     </Button>
+                    <Button onClick={onClose} color='secondary'>
+                        Cancel
+                    </Button>
                 </DialogActions>
             </Dialog>
         </Fragment>
