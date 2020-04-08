@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -11,6 +11,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import CompleteForm from '../../common/CompleteForm';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
@@ -57,7 +58,10 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
     const [allQuizzes, setAllQuizzes] = useState([]);
     const [classList, setAllClasses] = useState([]);
     const [studentId, setStudentId] = useState('');
-
+    const [quizToShow, setQuizToShow] = useState({
+        showQuiz: false,
+        quizAtIndex: ''
+    });
     useEffect(() => {
         async function getAllClasses() {
             const options = {
@@ -107,8 +111,12 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
         setStudentId(event.target.value);   
     };
     
+    const handleQuizCardClick = index => {
+        setQuizToShow({ showQuiz: true, quizAtIndex: allQuizzes[index] });
+    };
+
     return (
-        <div>
+        <Fragment>
             <Typography variant="h4" className={classes.pageTitle}>Assignments</Typography>
             <Divider className={classes.divider} variant="fullWidth"/>
             
@@ -137,7 +145,8 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                     }
                     {allQuizzes.map((quiz, index) => 
                         <Card variant='outlined' key={index} className={classes.quizCard}>
-                            <CardActionArea component={Link} to={{ pathname: `/student/Quiz/${quiz.title}`, state: { formId: quiz.form_id, instanceId: quiz.instance_id, studentId: studentId }}}>
+                            {/* <CardActionArea component={Link} to={{ pathname: `/student/Quiz/${quiz.title}`, state: { formId: quiz.form_id, instanceId: quiz.instance_id, studentId: studentId }}}> */}
+                            <CardActionArea onClick={() => handleQuizCardClick(index)}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {quiz.title}
@@ -176,7 +185,23 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                     
                 </List>
             </div>
-        </div>
+
+            {quizToShow['showQuiz'] && <CompleteForm 
+                open={quizToShow['showQuiz']}
+                onClose={() => setQuizToShow({ showQuiz: false, quizAtIndex: '' })}
+                formTitle={quizToShow['quizAtIndex'].title}
+                formDescription={quizToShow['quizAtIndex'].description}
+                buttonText='Take this quiz'
+                routeForward={{ 
+                    pathname: `/student/Quiz/${quizToShow['quizAtIndex'].title}`, 
+                    state: { 
+                        formId: quizToShow['quizAtIndex'].form_id, 
+                        instanceId: quizToShow['quizAtIndex'].instance_id, 
+                        studentId: studentId 
+                    }
+                }}
+            />}
+        </Fragment>
         
     );
 }
