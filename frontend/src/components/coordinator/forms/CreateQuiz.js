@@ -80,7 +80,7 @@ const CreateQuiz = ({ userId, userType, token, loggedIn }) => {
                 Create New
             </Button>
             
-            <Typography className={classes.templateText} variant='h5'>Quiz Templates</Typography>
+            <Typography className={classes.templateText} variant='h5'>Previously Made</Typography>
             <Divider className={classes.templateContainer}/>
             
             <div className={classes.quizList}>
