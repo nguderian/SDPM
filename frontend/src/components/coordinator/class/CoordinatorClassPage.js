@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import MaterialTable from 'material-table';
 import { forwardRef } from 'react';
 import AddBox from '@material-ui/icons/AddBox';
@@ -19,6 +19,13 @@ import ViewColumn from '@material-ui/icons/ViewColumn';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import axios from 'axios';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -49,9 +56,17 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
+  classSelector: {
+    marginLeft: theme.spacing(0),
+    marginBottom: theme.spacing(0), 
+    minWidth: '30%'
+},
 }));
 
-export default function MaterialTableDemo() {
+export default function MaterialTableDemo({ userId, userType, token, loggedIn }) {
+  const classes = useStyles();
+  const [classList, setClassList] = useState([]);
+  const [currentClass,setCurrentClass] = useState('');
   const [state, setState] = React.useState({
     columns: [
       { title: 'Name', field: 'name' },
@@ -69,10 +84,56 @@ export default function MaterialTableDemo() {
     ],
   });
 
+  useEffect(() => {
+    async function getAllClasses() {
+        const options = {
+            method: 'POST',
+            url: 'http://localhost:3001/api/getAllClasses',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            data: {
+              'user_id': userId,
+              'is_active': 1
+            },
+        };
+
+        let result = await axios(options);
+        console.log(result);
+        setClassList(result.data);
+    }
+    getAllClasses();
+}, []);
+
+  const handleClassChange = event => {
+    setCurrentClass(event.target.value);   
+};
+
   return (
-    <div style={{ maxWidth: "100%" }}>
-      <Grid container spacing={0}>
-      <Grid item xs>
+    <div>
+    <div style={{ display: 'flex', flexDirection: 'row'}}>
+    <FormControl variant='outlined' className={classes.classSelector}>
+      <InputLabel>Select Class</InputLabel>
+        <Select
+          label='Class'
+          value={currentClass}
+          onChange={handleClassChange}
+        >
+        {classList.map((classItem, index) => 
+        <MenuItem key={index} value={classItem.class_id}>{classItem.name}</MenuItem>
+        )}
+        </Select>
+    </FormControl>
+    <Button
+      variant="contained"
+      color="secondary">
+      Update Roster
+    </Button> 
+    </div>
+    <div>
+    <Grid container spacing={0}>
+    <Grid item xs>
     <MaterialTable
       icons = {tableIcons}
       title="Student/Group Roster"
@@ -162,12 +223,8 @@ export default function MaterialTableDemo() {
           }),
       }}
     /></Grid>
-</Grid>
-<Button
-  variant="contained"
-  color="secondary">
-  Update Roster
-  </Button>
-  </div>
+    </Grid>
+    </div>
+    </div>
   );
 }
