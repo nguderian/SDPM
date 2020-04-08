@@ -98,6 +98,7 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
     const [endDateTime, setEndDateTime] = useState(formattedEnd);
 
     useEffect(() => {
+        // only get all active classes 
         async function getClasses() {
             const options = {
                 method: 'POST',
@@ -107,7 +108,8 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
                     'Authorization': token
                 }, 
                 data: {
-                    'user_id': userId
+                    'user_id': userId, 
+                    'is_active': 1
                 } 
             };
 
