@@ -45,11 +45,11 @@ class studentInfo {
 
     static async updateStudent(req, res, next){
         
-        const { degree_id, sd1_term, sd1_year, sd2_term, sd2_year, team_id, student_id } = req.body;
+        const { degree_id, sd1_term, sd1_year, sd2_term, sd2_year, team_id, student_id, class_id } = req.body;
 
         try{
-            await sequelize.query('CALL update_student(?,?,?,?,?,?,?)',
-            { replacements: [student_id, team_id, degree_id, sd1_term, sd1_year, sd2_term, sd2_year],
+            await sequelize.query('CALL update_student(?,?,?,?,?,?,?,?)',
+            { replacements: [student_id, team_id, degree_id, sd1_term, sd1_year, sd2_term, sd2_year, class_id],
             types: sequelize.QueryTypes.CALL});
         }catch(error){
             console.log("update student failed");
