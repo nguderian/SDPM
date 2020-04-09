@@ -9,6 +9,7 @@ import Home from './components/Home';
 import TakeQuizContainer from './components/containers/student/quiz/TakeQuizContainer';
 import ViewMeetingsContainer from './components/containers/student/meeting/ViewMeetingsContainer';
 import NewMeetingContainer from './components/containers/student/meeting/NewMeetingContainer';
+import TakeAttendanceContainer from './components/containers/student/meeting/TakeAttendanceContainer';
 import CreateSurveyContainer from './components/containers/coordinator/forms/CreateSurveyContainer';
 import NewSurveyContainer from './components/containers/coordinator/forms/NewSurveyCJontainer';
 
@@ -27,9 +28,10 @@ const routes = (
             <Route path='/coordinator/Survey/CreateSurvey' exact component={CreateSurveyContainer}/>
             <Route path='/coordinator/Survey/NewSurvey' exact component={NewSurveyContainer}/>
             
-            {/* meeting creation */}
-            <Route path='/student/Meeting/CreateMeeting' exact component={ViewMeetingsContainer}/>
-            <Route path='/student/Meeting/:title'  render={(props) => <NewMeetingContainer {...props} />}/>
+            {/* meetings */}
+            <Route path='/student/Meeting/ViewMeetings' exact component={ViewMeetingsContainer}/>
+            <Route path='/student/Meeting/NewMeeting'  exact component={NewMeetingContainer}/>
+            <Route path='/student/Meeting/:title' render={(props) => <TakeAttendanceContainer {...props} />}/>
 
             {/* complete a quiz */}
             <Route path='/student/Quiz/ViewQuizzes' exact component={ViewQuizzesContainer}/>

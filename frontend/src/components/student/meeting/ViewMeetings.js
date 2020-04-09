@@ -183,6 +183,7 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
 
     return (
         <Fragment>
+            {console.log(meetingToShow)}
             <Typography variant="h4" className={classes.pageTitle}>Meetings</Typography>
             <Divider className={classes.divider} variant="fullWidth"/>
             <div className={classes.options}>
@@ -213,7 +214,7 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
                     )}
                 </Select>
             </FormControl>
-            <Button className={classes.createButton} variant="contained" color="primary" component={Link} to={{ pathname: '/student/Meeting/NewMeeting', state: { formId: '' }}}>
+            <Button className={classes.createButton} variant="contained" color="primary" component={Link} to='/student/Meeting/NewMeeting'>
                 Create New
             </Button>
             </div>
@@ -273,15 +274,13 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
             {meetingToShow['showMeeting'] && <CompleteForm 
                 open={meetingToShow['showMeeting']}
                 onClose={() => setMeetingToShow({ showMeeting: false, meetingAtIndex: '' })}
-                formTitle={meetingToShow['quizAtIndex'].title}
-                formDescription={meetingToShow['quizAtIndex'].description}
+                formTitle={meetingToShow['meetingAtIndex'].title}
+                formDescription={meetingToShow['meetingAtIndex'].description}
                 buttonText='Take Attendance'
                 routeForward={{
                     pathname: `/student/Meeting/${meetingToShow['meetingAtIndex'].title}`,
                     state: {
-                        formId: meetingToShow['meetingAtIndex'].form_id, 
-                        instanceId: meetingToShow['meetingAtIndex'].instance_id, 
-                        studentId: activeStudentId 
+                        meeting: meetingToShow['meetingAtIndex']
                     }
                 }}
             />}
