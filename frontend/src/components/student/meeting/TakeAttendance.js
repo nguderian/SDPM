@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const TakeAttendance = ( { userId, userType, token, loggedIn, location }) => {
+const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
     const classes = useStyles();
     const { meeting, studentId } = location.state;
     const [teamId, setTeamId] = useState('');

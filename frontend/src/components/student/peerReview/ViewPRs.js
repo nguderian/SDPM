@@ -12,6 +12,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import CompleteForm from '../../common/CompleteForm';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -50,17 +51,29 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1),
         marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2)
-    }, 
+    },
+    options: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginBottom: theme.spacing(2)
+    }
 }));
 
 const ViewPRs = ({ userId, userType, token, loggedIn }) => {
     const classes = useStyles();
-    const [allPRs, setAllPRs] = useState([]);
-    const [classList, setClassList] = useState([]);
-    const [studentId, setStudentId] = useState('');
+    const [upcomingPrs, setUpcomingPrs] = useState([]);
+    const [completedPrs, setCompletedPrs] = useState([]);
+    const [activeClasses, setActiveClasses] = useState([]);
+    const [inactiveClasses, setInactiveClasses] = useState([]);
+    const [activeStudentId, setActiveStudentId] = useState('');
+    const [inactiveStudentId, setInactiveStudentId] = useState('');
+    const [prToShow, setPrToShow] = useState({
+        showPr: false,
+        prAtIndex: {}
+    });
 
     useEffect(() => {
-        async function getAllClasses() {
+        async function getActiveClasses() {
             const options = {
                 method: 'POST',
                 url: 'http://localhost:3001/api/getAllClasses',
@@ -70,19 +83,38 @@ const ViewPRs = ({ userId, userType, token, loggedIn }) => {
                 },
                 data: {
                     'user_id': userId,
+                    'is_active': 1
                 },
             };
 
             let result = await axios(options);
             console.log(result);
-            setClassList(result.data);
+            setActiveClasses(result.data);
         }
-        getAllClasses();
+        async function getInactiveClasses() {
+            const options = {
+                method: 'POST',
+                url: 'http://localhost:3001/api/getAllClasses',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+                data: {
+                    'user_id': userId,
+                    'is_active': 0
+                },
+            };
+
+            let result = await axios(options);
+            setInactiveClasses(result.data);
+        }
+        getActiveClasses();
+        getInactiveClasses();
     }, []);
 
     useEffect(() => {
-        if(studentId) {
-            async function getAllPRs() {
+        if(activeStudentId) {
+            async function getUpcomingPrs() {
                 const options = {
                     method: 'POST',
                     url: 'http://localhost:3001/api/getInstances',
@@ -91,53 +123,105 @@ const ViewPRs = ({ userId, userType, token, loggedIn }) => {
                         'Authorization': token
                     },
                     data: {
-                        'student_id': studentId,
-                        'type': 'survey'
+                        'student_id': activeStudentId,
+                        'type': 'survey',
+                        'is_complete': 0
                     }
                 };
         
                 let result = await axios(options);
                 console.log(result);
-                setAllPRs(result.data);
+                setUpcomingPrs(result.data);
             }
-            getAllPRs();
+            async function getCompletedPrs() {
+                const options = {
+                    method: 'POST',
+                    url: 'http://localhost:3001/api/getInstances',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    data: {
+                        'student_id': activeStudentId,
+                        'type': 'meeting',
+                        'is_complete': 1
+                    }
+                };
+        
+                let result = await axios(options);
+                console.log(result);
+                setCompletedPrs(result.data);
+            }
+            getUpcomingPrs();
+            getCompletedPrs();
         }
-    }, [studentId]);
+    }, [activeStudentId]);
 
-    const handleClassChange = event => {
-        setStudentId(event.target.value);   
+    const handleActiveClassChange = event => {
+        setActiveStudentId(event.target.value);   
+    };
+
+    const handleInactiveClassChange = event => {
+        setInactiveStudentId(event.target.value);
+    };
+
+    const handlePrCardClick = (index, type) => {
+        if(type === 'upcoming') {
+            setPrToShow({ showPr: true, prAtIndex: upcomingPrs[index] });
+        }
+        else if(type === 'completed') {
+            setPrToShow({ showPr: true, prAtIndex: completedPrs[index] });
+        }
     };
 
     return (
         <Fragment>
             <Typography variant="h4" className={classes.pageTitle}>Group Peer Reviews</Typography>
             <Divider className={classes.divider} variant="fullWidth"/>
-            <FormControl variant='outlined' className={classes.classSelector}>
-                <InputLabel>Select Class</InputLabel>
-                <Select
-                    label='Class'
-                    value={studentId}
-                    onChange={handleClassChange}
-                >
-                    {classList.map((classItem, index) => 
-                        <MenuItem key={index} value={classItem.student_id}>{classItem.name}</MenuItem>
-                    )}
-                </Select>
-            </FormControl>
+
+            <div className={classes.options}>
+                <FormControl variant='outlined' className={classes.classSelector}>
+                    <InputLabel>Select current class</InputLabel>
+                    <Select
+                        label='Current Class'
+                        value={activeStudentId}
+                        onChange={handleActiveClassChange}
+                    >
+                        {activeClasses.map((activeClass, index) => 
+                            <MenuItem key={index} value={activeClass.student_id}>{activeClass.name}</MenuItem>
+                        )}
+                    </Select>
+                </FormControl>
+
+                <FormControl variant='outlined' className={classes.classSelector}>
+                    <InputLabel>Select previous class</InputLabel>
+                    <Select
+                        label='Current Class'
+                        value={inactiveStudentId}
+                        disabled={inactiveClasses.length === 0 ? true : false}
+                        onChange={handleInactiveClassChange}
+                    >
+                        {inactiveClasses.map((inactiveClass, index) => 
+                            <MenuItem key={index} value={inactiveClass.student_id}>{inactiveClass.name}</MenuItem>
+                        )}
+                    </Select>
+                </FormControl>
+            </div>
+            
 
             <Typography className={classes.detailText} variant='h5'>Upcoming</Typography>
             <div className={classes.prList}>
                 <List component='nav'>
-                    {allPRs.length === 0 &&
+                    {upcomingPrs.length === 0 &&
                         <Card variant='elevation' className={classes.prCard}>
                             <CardContent>
                                 <Typography>No upcoming peer reviews. Please select a class</Typography>
                             </CardContent>
                         </Card>
                     }
-                    {allPRs.map((pr, index) => 
+                    {upcomingPrs.map((pr, index) => 
                         <Card variant='outlined' key={index} className={classes.prCard}>
-                            <CardActionArea component={Link} to={{ pathname: `/student/Quiz/${pr.title}`, state: { formId: pr.form_id, instanceId: pr.instance_id, studentId: studentId }}}>
+                            <CardActionArea onClick={() => handlePrCardClick(index, 'upcoming')}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {pr.title}
@@ -154,16 +238,16 @@ const ViewPRs = ({ userId, userType, token, loggedIn }) => {
             <Typography className={classes.detailText} variant='h5'>Completed</Typography>
             <div className={classes.prList}>
                 <List component='nav'>
-                    {allPRs.length === 0 &&
+                    {completedPrs.length === 0 &&
                         <Card variant='elevation' className={classes.prCard}>
                             <CardContent>
                                 <Typography>No completed peer reviews. Please select a class</Typography>
                             </CardContent>
                         </Card>
                     }
-                    {allPRs.map((pr, index) => 
+                    {completedPrs.map((pr, index) => 
                         <Card variant='outlined' key={index} className={classes.prCard}>
-                            <CardActionArea component={Link} to={{ pathname: `/student/Quiz/${pr.title}`, state: { formId: pr.form_id, instanceId: pr.instance_id, studentId: studentId }}}>
+                            <CardActionArea onClick={() => handlePrCardClick(index, 'completed')}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {pr.title}
@@ -176,7 +260,21 @@ const ViewPRs = ({ userId, userType, token, loggedIn }) => {
                     
                 </List>
             </div>
-
+            
+            {prToShow.showPr && <CompleteForm 
+                open={prToShow.showPr}
+                onClose={() => setPrToShow({ showPr: false, prAtIndex: {} })}
+                formTitle={prToShow.prAtIndex.title}
+                formDescription={prToShow.prAtIndex.description}
+                buttonText='Complete Peer Review'
+                routeForward={{
+                    pathname: `/student/PeerReview/${prToShow.prAtIndex.title}`,
+                    state: {
+                        pr: prToShow.prAtIndex,
+                        studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId
+                    }
+                }}
+            />}
         </Fragment>
     )
 }

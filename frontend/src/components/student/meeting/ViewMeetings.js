@@ -77,7 +77,7 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
     const [inactiveStudentId, setInactiveStudentId] = useState('');
     const [meetingToShow, setMeetingToShow] = useState({
         showMeeting: false,
-        meetingAtIndex: ''
+        meetingAtIndex: {}
     });
 
     useEffect(() => {
@@ -273,7 +273,7 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
 
             {meetingToShow['showMeeting'] && <CompleteForm 
                 open={meetingToShow['showMeeting']}
-                onClose={() => setMeetingToShow({ showMeeting: false, meetingAtIndex: '' })}
+                onClose={() => setMeetingToShow({ showMeeting: false, meetingAtIndex: {} })}
                 formTitle={meetingToShow['meetingAtIndex'].title}
                 formDescription={meetingToShow['meetingAtIndex'].description}
                 buttonText='Take Attendance'
