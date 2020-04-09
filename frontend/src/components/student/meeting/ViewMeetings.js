@@ -131,8 +131,8 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
                     },
                     data: {
                         'student_id': activeStudentId,
-                        'type': 'meeting'
-                        // is_complete = 0
+                        'type': 'meeting',
+                        'is_complete': 0
                     }
                 };
         
@@ -150,8 +150,8 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
                     },
                     data: {
                         'student_id': activeStudentId,
-                        'type': 'meeting'
-                        // is_complete = 1
+                        'type': 'meeting',
+                        'is_complete': 1
                     }
                 };
         
