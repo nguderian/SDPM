@@ -87,7 +87,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
                 <ListItemText primary='Assignments'/>
               </ListItem>
 
-              <ListItem button component={Link} to='/student/Meeting/CreateMeeting'>
+              <ListItem button component={Link} to='/student/Meeting/ViewMeetings'>
                 <ListItemIcon><ScheduleIcon/></ListItemIcon>
                 <ListItemText primary='Meetings'/>
               </ListItem>
