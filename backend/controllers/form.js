@@ -169,8 +169,10 @@ class form {
                     }
                     else {
                         await sequelize.query('CALL insert_answer_key(?,?,?)',
-                                { replacements: ["", question_id, 
-                                    1], type: sequelize.QueryTypes.CALL });
+                            {
+                                replacements: ["", question_id,
+                                    1], type: sequelize.QueryTypes.CALL
+                            });
                     }
                 } catch (error) {
                     console.log(error);
@@ -183,7 +185,7 @@ class form {
 
         if (type === 'meeting') {
             // const for meeting and form.
-            const { access_level, title, user_id, description, team_id, start_date, end_date } = req.body;
+            const { access_level, title, user_id, description, team_id, start_date, end_date} = req.body;
 
             // Insert the form.
             try {
@@ -855,25 +857,46 @@ class form {
     // This will also grab any instances assigned to the that user's team_id.
     static async getInstances(req, res, next) {
 
-        const { user_id, type, student_id } = req.body;
+        const { type, student_id, is_complete } = req.body;
         let instanceList;
         if (type == undefined) {
-            try {
-                instanceList = await sequelize.query('CALL get_student_instances(?)',
-                    { replacements: [student_id], type: sequelize.QueryTypes.CALL });
-            } catch (error) {
-                console.log(error);
-                res.send({ status: "Get Instances Failed" });
+            if (is_complete == undefined) {
+                try {
+                    instanceList = await sequelize.query('CALL get_student_instances(?)',
+                        { replacements: [student_id], type: sequelize.QueryTypes.CALL });
+                } catch (error) {
+                    console.log(error);
+                    res.send({ status: "Get Instances Failed" });
+                }
+            }
+            else {
+                try {
+                    instanceList = await sequelize.query('CALL get_student_instances_is_complete(?,?)',
+                        { replacements: [student_id, is_complete], type: sequelize.QueryTypes.CALL });
+                } catch (error) {
+                    console.log(error);
+                    res.send({ status: "Get Instances Failed" });
+                }
             }
         }
-        else 
-        {
-            try {
-                instanceList = await sequelize.query('CALL get_student_type_instances(?,?)',
-                    { replacements: [student_id,type], type: sequelize.QueryTypes.CALL });
-            } catch (error) {
-                console.log(error);
-                res.send({ status: "Get Instances Failed" });
+        else {
+            if (is_complete == undefined) {
+                try {
+                    instanceList = await sequelize.query('CALL get_student_type_instances(?,?)',
+                        { replacements: [student_id, type], type: sequelize.QueryTypes.CALL });
+                } catch (error) {
+                    console.log(error);
+                    res.send({ status: "Get Instances Failed" });
+                }
+            }
+            else {
+                try {
+                    instanceList = await sequelize.query('CALL get_student_type_instances_is_complete(?,?,?)',
+                        { replacements: [student_id, type, is_complete], type: sequelize.QueryTypes.CALL });
+                } catch (error) {
+                    console.log(error);
+                    res.send({ status: "Get Instances Failed" });
+                }
             }
         }
 
