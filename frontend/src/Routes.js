@@ -9,11 +9,8 @@ import AdminClassPage from './components/AdminClassPage';
 import Home from './components/Home';
 import ViewMeetingsContainer from './components/containers/student/meeting/ViewMeetingsContainer';
 import NewMeetingContainer from './components/containers/student/meeting/NewMeetingContainer';
-<<<<<<< HEAD
-import ViewPRsContainer from './components/containers/student/peerReview/ViewPRsContainer';
-=======
 import TakeAttendanceContainer from './components/containers/student/meeting/TakeAttendanceContainer';
->>>>>>> f6091fcac4f9911bc1c48b15a6110daebe2b847f
+import ViewPRsContainer from './components/containers/student/peerReview/ViewPRsContainer';
 import CreateSurveyContainer from './components/containers/coordinator/forms/CreateSurveyContainer';
 import NewSurveyContainer from './components/containers/coordinator/forms/NewSurveyCJontainer';
 
