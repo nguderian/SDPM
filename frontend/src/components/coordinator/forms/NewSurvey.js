@@ -195,6 +195,37 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
             success = success && false;
         }
 
+        // creating an instance of the form above
+        body = {
+            'class_id': selectedClass,
+            'start_date': startDateTime,
+            'end_date':  endDateTime,
+            'form_id': newFormId,
+            'code': 1
+        };
+
+        options = {
+            method: 'POST',
+            url: 'http://localhost:3001/api/assignForm',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            data: body
+        }
+
+        response = await axios(options);
+        console.log(response);
+        responseOK = response && response.status === 200 && response.statusText === 'OK';
+        if(responseOK) {
+            success = success && true;
+        }
+        else {
+            // send alert showing error and what the error was
+            console.log('something went wrong');
+            success = success && false;
+        }
+
         setFormCreated(success);
     };
 
