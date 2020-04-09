@@ -68,11 +68,11 @@ class teamInfo {
     }
 
     static async getTeamID(req, res, next){
-        const {user_id} = req.body;
+        const {student_id} = req.body;
         let teamid;
         try{
             teamid = await sequelize.query('CALL get_team_id(?)',
-            { replacements : [user_id], type: sequelize.QueryTypes.CALL });
+            { replacements : [student_id], type: sequelize.QueryTypes.CALL });
         } catch(error)
         {
             console.log("get team id failed");
