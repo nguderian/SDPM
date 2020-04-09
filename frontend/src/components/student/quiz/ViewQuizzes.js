@@ -50,20 +50,29 @@ const useStyles = makeStyles(theme => ({
         marginBottom: theme.spacing(2), 
         minWidth: '15%'
     },
+    options: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginBottom: theme.spacing(2)
+    }
 }))
 
 
 const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
     const classes = useStyles();
-    const [allQuizzes, setAllQuizzes] = useState([]);
-    const [classList, setAllClasses] = useState([]);
-    const [studentId, setStudentId] = useState('');
+    const [upcomingQuizzes, setUpcomingQuizzes] = useState([]);
+    const [completedQuizzes, setCompletedQuizzes] = useState([]);
+    const [activeClasses, setActiveClasses] = useState([]);
+    const [inactiveClasses, setInactiveClasses] = useState([]);
+    const [activeStudentId, setActiveStudentId] = useState('');
+    const [inactiveStudentId, setInactiveStudentId] = useState('');
     const [quizToShow, setQuizToShow] = useState({
         showQuiz: false,
         quizAtIndex: ''
     });
+
     useEffect(() => {
-        async function getAllClasses() {
+        async function getActiveClasses() {
             const options = {
                 method: 'POST',
                 url: 'http://localhost:3001/api/getAllClasses',
@@ -73,19 +82,38 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                 },
                 data: {
                     'user_id': userId,
+                    'is_active': 1
                 },
             };
 
             let result = await axios(options);
             console.log(result);
-            setAllClasses(result.data);
+            setActiveClasses(result.data);
         }
-        getAllClasses();
+        async function getInactiveClasses() {
+            const options = {
+                method: 'POST',
+                url: 'http://localhost:3001/api/getAllClasses',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+                data: {
+                    'user_id': userId,
+                    'is_active': 0
+                },
+            };
+
+            let result = await axios(options);
+            setInactiveClasses(result.data);
+        }
+        getActiveClasses();
+        getInactiveClasses();
     }, [])
 
     useEffect(() => {
-        if(studentId) {
-            async function getAllQuizzes() {
+        if(activeStudentId) {
+            async function getUpcomingQuizzes() {
                 const options = {
                     method: 'POST',
                     url: 'http://localhost:3001/api/getInstances',
@@ -94,25 +122,57 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                         'Authorization': token
                     },
                     data: {
-                        'student_id': studentId,
-                        'type': 'quiz'
+                        'student_id': activeStudentId,
+                        'type': 'quiz',
+                        'is_complete': 0
                     }
                 };
         
                 let result = await axios(options);
                 console.log(result);
-                setAllQuizzes(result.data);
+                setUpcomingQuizzes(result.data);
             }
-            getAllQuizzes();
+            async function getCompletedQuizzes() {
+                const options = {
+                    method: 'POST',
+                    url: 'http://localhost:3001/api/getInstances',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    data: {
+                        'student_id': activeStudentId,
+                        'type': 'quiz',
+                        'is_complete': 1
+                    }
+                };
+        
+                let result = await axios(options);
+                console.log(result);
+                setCompletedQuizzes(result.data);
+            }
+            getUpcomingQuizzes();
+            getCompletedQuizzes();
         }
-    }, [studentId]);
+    }, [activeStudentId]);
 
-    const handleClassChange = event => {
-        setStudentId(event.target.value);   
+    const handleActiveClassChange = event => {
+        setActiveStudentId(event.target.value);   
+        setInactiveStudentId('');
+    };
+
+    const handleInactiveClassChange = event => {
+        setInactiveStudentId(event.target.value);
+        setActiveStudentId('');
     };
     
-    const handleQuizCardClick = index => {
-        setQuizToShow({ showQuiz: true, quizAtIndex: allQuizzes[index] });
+    const handleQuizCardClick = (index, type) => {
+        if(type === 'upcoming') {
+            setQuizToShow({ showQuiz: true, quizAtIndex: upcomingQuizzes[index] });
+        }
+        else if(type === 'completed') {
+            setQuizToShow({ showQuiz: true, quizAtIndex: completedQuizzes[index] });
+        }
     };
 
     return (
@@ -120,33 +180,48 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
             <Typography variant="h4" className={classes.pageTitle}>Assignments</Typography>
             <Divider className={classes.divider} variant="fullWidth"/>
             
-            <FormControl variant='outlined' className={classes.classSelector}>
-                <InputLabel>Select Class</InputLabel>
-                <Select
-                    label='Class'
-                    value={studentId}
-                    onChange={handleClassChange}
-                >
-                    {classList.map((classItem, index) => 
-                        <MenuItem key={index} value={classItem.student_id}>{classItem.name}</MenuItem>
-                    )}
-                </Select>
-            </FormControl>
+            <div className={classes.options}>
+                <FormControl variant='outlined' className={classes.classSelector}>
+                    <InputLabel>Select current class</InputLabel>
+                    <Select
+                        label='Class'
+                        value={activeStudentId}
+                        onChange={handleActiveClassChange}
+                    >
+                        {activeClasses.map((activeClass, index) => 
+                            <MenuItem key={index} value={activeClass.student_id}>{activeClass.name}</MenuItem>
+                        )}
+                    </Select>
+                </FormControl>
+
+                <FormControl variant='outlined' className={classes.classSelector}>
+                    <InputLabel>Select previous class</InputLabel>
+                    <Select
+                        label='Class'
+                        value={inactiveStudentId}
+                        disabled={inactiveClasses.length === 0 ? true : false}
+                        onChange={handleInactiveClassChange}
+                    >
+                        {inactiveClasses.map((inactiveClass, index) => 
+                            <MenuItem key={index} value={inactiveClass.student_id}>{inactiveClass.name}</MenuItem>
+                        )}
+                    </Select>
+                </FormControl>
+            </div>
             
             <Typography className={classes.detailText} variant='h5'>Upcoming</Typography>
             <div className={classes.quizList}>
                 <List component='nav'>
-                    {allQuizzes.length === 0 &&
+                    {upcomingQuizzes.length === 0 &&
                         <Card variant='elevation' className={classes.quizCard}>
                             <CardContent>
                                 <Typography>No upcoming assignments. Please select a class</Typography>
                             </CardContent>
                         </Card>
                     }
-                    {allQuizzes.map((quiz, index) => 
+                    {upcomingQuizzes.map((quiz, index) => 
                         <Card variant='outlined' key={index} className={classes.quizCard}>
-                            {/* <CardActionArea component={Link} to={{ pathname: `/student/Quiz/${quiz.title}`, state: { formId: quiz.form_id, instanceId: quiz.instance_id, studentId: studentId }}}> */}
-                            <CardActionArea onClick={() => handleQuizCardClick(index)}>
+                            <CardActionArea onClick={() => handleQuizCardClick(index, 'upcoming')}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {quiz.title}
@@ -163,16 +238,16 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
             <Typography className={classes.detailText} variant='h5'>Completed</Typography>
             <div className={classes.quizList}>
                 <List component='nav'>
-                    {allQuizzes.length === 0 &&
+                    {completedQuizzes.length === 0 &&
                         <Card variant='elevation' className={classes.quizCard}>
                             <CardContent>
                                 <Typography>No completed asignments. Please select a class</Typography>
                             </CardContent>
                         </Card>
                     }
-                    {allQuizzes.map((quiz, index) => 
+                    {completedQuizzes.map((quiz, index) => 
                         <Card variant='outlined' key={index} className={classes.quizCard}>
-                            <CardActionArea component={Link} to={{ pathname: `/student/Quiz/${quiz.title}`, state: { formId: quiz.form_id, instanceId: quiz.instance_id, studentId: studentId }}}>
+                            <CardActionArea onClick={() => handleQuizCardClick(index, 'completed')}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {quiz.title}
@@ -197,7 +272,7 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                     state: { 
                         formId: quizToShow['quizAtIndex'].form_id, 
                         instanceId: quizToShow['quizAtIndex'].instance_id, 
-                        studentId: studentId 
+                        studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId
                     }
                 }}
             />}
