@@ -32,10 +32,10 @@ class classes {
 
     static async getAllClasses(req, res, next) {
 
-        const { user_id } = req.body;
+        const { user_id, is_active } = req.body;
         let status = {};
         let returnClasses;
-
+        
         let userType = await sequelize.query(
             'CALL get_user_type(?)',
             { replacements: [user_id], type: sequelize.QueryTypes.CALL });
@@ -44,13 +44,12 @@ class classes {
         if (type == "student") {
             try {
                 returnClasses = await sequelize.query(
-                    'CALL get_all_classes_student(?)',
-                    { replacements: [user_id], type: sequelize.QueryTypes.CALL });
+                    'CALL get_all_classes_student(?,?)',
+                    { replacements: [user_id, is_active], type: sequelize.QueryTypes.CALL });
                 status.status1 = "All classes";
                 console.log(returnClasses);
                 next;
             } catch (error) {
-                console.log(class_id);
                 status.status1 = "Failed";
                 next;
             }
@@ -58,13 +57,12 @@ class classes {
         else if (type == "coordinator") {
             try {
                 returnClasses = await sequelize.query(
-                    'CALL get_all_classes_coordinator(?)',
-                    { replacements: [user_id], type: sequelize.QueryTypes.CALL });
+                    'CALL get_all_classes_coordinator(?,?)',
+                    { replacements: [user_id, is_active], type: sequelize.QueryTypes.CALL });
                 status.status1 = "All classes";
                 console.log(returnClasses);
                 next;
             } catch (error) {
-                console.log(class_id);
                 status.status1 = "Failed";
                 next;
             }
@@ -72,8 +70,6 @@ class classes {
         else {
             res.send("Not found.");
         }
-
-        
 
         res.send(returnClasses);
 

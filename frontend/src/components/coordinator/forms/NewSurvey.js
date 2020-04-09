@@ -98,6 +98,7 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
     const [endDateTime, setEndDateTime] = useState(formattedEnd);
 
     useEffect(() => {
+        // only get all active classes 
         async function getClasses() {
             const options = {
                 method: 'POST',
@@ -107,7 +108,8 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
                     'Authorization': token
                 }, 
                 data: {
-                    'user_id': userId
+                    'user_id': userId, 
+                    'is_active': 1
                 } 
             };
 
@@ -185,6 +187,37 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
         let newFormId = response.data.form_id;
         if(responseOK) {
             console.log(newFormId);
+            success = success && true;
+        }
+        else {
+            // send alert showing error and what the error was
+            console.log('something went wrong');
+            success = success && false;
+        }
+
+        // creating an instance of the form above
+        body = {
+            'class_id': selectedClass,
+            'start_date': startDateTime,
+            'end_date':  endDateTime,
+            'form_id': newFormId,
+            'code': 1
+        };
+
+        options = {
+            method: 'POST',
+            url: 'http://localhost:3001/api/assignForm',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            data: body
+        }
+
+        response = await axios(options);
+        console.log(response);
+        responseOK = response && response.status === 200 && response.statusText === 'OK';
+        if(responseOK) {
             success = success && true;
         }
         else {

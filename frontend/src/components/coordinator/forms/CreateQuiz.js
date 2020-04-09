@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
         marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2)
     },
-    quizTitle: {
+    quizDescription: {
         fontSize: 14
     },
     formListWrapper: {
@@ -80,7 +80,7 @@ const CreateQuiz = ({ userId, userType, token, loggedIn }) => {
                 Create New
             </Button>
             
-            <Typography className={classes.templateText} variant='h5'>Quiz Templates</Typography>
+            <Typography className={classes.templateText} variant='h5'>Previously Made</Typography>
             <Divider className={classes.templateContainer}/>
             
             <div className={classes.quizList}>
@@ -92,7 +92,7 @@ const CreateQuiz = ({ userId, userType, token, loggedIn }) => {
                                 <Typography color='textSecondary' gutterBottom>
                                     {quiz.title}
                                 </Typography>
-                                <Typography className={classes.quizTitle}>{quiz.description}</Typography>
+                                <Typography className={classes.quizDescription}>{quiz.description}</Typography>
                                 <Typography>{quiz.form_id}</Typography>
                             </CardContent>
                         </CardActionArea>

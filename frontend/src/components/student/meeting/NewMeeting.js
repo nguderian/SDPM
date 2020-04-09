@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const NewMeeting = ({ userId, userType, token, loggedIn}) => {
+const NewMeeting = ({ userId, userType, token, loggedIn }) => {
     let formattedStart = new Date();
     formattedStart = formatDate(formattedStart);
     let formattedEnd = new Date();
@@ -180,7 +180,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn}) => {
                 end={endDateTime}
                 assigned='Your team'
                 alertGrade=''
-                routeBack='/student/Meeting/CreateMeeting'
+                routeBack='/student/Meeting/ViewMeetings'
             />}
         </Fragment>
     )
