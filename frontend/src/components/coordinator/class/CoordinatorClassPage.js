@@ -24,8 +24,6 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -67,22 +65,12 @@ export default function MaterialTableDemo({ userId, userType, token, loggedIn })
   const classes = useStyles();
   const [classList, setClassList] = useState([]);
   const [currentClass,setCurrentClass] = useState('');
-  const [state, setState] = React.useState({
-    columns: [
-      { title: 'Name', field: 'name' },
-      { title: 'Surname', field: 'surname' },
-      { title: 'Group', field: 'birthYear', type: 'numeric' },
-    ],
-    data: [
-      { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
-      {
-        name: 'Zerya Betül',
-        surname: 'Baran',
-        birthYear: 2017,
-        birthCity: 34,
-      },
-    ],
-  });
+  const [studentList, setStudentList] = useState([]);
+  const [columns, setColumns] = useState([
+    { title: 'First Name', field: 'first_name' },
+    { title: 'Last Name', field: 'last_name' },
+    { title: 'Group', field: 'project_name', type: 'numeric' },
+  ]);
 
   useEffect(() => {
     async function getAllClasses() {
@@ -106,8 +94,31 @@ export default function MaterialTableDemo({ userId, userType, token, loggedIn })
     getAllClasses();
 }, []);
 
+useEffect(() => {
+  if(currentClass){
+    async function getAllStudents() {
+        const options = {
+            method: 'POST',
+            url: 'http://localhost:3001/api/getStudentsInClass',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            data: {
+              'class_id': currentClass
+            },
+        };
+
+        let result = await axios(options);
+        console.log(result);
+        setStudentList(result.data);
+    }
+    getAllStudents();
+  }
+}, [currentClass]);
+
   const handleClassChange = event => {
-    setCurrentClass(event.target.value);   
+    setCurrentClass(event.target.value);  
 };
 
   return (
@@ -128,54 +139,19 @@ export default function MaterialTableDemo({ userId, userType, token, loggedIn })
     <Button
       variant="contained"
       color="secondary">
-      Update Roster
+      Upload Roster
     </Button> 
     </div>
+
     <div>
     <Grid container spacing={0}>
     <Grid item xs>
     <MaterialTable
       icons = {tableIcons}
       title="Student/Group Roster"
-      columns={state.columns}
-      data={state.data}
-      editable={{
-        onRowAdd: newData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              setState(prevState => {
-                const data = [...prevState.data];
-                data.push(newData);
-                return { ...prevState, data };
-              });
-            }, 600);
-          }),
-        onRowUpdate: (newData, oldData) =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              if (oldData) {
-                setState(prevState => {
-                  const data = [...prevState.data];
-                  data[data.indexOf(oldData)] = newData;
-                  return { ...prevState, data };
-                });
-              }
-            }, 600);
-          }),
-        onRowDelete: oldData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              setState(prevState => {
-                const data = [...prevState.data];
-                data.splice(data.indexOf(oldData), 1);
-                return { ...prevState, data };
-              });
-            }, 600);
-          }),
-      }}
+      columns={columns}
+      data={studentList}
+      
     /></Grid>
 
 
@@ -183,45 +159,8 @@ export default function MaterialTableDemo({ userId, userType, token, loggedIn })
     <MaterialTable
       icons = {tableIcons}
       title="Notifications"
-      columns={state.columns}
-      data={state.data}
-      editable={{
-        onRowAdd: newData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              setState(prevState => {
-                const data = [...prevState.data];
-                data.push(newData);
-                return { ...prevState, data };
-              });
-            }, 600);
-          }),
-        onRowUpdate: (newData, oldData) =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              if (oldData) {
-                setState(prevState => {
-                  const data = [...prevState.data];
-                  data[data.indexOf(oldData)] = newData;
-                  return { ...prevState, data };
-                });
-              }
-            }, 600);
-          }),
-        onRowDelete: oldData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              setState(prevState => {
-                const data = [...prevState.data];
-                data.splice(data.indexOf(oldData), 1);
-                return { ...prevState, data };
-              });
-            }, 600);
-          }),
-      }}
+      columns={columns}
+      data={studentList}
     /></Grid>
     </Grid>
     </div>
