@@ -1073,10 +1073,14 @@ async function quizGrader(student_id, form_id, instance_id, responses) {
                         }
                     case 'fill_blank':
                         {
-                            var r = dice(keys[i].key_text, responses[j].answer_text)
-                            var c = levenstein(keys[i].key_text, responses[j].answer_text)
+                            
+                            var r = dice(keys[i].key_text, responses[j].answer_text);
+
+                            var c = levenstein(keys[i].key_text, responses[j].answer_text);
+    
                             var p = c / keys[i].key_text.length;
-                            if (r > .9 || p > .75) {
+                            
+                            if (r > .9) {
                                 correct += 1;
                             }
 
