@@ -180,7 +180,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn }) => {
                 end={endDateTime}
                 assigned='Your team'
                 alertGrade=''
-                routeBack='/student/Meeting/CreateMeeting'
+                routeBack='/student/Meeting/ViewMeetings'
             />}
         </Fragment>
     )

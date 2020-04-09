@@ -96,6 +96,7 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
             };
 
             let result = await axios(options);
+            console.log(result);
             setActiveClasses(result.data);
         }
         async function getInactiveClasses() {
@@ -183,7 +184,6 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
 
     return (
         <Fragment>
-            {console.log(meetingToShow)}
             <Typography variant="h4" className={classes.pageTitle}>Meetings</Typography>
             <Divider className={classes.divider} variant="fullWidth"/>
             <div className={classes.options}>
@@ -280,7 +280,8 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
                 routeForward={{
                     pathname: `/student/Meeting/${meetingToShow['meetingAtIndex'].title}`,
                     state: {
-                        meeting: meetingToShow['meetingAtIndex']
+                        meeting: meetingToShow['meetingAtIndex'],
+                        studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId
                     }
                 }}
             />}
