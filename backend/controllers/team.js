@@ -78,7 +78,19 @@ class teamInfo {
             console.log("get team id failed");
             res.send({ status : "get team id failed"});
         }
-        res.send({ status : "success", team_id : teamid});
+
+        let team_id = teamid[0].team_id;
+        let resultTeam;
+        try{
+            resultTeam = await sequelize.query('CALL get_team(?)',
+            { replacements : [team_id], type: sequelize.QueryTypes.CALL });
+        } catch(error)
+        {
+            console.log("get team failed");
+            res.send({ status : "get team failed"});
+        }
+
+        res.send(resultTeam);
     }
     //Generates report for advisor
     static async generateReport(req,res,next)
