@@ -158,10 +158,12 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
 
     const handleActiveClassChange = event => {
         setActiveStudentId(event.target.value);   
+        setInactiveStudentId('');
     };
 
     const handleInactiveClassChange = event => {
         setInactiveStudentId(event.target.value);
+        setActiveStudentId('');
     };
     
     const handleQuizCardClick = (index, type) => {
@@ -219,8 +221,7 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                     }
                     {upcomingQuizzes.map((quiz, index) => 
                         <Card variant='outlined' key={index} className={classes.quizCard}>
-                            {/* <CardActionArea component={Link} to={{ pathname: `/student/Quiz/${quiz.title}`, state: { formId: quiz.form_id, instanceId: quiz.instance_id, studentId: studentId }}}> */}
-                            <CardActionArea onClick={() => handleQuizCardClick(index)}>
+                            <CardActionArea onClick={() => handleQuizCardClick(index, 'upcoming')}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {quiz.title}
@@ -246,7 +247,7 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                     }
                     {completedQuizzes.map((quiz, index) => 
                         <Card variant='outlined' key={index} className={classes.quizCard}>
-                            <CardActionArea component={Link} to={{ pathname: `/student/Quiz/${quiz.title}`, state: { formId: quiz.form_id, instanceId: quiz.instance_id, studentId: inactiveStudentId }}}>
+                            <CardActionArea onClick={() => handleQuizCardClick(index, 'completed')}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {quiz.title}
@@ -271,7 +272,7 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                     state: { 
                         formId: quizToShow['quizAtIndex'].form_id, 
                         instanceId: quizToShow['quizAtIndex'].instance_id, 
-                        studentId: activeStudentId 
+                        studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId
                     }
                 }}
             />}
