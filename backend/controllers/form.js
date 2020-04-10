@@ -769,12 +769,14 @@ class form {
                     next;
                 }
             }
+          
             try {
                 triggerCheck(student_id, instance_id, form_id, results);
             } catch (error) {
                 console.log(error);
             }
             //res.send(status);
+
         }
 
         if (type === 'quiz') {

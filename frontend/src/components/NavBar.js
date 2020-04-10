@@ -92,7 +92,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
                 <ListItemText primary='Meetings'/>
               </ListItem>
   
-              <ListItem button component={Link} to='/'>
+              <ListItem button component={Link} to='/student/PeerReview/ViewPeerReviews'>
                 <ListItemIcon><RateReviewIcon/></ListItemIcon>
                 <ListItemText primary='Group Peer Review'/>
               </ListItem>

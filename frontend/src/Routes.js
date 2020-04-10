@@ -1,15 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import NavBarContainer from './components/containers/NavBarContainer';
 import CreateQuizContainer from './components/containers/coordinator/forms/CreateQuizContainer';
 import NewQuizContainer from './components/containers/coordinator/forms/NewQuizContainer';
 import ViewQuizzesContainer from './components/containers/student/quiz/ViewQuizzesContainer';
-import NavBarContainer from './components/containers/NavBarContainer';
+import TakeQuizContainer from './components/containers/student/quiz/TakeQuizContainer';
 import AdminClassPage from './components/AdminClassPage';
 import Home from './components/Home';
-import TakeQuizContainer from './components/containers/student/quiz/TakeQuizContainer';
 import ViewMeetingsContainer from './components/containers/student/meeting/ViewMeetingsContainer';
 import NewMeetingContainer from './components/containers/student/meeting/NewMeetingContainer';
 import TakeAttendanceContainer from './components/containers/student/meeting/TakeAttendanceContainer';
+import ViewPRsContainer from './components/containers/student/peerReview/ViewPRsContainer';
+import TakePRContainer from './components/containers/student/peerReview/TakePRContainer';
 import CreateSurveyContainer from './components/containers/coordinator/forms/CreateSurveyContainer';
 import NewSurveyContainer from './components/containers/coordinator/forms/NewSurveyCJontainer';
 
@@ -35,7 +37,11 @@ const routes = (
 
             {/* complete a quiz */}
             <Route path='/student/Quiz/ViewQuizzes' exact component={ViewQuizzesContainer}/>
-            <Route path='/student/Quiz/:title' render={ (props) => <TakeQuizContainer {...props}/>}/>
+            <Route path='/student/Quiz/:title' render={(props) => <TakeQuizContainer {...props}/>}/>
+
+            {/* complete a peer review */}
+            <Route path='/student/PeerReview/ViewPeerReviews' exact component={ViewPRsContainer}/>
+            <Route path='/student/PeerReview/:title' render={(props) => <TakePRContainer {...props} />} />
         </Switch>
     </Router>
 )

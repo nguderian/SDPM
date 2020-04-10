@@ -8,6 +8,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button'; 
 import FormSubmitted from '../../common/FormSubmitted';
+import Slider from '@material-ui/core/Slider';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
@@ -15,20 +16,24 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1),
         marginTop: theme.spacing(2),
         textAlign: 'center'
-    }, 
-    meetingDetail: {
+    },
+    surveyDetail: {
         marginLeft: theme.spacing(3),
         marginRight: theme.spacing(3),
         marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2)
     },
-    meetingCard: {
+    submitButton: {
+        textAlign: 'center',
+        marginTop: theme.spacing(2)
+    },
+    prCard: {
         marginLeft: theme.spacing(7),
         marginRight: theme.spacing(7),
         marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2)
     },
-    meetingCards: {
+    prCards: {
         justifyContent: 'center',
         alignItems: 'center',
         width: '50%',
@@ -40,12 +45,9 @@ const useStyles = makeStyles(theme => ({
         maxHeight: '70%',
         overflowY: 'scroll'
     },
-    checkBox: {
-        marginTop: theme.spacing(2),
-    },
-    submitButton: {
-        textAlign: 'center',
-        marginTop: theme.spacing(2)
+    slider: {
+        width: '60%',
+        marginTop: theme.spacing(5),
     }
 }));
 
@@ -58,14 +60,12 @@ function isEmpty(obj) {
     return true;
 };
 
-const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
+const TakePR = ({ userId, userType, token, loggedIn, location }) => {
     const classes = useStyles();
-    const { meeting, studentId } = location.state;
+    const { pr, studentId } = location.state;
     const [teamData, setTeamData] = useState({});
-    const [attendance, setAttendance] = useState({
-        teamMembers: [],
-        didAttend: []
-    });
+    const [teamMembers, setTeamMembers] = useState([]);
+    const [quizAnswers, setQuizAnswers] = useState([]);
     const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
@@ -104,55 +104,78 @@ const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
                 };
                 
                 let result = await axios(options);
-                const teamMembers = result.data.team_members;
-
-                let arr = [];
-                console.log(teamMembers);
-                teamMembers.forEach(teamMember => {
-                    let obj = {
-                        student_id: teamMember.student_id,
-                        did_attend: 0,
-                        reason: ''
-                    }
-                    arr.push(obj);
-                });
-                
-                setAttendance({ teamMembers: teamMembers, didAttend: arr });
+                console.log(result);
+                setTeamMembers(result.data.team_members);
             }
             getTeamMembers()
         }
     }, [teamData]);
 
-    const captureDidAttend = (event, index) => {
-        attendance.didAttend[index].did_attend = ~~event.target.checked;
-        attendance.didAttend[index].reason = '';
-        setAttendance({ ...attendance })
-    };
+    useEffect(() => {
+        if(teamMembers.length !== 0) {
+            async function getQuiz() {
+                const options = {
+                    method: 'POST', 
+                    url: 'http://localhost:3001/api/getForm', 
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    }, 
+                    data: {
+                        'form_id': pr.form_id,
+                        'user_id': userId
+                    }
+                };
+                console.log(teamMembers);
+                const result = await axios(options);
+                console.log(result);
+                const survey = result.data.survey;
 
-    const captureAbsenceReason = (event, index) => {
-        attendance.didAttend[index].reason = event.target.value;
-        setAttendance({ ...attendance })
+                let arr = [];
+                
+                teamMembers.forEach(teamMember => {
+                    let obj = {
+                        question_id: survey.questions[0].question_id,
+                        answer_text: '2',
+                        student_id: teamMember.student_id
+                    }
+                    arr.push(obj);
+                });
+
+                setQuizAnswers(arr);
+            }
+            getQuiz();
+        }
+        
+    }, [teamMembers]);
+
+    const handleParticipationGrade = (index, event, value) => {
+        quizAnswers[index].answer_text = value;
+        setQuizAnswers({ ...quizAnswers })
     };
 
     const handleCloseSubmittedDialog = () => {
-        setSubmitted(false);
+        setSubmitted(true);
     };
-    
-    async function submitMeeting() {
-        const body = {
-            'instance_id': meeting.instance_id,
-            'users': attendance.didAttend
-        }
 
+    async function submitPr() {
+        const body = {
+            'form_id': pr.form_id,
+            'instance_id': pr.instance_id,
+            'student_id': studentId,
+            'results': quizAnswers, 
+            'user_id': userId
+        };
+        
         const options = {
             method: 'POST', 
-            url: 'http://localhost:3001/api/takeAttendance',
+            url: 'http://localhost:3001/api/submitForm',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': token
             }, 
             data: body
-        }
+        };
 
         console.log(options);
         let response = await axios(options);
@@ -171,58 +194,45 @@ const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
         setSubmitted(success);
     };
 
-
     return (
         <Fragment>
-            <Typography variant="h4" className={classes.pageTitle}>{meeting.title}</Typography>
+            <Typography variant="h4" className={classes.pageTitle}>{pr.title}{teamData.project_name}</Typography>
 
-            <form className={classes.meetingDetail} noValidate autoComplete='off'>
-                <TextField
+            <form className={classes.surveyDetail} noValidate autoComplete='off'>
+                <TextField 
                     disabled
                     variant='outlined'
-                    value={meeting['description']}
+                    value={pr.description}
                     multiline={true}
-                    fullWidth={true}
+                    fullWidth
                 />
             </form>
-
-            <div className={classes.meetingCards}>
-                {attendance.teamMembers.map((teamMember, index) => 
-                    <Card variant='outlined' key={index} className={classes.meetingCard}>
+            
+            <div className={classes.prCards}>
+                {teamMembers.map((teamMember, index) => 
+                    <Card variant='outlined' key={index} className={classes.prCard}>
                         <CardContent>
                             <Typography>{`${teamMember.first_name}  ${teamMember.last_name}`}</Typography>
-
-                            <FormControlLabel className={classes.checkBox}
-                                control={
-                                    <Checkbox 
-                                        checked={attendance.didAttend[index].did_attend === 1 ? true : false}
-                                        onChange={(event) => captureDidAttend(event, index)}
-                                        color='primary'
-                                    />
-                                }
-                                label='Did attend?'
+                            <Typography>Participation Grade?</Typography>
+                            <Slider
+                                className={classes.slider}
+                                defaultValue={2}
+                                valueLabelDisplay='on'
+                                step={1}
+                                marks
+                                min={1}
+                                max={10}
+                                onChange={(event, value) => handleParticipationGrade(index, event, value)}
                             />
-
-                            <form>
-                                <TextField 
-                                    disabled={attendance.didAttend[index].did_attend === 1 ? true : false }
-                                    variant='outlined'
-                                    fullWidth={true}
-                                    label='Reason for not attending'
-                                    value={attendance.didAttend[index].reason}
-                                    onChange={(event) => captureAbsenceReason(event, index)}
-                                />
-                            </form>
                         </CardContent>
                     </Card>
                 )}
             </div>
-
             <div className={classes.submitButton}>
                 <Button
                     variant='contained'
                     color='primary'
-                    onClick={submitMeeting}
+                    onClick={submitPr}
                 >
                     Submit
                 </Button>
@@ -231,13 +241,12 @@ const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
             {submitted && <FormSubmitted 
                 open={submitted}
                 onClose={() => handleCloseSubmittedDialog()}
-                confirmationText={`Attendance taken on ${meeting.title}`}
-                submittedText='Attendance Taken'
-                routeBack='/student/Meeting/ViewMeetings'
+                confirmationText={`${pr.title} submitted!`}
+                submittedText='Peer Review Submitted'
+                routeBack='/student/PeerReview/ViewPeerReviews'
             />}
         </Fragment>
     )
 }
 
-export default TakeAttendance;
-
+export default TakePR;
