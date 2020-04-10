@@ -4,13 +4,8 @@ import NavBarContainer from './components/containers/NavBarContainer';
 import CreateQuizContainer from './components/containers/coordinator/forms/CreateQuizContainer';
 import NewQuizContainer from './components/containers/coordinator/forms/NewQuizContainer';
 import ViewQuizzesContainer from './components/containers/student/quiz/ViewQuizzesContainer';
-<<<<<<< HEAD
-import NavBarContainer from './components/containers/NavBarContainer';
 import CoordinatorClassPageContainer from './components/containers/coordinator/class/CoordinatorClassPageContainer';
-=======
 import TakeQuizContainer from './components/containers/student/quiz/TakeQuizContainer';
-import AdminClassPage from './components/AdminClassPage';
->>>>>>> b6638ed11b0b6f130d75254a324b34e7b086c03b
 import Home from './components/Home';
 import ViewMeetingsContainer from './components/containers/student/meeting/ViewMeetingsContainer';
 import NewMeetingContainer from './components/containers/student/meeting/NewMeetingContainer';
