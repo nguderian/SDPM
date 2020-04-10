@@ -163,7 +163,8 @@ const TakePR = ({ userId, userType, token, loggedIn, location }) => {
             'form_id': pr.form_id,
             'instance_id': pr.instance_id,
             'student_id': studentId,
-            'results': quizAnswers
+            'results': quizAnswers, 
+            'user_id': userId
         };
         
         const options = {
