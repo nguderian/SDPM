@@ -32,7 +32,7 @@ const routes = (
             
             {/* meetings */}
             <Route path='/student/Meeting/ViewMeetings' exact component={ViewMeetingsContainer}/>
-            <Route path='/student/Meeting/NewMeeting'  exact component={NewMeetingContainer}/>
+            <Route path='/student/Meeting/NewMeeting'  render={(props) => <NewMeetingContainer {...props} />} />
             <Route path='/student/Meeting/:title' render={(props) => <TakeAttendanceContainer {...props} />}/>
 
             {/* complete a quiz */}

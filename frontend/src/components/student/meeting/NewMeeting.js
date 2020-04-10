@@ -46,17 +46,39 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const NewMeeting = ({ userId, userType, token, loggedIn }) => {
+const NewMeeting = ({ userId, userType, token, loggedIn, location }) => {
     let formattedStart = new Date();
     formattedStart = formatDate(formattedStart);
     let formattedEnd = new Date();
     formattedEnd = formatDate(formattedEnd);
     const classes = useStyles();
+    const { studentId } = location.state;
     const [meetingTitle, setMeetingTitle] = useState('');
+    const [teamData, setTeamData] = useState({});
     const [meetingDescription, setMeetingDescription] = useState('');
     const [startDateTime, setStartDateTime] = useState(formattedStart);
     const [endDateTime, setEndDateTime] = useState(formattedEnd);
     const [formCreated, setFormCreated] = useState(false);
+
+    useEffect(() => {
+        async function getTeam() {
+            const options = {
+                method: 'POST',
+                url: 'http://localhost:3001/api/getTeamID',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+                data: {
+                    'student_id': studentId
+                },
+            };
+
+            let result = await axios(options);
+            setTeamData(result.data);
+        }
+        getTeam()
+    }, []);
 
     const handlemeetingTitleChange = event => {
         setMeetingTitle(event.target.value);
@@ -89,7 +111,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn }) => {
             'description': meetingDescription,
             'start_date': startDateTime,
             'end_date': endDateTime,
-            'team_id': 1
+            'team_id': teamData[0].team_id
         }
 
         let options = {
@@ -102,6 +124,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn }) => {
             data: body
         }
 
+        console.log(options);
         let response = await axios(options);
         console.log(response);
         let responseOK = response && response.status === 200 && response.statusText === 'OK';
