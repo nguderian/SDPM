@@ -72,15 +72,6 @@ app.use(session({
 }));
 app.use(bodyParser.urlencoded({extended: false}));
 app.post('/launch_lti', lti.handleLaunch);
-app.get('/application', (req, res, next) => {
-  if (req.session.userId) {
-    console.log('User ID: ' + req.session.userId);
-    console.log('User: ' + req.session.userfullname);
-    console.log('Course: ' + req.session.coursename);
-  } else {
-    next(new Error('Session invalid. Please login via LTI to use this application.'));
-  }
-});
 
 var server = http.createServer(app);
 app.set('port', nconf.get('http:port'));
