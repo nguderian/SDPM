@@ -51,13 +51,22 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+function isEmpty(obj) {
+    for (var key in obj) {
+        if(obj.hasOwnProperty(key)) {
+            return false;
+        }
+    }
+    return true;
+};
+
 const TakePR = ({ userId, userType, token, loggedIn, location }) => {
     const classes = useStyles();
     const { pr, studentId } = location.state;
-    const [teamId, setTeamId] = useState('');
-    const [prDetails, setPrDetails] = useState({
-        teamMembers: []
-    });
+    const [teamData, setTeamData] = useState([]);
+    const [teamMembers, setTeamMembers] = useState([]);
+    const [quizAnswers, setQuizAnswers] = useState([]);
+    const [submitted, setSubmitted] = useState(false);
 
     useEffect(() => {
         async function getTeam() {
@@ -74,14 +83,13 @@ const TakePR = ({ userId, userType, token, loggedIn, location }) => {
             };
 
             let result = await axios(options);
-            console.log(result.data.team_id[0].team_id);
-            setTeamId(result.data.team_id[0].team_id);
+            setTeamData(result.data);
         }
         getTeam()
     }, []);
 
     useEffect(() => {
-        if(teamId) {
+        if(!isEmpty(teamData)) {
             async function getTeamMembers() {
                 const options = {
                     method: 'POST',
@@ -91,25 +99,103 @@ const TakePR = ({ userId, userType, token, loggedIn, location }) => {
                         'Authorization': token
                     },
                     data: {
-                        'team_id': teamId
+                        'team_id': teamData[0].team_id
                     },
                 };
                 
                 let result = await axios(options);
-                setPrDetails({ ...prDetails, teamMembers: result.data.team_members })
+                console.log(result);
+                setTeamMembers(result.data.team_members);
             }
             getTeamMembers()
         }
-    }, [teamId]);
+    }, [teamData]);
+
+    useEffect(() => {
+        if(teamMembers.length !== 0) {
+            async function getQuiz() {
+                const options = {
+                    method: 'POST', 
+                    url: 'http://localhost:3001/api/getForm', 
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    }, 
+                    data: {
+                        'form_id': pr.form_id,
+                        'user_id': userId
+                    }
+                };
+                console.log(teamMembers);
+                const result = await axios(options);
+                console.log(result);
+                const survey = result.data.survey;
+
+                let arr = [];
+                
+                teamMembers.forEach(teamMember => {
+                    let obj = {
+                        question_id: survey.questions[0].question_id,
+                        answer_text: '2',
+                        student_id: teamMember.student_id
+                    }
+                    arr.push(obj);
+                });
+
+                setQuizAnswers(arr);
+            }
+            getQuiz();
+        }
+        
+    }, [teamMembers]);
+
+    const handleParticipationGrade = (index, event, value) => {
+        quizAnswers[index].answer_text = value;
+        setQuizAnswers({ ...quizAnswers })
+    };
+
+    const handleCloseSubmittedDialog = () => {
+        setSubmitted(true);
+    };
 
     async function submitPr() {
-        console.log(prDetails);
+        const body = {
+            'form_id': pr.form_id,
+            'instance_id': pr.instance_id,
+            'student_id': studentId,
+            'results': quizAnswers
+        };
+        
+        const options = {
+            method: 'POST', 
+            url: 'http://localhost:3001/api/submitForm',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }, 
+            data: body
+        };
+
+        console.log(options);
+        let response = await axios(options);
+        console.log(response);
+        let responseOK = response && response.status === 200 && response.statusText === 'OK';
+        let success = true;
+        if(responseOK) {
+            success = success && true;
+            console.log('form Submitted!');
+        }
+        else {
+            success = success && false;
+            console.log('something went wrong');
+        }
+
+        setSubmitted(success);
     };
 
     return (
         <Fragment>
-            {console.log(prDetails)}
-            <Typography variant="h4" className={classes.pageTitle}>{pr.title}</Typography>
+            <Typography variant="h4" className={classes.pageTitle}>{pr.title}{teamData.project_name}</Typography>
 
             <form className={classes.surveyDetail} noValidate autoComplete='off'>
                 <TextField 
@@ -122,7 +208,7 @@ const TakePR = ({ userId, userType, token, loggedIn, location }) => {
             </form>
             
             <div className={classes.prCards}>
-                {prDetails.teamMembers.map((teamMember, index) => 
+                {teamMembers.map((teamMember, index) => 
                     <Card variant='outlined' key={index} className={classes.prCard}>
                         <CardContent>
                             <Typography>{`${teamMember.first_name}  ${teamMember.last_name}`}</Typography>
@@ -135,6 +221,7 @@ const TakePR = ({ userId, userType, token, loggedIn, location }) => {
                                 marks
                                 min={1}
                                 max={10}
+                                onChange={(event, value) => handleParticipationGrade(index, event, value)}
                             />
                         </CardContent>
                     </Card>
@@ -149,6 +236,14 @@ const TakePR = ({ userId, userType, token, loggedIn, location }) => {
                     Submit
                 </Button>
             </div>
+
+            {submitted && <FormSubmitted 
+                open={submitted}
+                onClose={() => handleCloseSubmittedDialog()}
+                confirmationText={`${pr.title} submitted!`}
+                submittedText='Peer Review Submitted'
+                routeBack='/student/PeerReview/ViewPeerReviews'
+            />}
         </Fragment>
     )
 }
