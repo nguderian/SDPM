@@ -9,6 +9,7 @@ import TakeMultipleChoice from './questions/TakeMultipleChoice';
 import Button from '@material-ui/core/Button';
 import FormSubmitted from '../../common/FormSubmitted';
 import axios from 'axios';
+import TakeFreeResponse from './questions/TakeFreeResponse';
 
 const useStyles = makeStyles(theme =>({
     pageTitle: {
@@ -110,7 +111,8 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
             "form_id": formId,
             "instance_id": instanceId,
             "student_id": studentId,
-            "results": quiz['answers']
+            "results": quiz['answers'], 
+            "user_id": userId
         };
 
         const options = {
@@ -169,6 +171,13 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
                             }
                             {question.question_type === 'fill_blank' && 
                                 <TakeFillBlank 
+                                    question={question}
+                                    handleChange={captureAnswer}
+                                    index={index}
+                                />
+                            }
+                            {question.question_type === 'free_response' && 
+                                <TakeFreeResponse 
                                     question={question}
                                     handleChange={captureAnswer}
                                     index={index}

@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -15,22 +16,28 @@ import CompleteForm from '../../common/CompleteForm';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-
 const useStyles = makeStyles(theme => ({
-    root: {
-      flexGrow: 1,
-    },
-    divider: {
+    pageTitle: {
         margin: theme.spacing(1),
+        marginTop: theme.spacing(2),
+        textAlign: 'center'
+    },
+    classSelector: {
+        marginLeft: theme.spacing(7),
+        marginBottom: theme.spacing(2), 
+        minWidth: '15%'
+    },
+    detailText: {
+        marginLeft: theme.spacing(7),
+        marginBottom: theme.spacing(2)
+    },
+    prCard: {
+        marginLeft: theme.spacing(7),
+        marginRight: theme.spacing(7),
         marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2)
-    }, 
-    createButton: {
-      marginLeft: theme.spacing(7),
-      marginTop: theme.spacing(1),
-      height: '7%',
     },
-    meetingList: {
+    prList: {
         flexGrow: 1,
         maxHeight: '40%',
         overflowY: 'scroll',
@@ -38,27 +45,12 @@ const useStyles = makeStyles(theme => ({
         borderRadius: '5px',
         marginLeft: theme.spacing(7),
         marginRight: theme.spacing(7), 
-        marginBottom: theme.spacing(7)
-    }, 
-    pageTitle: {
-        margin: theme.spacing(1),
-        marginTop: theme.spacing(2),
-        textAlign: 'center'
-    },
-    meetingCard: {
-        marginLeft: theme.spacing(7),
-        marginRight: theme.spacing(7),
-        marginBottom: theme.spacing(2),
-        marginTop: theme.spacing(2)
-    }, 
-    detailText: {
-        marginLeft: theme.spacing(7),
         marginBottom: theme.spacing(2)
     },
-    classSelector: {
-        marginLeft: theme.spacing(7),
-        marginBottom: theme.spacing(2), 
-        width: '15%'
+    divider: {
+        margin: theme.spacing(1),
+        marginBottom: theme.spacing(2),
+        marginTop: theme.spacing(2)
     },
     options: {
         display: 'flex',
@@ -67,17 +59,17 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
+const ViewPRs = ({ userId, userType, token, loggedIn }) => {
     const classes = useStyles();
-    const [upcomingMeetings, setUpcomingMeetings] = useState([]);
-    const [completedMeetings, setCompletedMeetings] = useState([]);
+    const [upcomingPrs, setUpcomingPrs] = useState([]);
+    const [completedPrs, setCompletedPrs] = useState([]);
     const [activeClasses, setActiveClasses] = useState([]);
     const [inactiveClasses, setInactiveClasses] = useState([]);
     const [activeStudentId, setActiveStudentId] = useState('');
     const [inactiveStudentId, setInactiveStudentId] = useState('');
-    const [meetingToShow, setMeetingToShow] = useState({
-        showMeeting: false,
-        meetingAtIndex: {}
+    const [prToShow, setPrToShow] = useState({
+        showPr: false,
+        prAtIndex: {}
     });
 
     useEffect(() => {
@@ -122,7 +114,7 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
 
     useEffect(() => {
         if(activeStudentId) {
-            async function getUpcomingMeetings() {
+            async function getUpcomingPrs() {
                 const options = {
                     method: 'POST',
                     url: 'http://localhost:3001/api/getInstances',
@@ -132,16 +124,16 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
                     },
                     data: {
                         'student_id': activeStudentId,
-                        'type': 'meeting',
+                        'type': 'survey',
                         'is_complete': 0
                     }
                 };
         
                 let result = await axios(options);
                 console.log(result);
-                setUpcomingMeetings(result.data);
+                setUpcomingPrs(result.data);
             }
-            async function getCompletedMeetings() {
+            async function getCompletedPrs() {
                 const options = {
                     method: 'POST',
                     url: 'http://localhost:3001/api/getInstances',
@@ -158,10 +150,10 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
         
                 let result = await axios(options);
                 console.log(result);
-                setCompletedMeetings(result.data);
+                setCompletedPrs(result.data);
             }
-            getUpcomingMeetings();
-            getCompletedMeetings();
+            getUpcomingPrs();
+            getCompletedPrs();
         }
     }, [activeStudentId]);
 
@@ -173,78 +165,68 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
         setInactiveStudentId(event.target.value);
     };
 
-    const handleMeetingCardClick = (index, type) => {
+    const handlePrCardClick = (index, type) => {
         if(type === 'upcoming') {
-            setMeetingToShow({ showMeeting: true, meetingAtIndex: upcomingMeetings[index] });
+            setPrToShow({ showPr: true, prAtIndex: upcomingPrs[index] });
         }
         else if(type === 'completed') {
-            setMeetingToShow({ showMeeting: true, meetingAtIndex: completedMeetings[index] });
+            setPrToShow({ showPr: true, prAtIndex: completedPrs[index] });
         }
     };
 
     return (
         <Fragment>
-            <Typography variant="h4" className={classes.pageTitle}>Meetings</Typography>
+            <Typography variant="h4" className={classes.pageTitle}>Group Peer Reviews</Typography>
             <Divider className={classes.divider} variant="fullWidth"/>
-            <div className={classes.options}>
-            
-            <FormControl variant='outlined' className={classes.classSelector}>
-                <InputLabel>Select current class</InputLabel>
-                <Select
-                    label='Current Class'
-                    value={activeStudentId}
-                    onChange={handleActiveClassChange}
-                >
-                    {activeClasses.map((activeClass, index) => 
-                        <MenuItem key={index} value={activeClass.student_id}>{activeClass.name}</MenuItem>
-                    )}
-                </Select>
-            </FormControl>
 
-            <FormControl variant='outlined' className={classes.classSelector}>
-                <InputLabel>Select previous class</InputLabel>
-                <Select
-                    label='Previous class'
-                    value={inactiveStudentId}
-                    disabled={inactiveClasses.length === 0 ? true : false}
-                    onChange={handleInactiveClassChange}
-                >
-                    {inactiveClasses.map((inactiveClass, index) => 
-                        <MenuItem key={index} value={inactiveClass.student_id}>{inactiveClass.name}</MenuItem>
-                    )}
-                </Select>
-            </FormControl>
-            <Button 
-                className={classes.createButton} 
-                variant="contained" 
-                color="primary" 
-                component={Link} 
-                to={{ pathname: '/student/Meeting/NewMeeting', state: { studentId: activeStudentId } }}
-                disabled={activeStudentId === '' ? true : false }
-            >
-                Create New
-            </Button>
+            <div className={classes.options}>
+                <FormControl variant='outlined' className={classes.classSelector}>
+                    <InputLabel>Select current class</InputLabel>
+                    <Select
+                        label='Current Class'
+                        value={activeStudentId}
+                        onChange={handleActiveClassChange}
+                    >
+                        {activeClasses.map((activeClass, index) => 
+                            <MenuItem key={index} value={activeClass.student_id}>{activeClass.name}</MenuItem>
+                        )}
+                    </Select>
+                </FormControl>
+
+                <FormControl variant='outlined' className={classes.classSelector}>
+                    <InputLabel>Select previous class</InputLabel>
+                    <Select
+                        label='Current Class'
+                        value={inactiveStudentId}
+                        disabled={inactiveClasses.length === 0 ? true : false}
+                        onChange={handleInactiveClassChange}
+                    >
+                        {inactiveClasses.map((inactiveClass, index) => 
+                            <MenuItem key={index} value={inactiveClass.student_id}>{inactiveClass.name}</MenuItem>
+                        )}
+                    </Select>
+                </FormControl>
             </div>
             
+
             <Typography className={classes.detailText} variant='h5'>Upcoming</Typography>
-            <div className={classes.meetingList}>
+            <div className={classes.prList}>
                 <List component='nav'>
-                    {upcomingMeetings.length === 0 &&
-                        <Card variant='elevation' className={classes.meetingCard}>
+                    {upcomingPrs.length === 0 &&
+                        <Card variant='elevation' className={classes.prCard}>
                             <CardContent>
-                                <Typography>No upcoming meetings. Please select a class</Typography>
+                                <Typography>No upcoming peer reviews. Please select a class</Typography>
                             </CardContent>
                         </Card>
                     }
-                    {upcomingMeetings.map((meeting, index) => 
-                        <Card variant='outlined' key={index} className={classes.meetingCard}>
-                            {/* <CardActionArea component={Link} to={{ pathname: `/student/Meeting/${meeting.title}`, state: { formId: meeting.form_id, instanceId: meeting.instance_id, studentId: studentId }}}> */}
-                            <CardActionArea onClick={() => handleMeetingCardClick(index, 'upcoming')}>
+                    {upcomingPrs.map((pr, index) => 
+                        <Card variant='outlined' key={index} className={classes.prCard}>
+                            <CardActionArea onClick={() => handlePrCardClick(index, 'upcoming')}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
-                                        {meeting.title}
+                                        {pr.title}
                                     </Typography>
-                                    <Typography>{meeting.description}</Typography>
+                                    <Typography>{pr.description}</Typography>
                                 </CardContent>
                             </CardActionArea>
                         </Card>
@@ -254,40 +236,41 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
             </div>
             
             <Typography className={classes.detailText} variant='h5'>Completed</Typography>
-            <div className={classes.meetingList}>
+            <div className={classes.prList}>
                 <List component='nav'>
-                    {completedMeetings.length === 0 &&
-                        <Card variant='elevation' className={classes.meetingCard}>
+                    {completedPrs.length === 0 &&
+                        <Card variant='elevation' className={classes.prCard}>
                             <CardContent>
-                                <Typography>No completed meetings. Please select a class</Typography>
+                                <Typography>No completed peer reviews. Please select a class</Typography>
                             </CardContent>
                         </Card>
                     }
-                    {completedMeetings.map((meeting, index) => 
-                        <Card variant='outlined' key={index} className={classes.meetingCard}>
-                            <CardActionArea onClick={() => handleMeetingCardClick(index, 'completed')}>
+                    {completedPrs.map((pr, index) => 
+                        <Card variant='outlined' key={index} className={classes.prCard}>
+                            <CardActionArea onClick={() => handlePrCardClick(index, 'completed')}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
-                                        {meeting.title}
+                                        {pr.title}
                                     </Typography>
-                                    <Typography>{meeting.description}</Typography>
+                                    <Typography>{pr.description}</Typography>
                                 </CardContent>
                             </CardActionArea>
                         </Card>
                     )}
+                    
                 </List>
             </div>
-
-            {meetingToShow['showMeeting'] && <CompleteForm 
-                open={meetingToShow['showMeeting']}
-                onClose={() => setMeetingToShow({ showMeeting: false, meetingAtIndex: {} })}
-                formTitle={meetingToShow['meetingAtIndex'].title}
-                formDescription={meetingToShow['meetingAtIndex'].description}
-                buttonText='Take Attendance'
+            
+            {prToShow.showPr && <CompleteForm 
+                open={prToShow.showPr}
+                onClose={() => setPrToShow({ showPr: false, prAtIndex: {} })}
+                formTitle={prToShow.prAtIndex.title}
+                formDescription={prToShow.prAtIndex.description}
+                buttonText='Complete Peer Review'
                 routeForward={{
-                    pathname: `/student/Meeting/${meetingToShow['meetingAtIndex'].title}`,
+                    pathname: `/student/PeerReview/${prToShow.prAtIndex.title}`,
                     state: {
-                        meeting: meetingToShow['meetingAtIndex'],
+                        pr: prToShow.prAtIndex,
                         studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId
                     }
                 }}
@@ -296,4 +279,4 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
     )
 }
 
-export default ViewMeetings;
+export default ViewPRs;

@@ -202,6 +202,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
     }, [formId]);
     
     useEffect(() => {
+        // only get all active classes
         async function getClasses() {
             const options = {
                 method: 'POST',
@@ -211,7 +212,8 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
                     'Authorization': token
                 }, 
                 data: {
-                    'user_id': userId
+                    'user_id': userId, 
+                    'is_active': 1
                 }
             };
     
