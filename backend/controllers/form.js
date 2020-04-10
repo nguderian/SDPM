@@ -185,7 +185,7 @@ class form {
 
         if (type === 'meeting') {
             // const for meeting and form.
-            const { access_level, title, user_id, description, team_id, start_date, end_date} = req.body;
+            const { access_level, title, user_id, description, team_id, start_date, end_date } = req.body;
 
             // Insert the form.
             try {
@@ -348,6 +348,191 @@ class form {
 
         }
         */
+
+    }
+
+    static async getInstance(req, res, next) {
+
+        const { instance_id } = req.body;
+        let formId;
+        let formType;
+
+        try {
+            let result = await sequelize.query('CALL get_form_id(?)',
+                { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
+
+            formId = result[0]['form_id'];
+
+        } catch (error) {
+            console.log(error);
+            res.send({ status: "Could not get form type" });
+        }
+
+        try {
+            let result = await sequelize.query('CALL get_form_type(?)',
+                { replacements: [formId], type: sequelize.QueryTypes.CALL });
+
+            formType = result[0]['type'];
+
+        } catch (error) {
+            console.log(error);
+            res.send({ status: "Could not get form type" });
+        }
+
+        if (formType === 'survey') {
+            let returnSurvey;
+            try {
+                returnSurvey = await sequelize.query('CALL get_survey(?)',
+                    { replacements: [formId], type: sequelize.QueryTypes.CALL });
+            } catch (error) {
+                console.log(error);
+                res.send({ status: "Could not get survey to take" });
+            }
+
+            console.log(returnSurvey);
+
+            var resultForm = {};
+            resultForm.title = returnSurvey[0].title;
+            resultForm.description = returnSurvey[0].description;
+            resultForm.type = returnSurvey[0].type;
+            resultForm.questions = new Array();
+
+            // going through each JSON
+            for (var i in returnSurvey) {
+
+                if (i == 0) {
+
+                    var current_question_id = returnSurvey[i].question_id;
+                    var current_question_control = 0;
+                    if (type == 'coordinator') {
+                        resultForm.questions.push({
+                            //"question_id": returnSurvey[i].question_id,
+                            "question_text": returnSurvey[i].question_text,
+                            "question_type": returnSurvey[i].question_type,
+                            "question_threshold": returnSurvey[i].question_threshold
+                        });
+                    } else if (type == 'student') {
+                        resultForm.questions.push({
+                            "question_id": returnSurvey[i].question_id,
+                            "question_text": returnSurvey[i].question_text,
+                            "question_type": returnSurvey[i].question_type,
+
+                        });
+                    }
+                    //resultForm.questions[current_question_control].answers = new Array();
+
+                }
+
+                if (current_question_id != returnSurvey[i].question_id) {
+
+
+                    if (type == 'coordinator') {
+                        resultForm.questions.push({
+                            //"question_id": returnSurvey[i].question_id,
+                            "question_text": returnSurvey[i].question_text,
+                            "question_type": returnSurvey[i].question_type,
+                            "question_threshold": returnSurvey[i].question_threshold
+                        });
+                    } else {
+                        resultForm.questions.push({
+                            "question_id": returnSurvey[i].question_id,
+                            "question_text": returnSurvey[i].question_text,
+                            "question_type": returnSurvey[i].question_type
+                        });
+                    }
+                    current_question_control++;
+                    //resultForm.questions[current_question_control].answers = new Array();
+                    current_question_id = returnSurvey[i].question_id;
+
+                }
+
+
+                /*resultForm.questions[current_question_control].answers.push({
+                    "key_text": returnSurvey[i].key_text
+                });*/
+            }
+
+            res.send({ survey: resultForm });
+        }
+        else if (formType === 'quiz') {
+            let returnQuiz;
+            try {
+                returnQuiz = await sequelize.query('CALL get_quiz(?)',
+                    { replacements: [form_id], type: sequelize.QueryTypes.CALL });
+                //console.log(JSON.stringify(returnQuiz, null, " "));
+            } catch (error) {
+                console.log(error);
+                res.send({ status: "Could not get quiz to take" });
+            }
+            var resultForm = {};
+            resultForm.title = returnQuiz[0].title;
+            resultForm.description = returnQuiz[0].description;
+            resultForm.type = returnQuiz[0].type;
+            if (type == 'coordinator') {
+                resultForm.threshold = returnQuiz[0].form_threshold;
+            }
+            resultForm.questions = new Array();
+
+            // going through each JSON
+            for (var i in returnQuiz) {
+
+                if (i == 0) {
+                    var current_question_id = returnQuiz[i].question_id;
+                    var current_question_control = 0;
+                    if (type == 'student') {
+                        resultForm.questions.push({
+                            "question_id": returnQuiz[i].question_id,
+                            "question_text": returnQuiz[i].question_text,
+                            "question_type": returnQuiz[i].question_type
+                        });
+                    } else if (type == 'coordinator') {
+                        resultForm.questions.push({
+                            // "question_id": returnQuiz[i].question_id,
+                            "question_text": returnQuiz[i].question_text,
+                            "question_type": returnQuiz[i].question_type
+                        });
+                    }
+
+                    resultForm.questions[current_question_control].answers = new Array();
+
+                }
+
+                if (current_question_id != returnQuiz[i].question_id) {
+
+
+                    if (type == 'student') {
+                        resultForm.questions.push({
+                            "question_id": returnQuiz[i].question_id,
+                            "question_text": returnQuiz[i].question_text,
+                            "question_type": returnQuiz[i].question_type
+                        });
+                    } else if (type == 'coordinator') {
+                        resultForm.questions.push({
+                            // "question_id": returnQuiz[i].question_id,
+                            "question_text": returnQuiz[i].question_text,
+                            "question_type": returnQuiz[i].question_type
+                        });
+                    }
+                    current_question_control++;
+                    resultForm.questions[current_question_control].answers = new Array();
+                    current_question_id = returnQuiz[i].question_id;
+
+                }
+
+                if (type == 'student') {
+                    resultForm.questions[current_question_control].answers.push({
+                        "key_text": returnQuiz[i].key_text
+                    });
+                }
+                else if (type == 'coordinator') {
+                    resultForm.questions[current_question_control].answers.push({
+                        "key_text": returnQuiz[i].key_text,
+                        "is_correct": returnQuiz[i].is_correct
+                    });
+                }
+            }
+
+        }
 
     }
 
@@ -573,9 +758,9 @@ class form {
                 try {
                     // Submit the survey instance.
                     let callSurvey = await sequelize.query(`CALL submit_survey(?,?,?,?)`,
-                        { replacements: [instance_id, results[i].question_id, results[i].answer_text, student_id], type: sequelize.QueryTypes.CALL });
+                        { replacements: [instance_id, results[i].question_id, results[i].answer_text, results[i].student_id], type: sequelize.QueryTypes.CALL });
                     // res.send({ status: "Success" });
-                    console.log(`Insert ${results[i].question_id} and ${results[i].text}`);
+                    console.log(`Insert ${results[i].question_id} and ${results[i].answer_text}`);
                     status.status2 = "Success"
                     next;
                 } catch (error) {
@@ -584,8 +769,14 @@ class form {
                     next;
                 }
             }
-            // triggerCheck(user_id, form_id, instance_id, results);
-            // res.send(status);
+          
+            try {
+                triggerCheck(student_id, instance_id, form_id, results);
+            } catch (error) {
+                console.log(error);
+            }
+            //res.send(status);
+
         }
 
         if (type === 'quiz') {
@@ -610,8 +801,12 @@ class form {
 
             let grade = await quizGrader(student_id, form_id, instance_id, results);
             status.grade = grade;
-
-            let team_id;
+            try {
+                triggerCheck(student_id, instance_id, form_id, null);
+            }
+            catch (error) {
+                comsole.log(error);
+            }
             /*
             try {
                 team_id = await sequelize.query('CALL get_team_id(?)',
@@ -1073,13 +1268,13 @@ async function quizGrader(student_id, form_id, instance_id, responses) {
                         }
                     case 'fill_blank':
                         {
-                            
+
                             var r = dice(keys[i].key_text, responses[j].answer_text);
 
                             var c = levenstein(keys[i].key_text, responses[j].answer_text);
-    
+
                             var p = c / keys[i].key_text.length;
-                            
+
                             if (r > .9) {
                                 correct += 1;
                             }
@@ -1122,77 +1317,109 @@ async function quizGrader(student_id, form_id, instance_id, responses) {
     return grade;
 }
 //Checks for trigger and email advisor as needed
-async function triggerCheck(form_id, instance_id, results, team_id, user_id) {
-
+async function triggerCheck(student_id, instance_id, form_id, results) {
+    let tempForm;
+    let threshold;
     let report = [];
     let tempResult;
     let type;
     var date = new Date().toISOString().slice(0, 10);
     let advisorID;
-    if (user_id != undefined)
-        advisorID = await sequelize.query('CALL get_student_advisor(?)', { replacements: [user_id], type: sequelize.QueryTypes.CALL });
-    else
-        advisorID = await sequelize.query('CALL get_team_advisor(?)', { replacements: [team_id], type: sequelize.QueryTypes.CALL });
+    let coordinator_user_id;
+    let instance;
+
     try {
-        //get type
-        tempResult = await sequelize.query('CALL get_form_type(?)', { replacements: [form_id], type: sequelize.QueryTypes.CALL });
-        type = tempResult[0]['type'];
-
-
-        // res.send({ thisType });
+        let formType = await sequelize.query('CALL get_form_type(?)',
+            { replacements: [form_id], type: sequelize.QueryTypes.CALL });
+        type = formType[0]['type'];
     } catch (error) {
         console.log(error);
-        // res.send({ status: "Failed"
+
     }
+    console.log(type);
+
+    try {
+        let coo_id = await sequelize.query('CALL get_student_coordinator(?)',
+            { replacements: [student_id], type: sequelize.QueryTypes.CALL });
+        coordinator_user_id = coo_id[0]['user_id'];
+    } catch (error) {
+        console.log(error);
+        //res.send("failed getting coordinator id");
+    }
+
+
+    //console.log(coordinator_user_id);
 
     if (type === 'survey') {
         for (let i = 0; i < results.length; i++) {
             //Get question threshold
             let question = await sequelize.query('CALL get_form_question(?)', { replacements: [results[i].question_id], type: sequelize.QueryTypes.CALL });
-            if (question[0].question_threshold != null && question[0].question_threshold > results[i].text) {
+            
+            if (question[0].question_threshold != null && question[0].question_threshold > results[i].answer_text) {
                 //Insert into alerts array
                 let newAlert = await sequelize.query(`CALL insert_alert_history(?,?)`, {
-                    replacements: [instance_id, advisorID[0].user_id],
+                    replacements: [instance_id, coordinator_user_id],
                     type: sequelize.QueryTypes.CALL
                 });
             }
         }
     }
     if (type === 'quiz') {
-        tempForm = await sequelize.query('CALL get_form(?)', { replacements: [form_id], type: sequelize.QueryTypes.CALL });
+
+        try {
+            tempForm = await sequelize.query('CALL get_form(?)', { replacements: [form_id], type: sequelize.QueryTypes.CALL });
+        } catch (error) {
+
+            console.log(error);
+            return;
+        }
         threshold = tempForm[0]['form_threshold'];
+
 
         let instanceGrade;
         try {
-            instanceGrade = await sequelize.query('SELECT form_instances.grade FROM form_instances WHERE form_instances.instance_id = ?', { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
+            instanceGrade = await sequelize.query('CALL get_instance_grade(?)', { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
         } catch (error) {
             console.log(error);
+            return;
         }
+        console.log(instanceGrade);
 
         if (threshold != undefined) {
             if (instanceGrade[0].grade < threshold) {
+                console.log(threshold);
                 //Insert into alerts array
-                let newAlert = await sequelize.query(`CALL insert_alert_history(?,?)`, {
-                    replacements: [instance_id, advisorID[0].user_id],
-                    type: sequelize.QueryTypes.CALL
-                });
+                try {
+                    let newAlert = await sequelize.query('CALL insert_alert_history(?,?)', {
+                        replacements: [instance_id, coordinator_user_id],
+                        type: sequelize.QueryTypes.CALL
+                    });
+                }
+                catch (error) {
+                    console.log(error);
+                    return;
+                }
             }
         }
+
     }
+    /*
     if (type === 'milestone')
         instance = await sequelize.query('CALL get_team_instance(?,?,?)', { replacements: [form_id, instance_id], type: sequelize.QueryTypes.CALL });
     else if (type === 'task') {
         instance = await sequelize.query('CALL get_instance(?,?)', { replacements: [form_id, instance_id], type: sequelize.QueryTypes.CALL });
     } else
-        instance = await sequelize.query('CALL get_form_instance(?,?,?)', { replacements: [form_id, instance_id, user_id], type: sequelize.QueryTypes.CALL });
+        instance = await sequelize.query('CALL get_form_instance(?,?,?)', { replacements: [form_id, instance_id, coordinator_user_id], type: sequelize.QueryTypes.CALL });
 
+
+    
     if (instance[0].end_date < date) {
         //Insert into alerts array for both 
         let newAlert = await sequelize.query(`CALL insert_alert_history(?,?)`, {
-            replacements: [instance_id, advisorID[0].user_id],
+            replacements: [instance_id, coordinator_user_id],
             type: sequelize.QueryTypes.CALL
         });
-    }
+    }*/
 
     //Email report
 
