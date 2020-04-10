@@ -111,7 +111,8 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
             "form_id": formId,
             "instance_id": instanceId,
             "student_id": studentId,
-            "results": quiz['answers']
+            "results": quiz['answers'], 
+            "user_id": userId
         };
 
         const options = {
