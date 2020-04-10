@@ -49,11 +49,19 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+function isEmpty(obj) {
+    for (var key in obj) {
+        if(obj.hasOwnProperty(key)) {
+            return false;
+        }
+    }
+    return true;
+};
 
 const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
     const classes = useStyles();
     const { meeting, studentId } = location.state;
-    const [teamId, setTeamId] = useState('');
+    const [teamData, setTeamData] = useState({});
     const [attendance, setAttendance] = useState({
         teamMembers: [],
         didAttend: []
@@ -75,14 +83,13 @@ const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
             };
 
             let result = await axios(options);
-            console.log(result.data.team_id[0].team_id);
-            setTeamId(result.data.team_id[0].team_id);
+            setTeamData(result.data);
         }
         getTeam()
     }, []);
 
     useEffect(() => {
-        if(teamId) {
+        if(!isEmpty(teamData)) {
             async function getTeamMembers() {
                 const options = {
                     method: 'POST',
@@ -92,7 +99,7 @@ const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
                         'Authorization': token
                     },
                     data: {
-                        'team_id': teamId
+                        'team_id': teamData[0].team_id
                     },
                 };
                 
@@ -100,10 +107,10 @@ const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
                 const teamMembers = result.data.team_members;
 
                 let arr = [];
-
+                console.log(teamMembers);
                 teamMembers.forEach(teamMember => {
                     let obj = {
-                        user_id: teamMember.user_id,
+                        student_id: teamMember.student_id,
                         did_attend: 0,
                         reason: ''
                     }
@@ -114,7 +121,7 @@ const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
             }
             getTeamMembers()
         }
-    }, [teamId]);
+    }, [teamData]);
 
     const captureDidAttend = (event, index) => {
         attendance.didAttend[index].did_attend = ~~event.target.checked;

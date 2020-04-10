@@ -63,7 +63,7 @@ function isEmpty(obj) {
 const TakePR = ({ userId, userType, token, loggedIn, location }) => {
     const classes = useStyles();
     const { pr, studentId } = location.state;
-    const [teamData, setTeamData] = useState([]);
+    const [teamData, setTeamData] = useState({});
     const [teamMembers, setTeamMembers] = useState([]);
     const [quizAnswers, setQuizAnswers] = useState([]);
     const [submitted, setSubmitted] = useState(false);

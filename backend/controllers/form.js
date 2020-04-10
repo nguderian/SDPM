@@ -584,8 +584,8 @@ class form {
                     next;
                 }
             }
-            triggerCheck(user_id, form_id, instance_id, results);
-            res.send(status);
+            // triggerCheck(user_id, form_id, instance_id, results);
+            // res.send(status);
         }
 
         if (type === 'quiz') {
