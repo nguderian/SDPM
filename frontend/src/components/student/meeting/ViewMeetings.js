@@ -214,7 +214,14 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
                     )}
                 </Select>
             </FormControl>
-            <Button className={classes.createButton} variant="contained" color="primary" component={Link} to='/student/Meeting/NewMeeting'>
+            <Button 
+                className={classes.createButton} 
+                variant="contained" 
+                color="primary" 
+                component={Link} 
+                to={{ pathname: '/student/Meeting/NewMeeting', state: { studentId: activeStudentId } }}
+                disabled={activeStudentId === '' ? true : false }
+            >
                 Create New
             </Button>
             </div>
