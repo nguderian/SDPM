@@ -13,7 +13,6 @@ function currentUser(state = initialState, action) {
 
     const handleOnLogin = (action) => {
         const newState = {...state};
-        console.log('action.payload', action.payload);
         newState.userId = action.payload.userId;
         newState.token = action.payload.token;
         newState.loggedIn = action.payload.loggedIn;

@@ -41,13 +41,13 @@ const SignIn = ({ userId, userType, token, loggedIn }) => {
     const history = useHistory();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    console.log('loggedIn', loggedIn);
 
     useEffect(() => {
         if(loggedIn) {
             history.push('/Home');
         }
-    })
+    });
+    
     const handleUsernameChange = event => {
         setUsername(event.target.value);
     };
@@ -58,7 +58,6 @@ const SignIn = ({ userId, userType, token, loggedIn }) => {
 
     async function login(event) {
         event.preventDefault();
-        console.log(username, password);
         dispatch(AuthActions.login(username, password));
     };
 

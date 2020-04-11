@@ -16,10 +16,11 @@ import HomeIcon from '@material-ui/icons/Home';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import ClassIcon from '@material-ui/icons/Class';
 import SettingsIcon from '@material-ui/icons/Settings';
-import CreateIcon from '@material-ui/icons/Create';
 import SearchIcon from '@material-ui/icons/Search';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import RateReviewIcon from '@material-ui/icons/RateReview';
+import AuthActions from '../storeConfig/actions/auth/AuthActions';
+import { useDispatch } from 'react-redux';
 
 
 const useStyles = makeStyles(theme => ({
@@ -46,14 +47,9 @@ const StyledNav = withStyles({
 
 const NavBar = ({ user_id, userType, token, loggedIn }) => {
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const history = useHistory();
     const logged = loggedIn;
-
-    // console.log(user_id, loggedIn, userType);
-    // useEffect(() => {
-    //   if(!loggedIn) {
-    //     history.push('/');
-    //   }
-    // })
 
     const [state, setState] = useState({
       left: false
@@ -158,9 +154,12 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
       }
     }
     
-    // async function logout() {
-    //   dispatch(AuthActions.logout());
-    // }
+    async function logout(event) {
+      await dispatch(AuthActions.logout());
+
+      history.push('/');
+    };
+    
     return (
       <div>
           <StyledNav position="static" className={classes.root}>
@@ -184,6 +183,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
                   {loggedIn &&
                     <Button 
                       color="black"
+                      onClick={logout}
                     >
                       Logout
                     </Button>

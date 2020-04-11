@@ -8,7 +8,6 @@ class AuthActions {
             payload: {}
         });
         
-        console.log(username, password);
         const body = {
             'username': username,
             'password': password
@@ -25,7 +24,6 @@ class AuthActions {
     
         let response = await axios(options);
         let responseOK = response && response.status === 200 && response.statusText === 'OK';
-        console.log(response);
         if(responseOK) {
             // Successful login
             dispatch({
@@ -41,7 +39,7 @@ class AuthActions {
         }
     };
     
-    logout = (dispatch) => {
+    logout = () => async (dispatch) => {
         dispatch({
             type: AuthActionTypes.ON_LOGOUT,
             payload: {}
