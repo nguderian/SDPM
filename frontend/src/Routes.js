@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import React, { Fragment } from 'react';
+import { BrowserRouter as Router, Route, Switch, useHistory } from 'react-router-dom';
 import NavBarContainer from './components/containers/NavBarContainer';
 import CreateQuizContainer from './components/containers/coordinator/forms/CreateQuizContainer';
 import NewQuizContainer from './components/containers/coordinator/forms/NewQuizContainer';
@@ -14,36 +14,47 @@ import ViewPRsContainer from './components/containers/student/peerReview/ViewPRs
 import TakePRContainer from './components/containers/student/peerReview/TakePRContainer';
 import CreateSurveyContainer from './components/containers/coordinator/forms/CreateSurveyContainer';
 import NewSurveyContainer from './components/containers/coordinator/forms/NewSurveyCJontainer';
+import SignInContainer from './components/containers/SignInContainer';
+import { createBrowserHistory } from 'history';
 
-const routes = (
-    <Router>
-        <NavBarContainer/>
-        <Switch> 
-            <Route path='/' exact component={Home}/>
-            <Route path='/AdminClassPage' exact component={AdminClassPage}/>
+const routes = () => {
+    const history = createBrowserHistory();
+    return (
+        <Fragment>
+            <Router history={history}>
+                <NavBarContainer/>
+                <Switch> 
+                    <Route path='/Home' exact component={Home} />
+                    <Route path='/' exact component={SignInContainer}/>
+                    <Route path='/AdminClassPage' exact component={AdminClassPage} />
+                    {/* <Route path='/SignIn'  render={(props) => <SignInContainer />} /> */}
+                    {/* quiz creation */}
+                    <Route path='/coordinator/Quiz/CreateQuiz' exact component={CreateQuizContainer} />
+                    <Route path='/coordinator/Quiz/:title' render={(props) => <NewQuizContainer {...props} />} />
+                    
+                    {/* survey creation */}
+                    <Route path='/coordinator/Survey/CreateSurvey' exact component={CreateSurveyContainer} />
+                    <Route path='/coordinator/Survey/NewSurvey' exact component={NewSurveyContainer} />
+                    
+                    {/* meetings */}
+                    <Route path='/student/Meeting/ViewMeetings' exact component={ViewMeetingsContainer} />
+                    <Route path='/student/Meeting/NewMeeting'  render={(props) => <NewMeetingContainer {...props} />} />
+                    <Route path='/student/Meeting/:title' render={(props) => <TakeAttendanceContainer {...props} />} />
 
-            {/* quiz creation */}
-            <Route path='/coordinator/Quiz/CreateQuiz' exact component={CreateQuizContainer}/>
-            <Route path='/coordinator/Quiz/:title' render={(props) => <NewQuizContainer {...props} />}/>
-            
-            {/* survey creation */}
-            <Route path='/coordinator/Survey/CreateSurvey' exact component={CreateSurveyContainer}/>
-            <Route path='/coordinator/Survey/NewSurvey' exact component={NewSurveyContainer}/>
-            
-            {/* meetings */}
-            <Route path='/student/Meeting/ViewMeetings' exact component={ViewMeetingsContainer}/>
-            <Route path='/student/Meeting/NewMeeting'  render={(props) => <NewMeetingContainer {...props} />} />
-            <Route path='/student/Meeting/:title' render={(props) => <TakeAttendanceContainer {...props} />}/>
+                    {/* complete a quiz */}
+                    <Route path='/student/Quiz/ViewQuizzes' exact component={ViewQuizzesContainer} />
+                    <Route path='/student/Quiz/:title' render={(props) => <TakeQuizContainer {...props}/>} />
 
-            {/* complete a quiz */}
-            <Route path='/student/Quiz/ViewQuizzes' exact component={ViewQuizzesContainer}/>
-            <Route path='/student/Quiz/:title' render={(props) => <TakeQuizContainer {...props}/>}/>
+                    {/* complete a peer review */}
+                    <Route path='/student/PeerReview/ViewPeerReviews' exact component={ViewPRsContainer} />
+                    <Route path='/student/PeerReview/:title' render={(props) => <TakePRContainer {...props} />} />
+                </Switch>
+            </Router>
+        </Fragment>
+    )
+}
 
-            {/* complete a peer review */}
-            <Route path='/student/PeerReview/ViewPeerReviews' exact component={ViewPRsContainer}/>
-            <Route path='/student/PeerReview/:title' render={(props) => <TakePRContainer {...props} />} />
-        </Switch>
-    </Router>
-)
+
+
 
 export default routes;

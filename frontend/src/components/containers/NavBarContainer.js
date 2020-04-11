@@ -1,5 +1,4 @@
 import NavBar from '../NavBar';
-import {onLogin} from '..//../storeConfig/actions';
 import {connect} from 'react-redux';
 
 const mapStateToProps = state =>{
@@ -11,16 +10,6 @@ const mapStateToProps = state =>{
         ip_address:state.ip_address
     }
 }
-
-// const mapDispatchToProps = dispatch => {
-//     return{
-//         onLogin(payload){
-//             dispatch(
-//                 onLogin(payload)
-//             )
-//         }
-//     }
-// }
 
 const NavBarContainer =  connect(mapStateToProps)(NavBar);
 
