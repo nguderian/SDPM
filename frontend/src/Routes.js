@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { BrowserRouter as Router, Route, Switch, useHistory } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
 import NavBarContainer from './components/containers/NavBarContainer';
 import CreateQuizContainer from './components/containers/coordinator/forms/CreateQuizContainer';
 import NewQuizContainer from './components/containers/coordinator/forms/NewQuizContainer';
@@ -27,7 +27,6 @@ const routes = () => {
                     <Route path='/Home' exact component={Home} />
                     <Route path='/' exact component={SignInContainer}/>
                     <Route path='/AdminClassPage' exact component={AdminClassPage} />
-                    {/* <Route path='/SignIn'  render={(props) => <SignInContainer />} /> */}
                     {/* quiz creation */}
                     <Route path='/coordinator/Quiz/CreateQuiz' exact component={CreateQuizContainer} />
                     <Route path='/coordinator/Quiz/:title' render={(props) => <NewQuizContainer {...props} />} />
