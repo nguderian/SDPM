@@ -1,5 +1,4 @@
 import ViewQuizzes from '../../../student/quiz/ViewQuizzes';
-import {onLogin} from '../../../../storeConfig/actions';
 import {connect} from 'react-redux';
 
 const mapStateToProps = state =>{
@@ -12,15 +11,6 @@ const mapStateToProps = state =>{
     }
 }
 
-// const mapDispatchToProps = dispatch => {
-//     return{
-//         onLogin(payload){
-//             dispatch(
-//                 onLogin(payload)
-//             )
-//         }
-//     }
-// }
 
 const ViewQuizzesContainer =  connect(mapStateToProps)(ViewQuizzes);
 
