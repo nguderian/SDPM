@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import NavBarContainer from './components/containers/NavBarContainer';
-import CreateQuizContainer from './components/containers/coordinator/forms/CreateQuizContainer';
-import NewQuizContainer from './components/containers/coordinator/forms/NewQuizContainer';
+import CreateQuizContainer from './components/containers/coordinator/forms/quiz/CreateQuizContainer';
+import NewQuizContainer from './components/containers/coordinator/forms/quiz/NewQuizContainer';
 import ViewQuizzesContainer from './components/containers/student/quiz/ViewQuizzesContainer';
 import TakeQuizContainer from './components/containers/student/quiz/TakeQuizContainer';
 import AdminClassPage from './components/AdminClassPage';
@@ -12,8 +12,8 @@ import NewMeetingContainer from './components/containers/student/meeting/NewMeet
 import TakeAttendanceContainer from './components/containers/student/meeting/TakeAttendanceContainer';
 import ViewPRsContainer from './components/containers/student/peerReview/ViewPRsContainer';
 import TakePRContainer from './components/containers/student/peerReview/TakePRContainer';
-import CreateSurveyContainer from './components/containers/coordinator/forms/CreateSurveyContainer';
-import NewSurveyContainer from './components/containers/coordinator/forms/NewSurveyCJontainer';
+import CreateSurveyContainer from './components/containers/coordinator/forms/peerReview/CreateSurveyContainer';
+import NewSurveyContainer from './components/containers/coordinator/forms/peerReview/NewSurveyCJontainer';
 import SignInContainer from './components/containers/SignInContainer';
 import { createBrowserHistory } from 'history';
 
