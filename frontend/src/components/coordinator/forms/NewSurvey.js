@@ -118,7 +118,7 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
             setClassList(result.data);
         }
         getClasses()
-    }, []);
+    }, [token, userId]);
 
     const handleSurveyTitleChange = event => {
         setSurveyTitle(event.target.value);

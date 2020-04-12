@@ -1,5 +1,4 @@
 import SignIn from '../SignIn';
-import AuthActions from '../../storeConfig/actions/auth/AuthActions';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state =>{
@@ -9,12 +8,6 @@ const mapStateToProps = state =>{
         loggedIn:state.loggedIn,
         userType:state.userType,
         ip_address:state.ip_address
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        login: AuthActions.login(),
     }
 }
 

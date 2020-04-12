@@ -118,7 +118,7 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
         }
         getActiveClasses();
         getInactiveClasses();
-    }, []);
+    }, [token, userId]);
 
     useEffect(() => {
         if(activeStudentId) {
@@ -163,7 +163,7 @@ const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
             getUpcomingMeetings();
             getCompletedMeetings();
         }
-    }, [activeStudentId]);
+    }, [activeStudentId, token]);
 
     const handleActiveClassChange = event => {
         setActiveStudentId(event.target.value);   

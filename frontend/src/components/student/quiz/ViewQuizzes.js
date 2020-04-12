@@ -6,7 +6,6 @@ import List from '@material-ui/core/List';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
-import { Link } from 'react-router-dom';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -109,7 +108,7 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
         }
         getActiveClasses();
         getInactiveClasses();
-    }, [])
+    }, [token, userId])
 
     useEffect(() => {
         if(activeStudentId) {
@@ -154,7 +153,7 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
             getUpcomingQuizzes();
             getCompletedQuizzes();
         }
-    }, [activeStudentId]);
+    }, [activeStudentId, token]);
 
     const handleActiveClassChange = event => {
         setActiveStudentId(event.target.value);   

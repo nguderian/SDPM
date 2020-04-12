@@ -7,7 +7,7 @@ const mapStateToProps = state =>{
         token: state.token,
         loggedIn:state.loggedIn,
         userType:state.userType,
-        loggedIn:state.ipAddress,
+        ipAddress:state.ipAddress,
     }
 }
 

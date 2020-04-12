@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
@@ -66,7 +66,7 @@ const CreateSurvey = ({ userId, userType, token, loggedIn }) => {
             setAllSurveys(result.data);
         }
         getAllSurveys();
-    }, []);
+    }, [token, userId]);
     
     return (
         <div className={classes.root}>

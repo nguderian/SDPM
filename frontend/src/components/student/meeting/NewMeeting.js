@@ -3,10 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
 import FormCreated from '../../common/FormCreated';
@@ -78,7 +74,7 @@ const NewMeeting = ({ userId, userType, token, loggedIn, location }) => {
             setTeamData(result.data);
         }
         getTeam()
-    }, []);
+    }, [studentId, token]);
 
     const handlemeetingTitleChange = event => {
         setMeetingTitle(event.target.value);

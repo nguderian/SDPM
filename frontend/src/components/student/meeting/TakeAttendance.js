@@ -86,7 +86,7 @@ const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
             setTeamData(result.data);
         }
         getTeam()
-    }, []);
+    }, [token, studentId]);
 
     useEffect(() => {
         if(!isEmpty(teamData)) {
@@ -121,7 +121,7 @@ const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
             }
             getTeamMembers()
         }
-    }, [teamData]);
+    }, [teamData, token]);
 
     const captureDidAttend = (event, index) => {
         attendance.didAttend[index].did_attend = ~~event.target.checked;

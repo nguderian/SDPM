@@ -4,8 +4,6 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button'; 
 import FormSubmitted from '../../common/FormSubmitted';
 import Slider from '@material-ui/core/Slider';
@@ -86,7 +84,7 @@ const TakePR = ({ userId, userType, token, loggedIn, location }) => {
             setTeamData(result.data);
         }
         getTeam()
-    }, []);
+    }, [studentId, token]);
 
     useEffect(() => {
         if(!isEmpty(teamData)) {
@@ -109,7 +107,7 @@ const TakePR = ({ userId, userType, token, loggedIn, location }) => {
             }
             getTeamMembers()
         }
-    }, [teamData]);
+    }, [teamData, token]);
 
     useEffect(() => {
         if(teamMembers.length !== 0) {
@@ -147,7 +145,7 @@ const TakePR = ({ userId, userType, token, loggedIn, location }) => {
             getQuiz();
         }
         
-    }, [teamMembers]);
+    }, [teamMembers, token, userId, pr]);
 
     const handleParticipationGrade = (index, event, value) => {
         quizAnswers[index].answer_text = value;

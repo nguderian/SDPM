@@ -88,14 +88,14 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
             });
             
             setQuiz({
-                ['title']: quiz.title,
-                ['description']: quiz.description,
-                ['questions']: quiz.questions,
-                ['answers']: arr
+                title: quiz.title,
+                description: quiz.description,
+                questions: quiz.questions,
+                answers: arr
             });
         }
         getQuiz()
-    }, [])
+    }, [formId, token, userId])
 
     const captureAnswer = (answer, index) => {
         quiz.answers[index].answer_text = answer;

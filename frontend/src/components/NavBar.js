@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -49,7 +49,6 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
-    const logged = loggedIn;
 
     const [state, setState] = useState({
       left: false
@@ -64,7 +63,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
     };
 
     const sideList = side => {
-      if(logged && userType === 'student') {
+      if(loggedIn && userType === 'student') {
         return (
           <div
             className={classes.list}
