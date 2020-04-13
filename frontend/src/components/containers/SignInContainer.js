@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 const mapStateToProps = state =>{
     return {
-        user_id: state.user_id,
+        userId: state.userId,
         token: state.token,
         loggedIn:state.loggedIn,
         userType:state.userType,

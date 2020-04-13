@@ -1,67 +1,244 @@
-import React, { Component } from 'react';
-import ReactDOM from "react-dom";
-import MaterialTable from "material-table";
-import { forwardRef } from 'react';
-import AddBox from '@material-ui/icons/AddBox';
-import ArrowDownward from '@material-ui/icons/ArrowDownward';
-import Check from '@material-ui/icons/Check';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import Clear from '@material-ui/icons/Clear';
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
-import Edit from '@material-ui/icons/Edit';
-import FilterList from '@material-ui/icons/FilterList';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import Remove from '@material-ui/icons/Remove';
-import SaveAlt from '@material-ui/icons/SaveAlt';
-import Search from '@material-ui/icons/Search';
-import ViewColumn from '@material-ui/icons/ViewColumn';
-import Button from '@material-ui/core/Button';
+import React, { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import List from '@material-ui/core/List';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardContent from '@material-ui/core/CardContent';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import axios from 'axios';
 
-const tableIcons = {
-  Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-  Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-  DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-  Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-  Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-  PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-  ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-  ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-  ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
-};
-class Home extends Component {
-    render() {
-        return (
-            <div style={{ maxWidth: "100%" }}>
-            <MaterialTable
-                icons={tableIcons}
-                columns=
-                {[
-                    { title: "Notifications", field: "notification" },
-                ]}
-                data=
-                {[
-                    { notification: "Mehmet"}
-                ]}
-                title=""
-            />
-            <Button variant="contained" color="secondary">
-                Create New Course
-            </Button>
+const useStyles = makeStyles(theme => ({
+    pageTitle: {
+        margin: theme.spacing(1),
+        marginTop: theme.spacing(2),
+        textAlign: 'center'
+    },
+    detailText: {
+        marginLeft: theme.spacing(7),
+        marginBottom: theme.spacing(2)
+    },
+    formList: {
+        flexGrow: 1,
+        maxHeight: '20%',
+        overflowY: 'scroll',
+        border: '1px solid gray',
+        borderRadius: '5px',
+        marginLeft: theme.spacing(7),
+        marginRight: theme.spacing(7), 
+        marginBottom: theme.spacing(2)
+    },
+    formCard: {
+        marginLeft: theme.spacing(7),
+        marginRight: theme.spacing(7),
+        marginBottom: theme.spacing(2),
+        marginTop: theme.spacing(2)
+    }, 
+}));
+
+
+const Home = ({ userId, userType, token, loggedIn }) => {
+    const classes = useStyles();
+    const [studentId, setStudentId] = useState('');
+    const [upcomingQuizzes, setUpcomingQuizzes] = useState([]);
+    const [upcomingMeetings, setUpcomingMeetings] = useState([]);
+    const [upcomingPrs, setUpcomingPrs] = useState([]);
+    console.log(userId, userType, token);
+
+    // if user is coordinator then we only want to show the alerts on this page
+    // but if they're a student then we want to load the studentId to get forms
+    useEffect(() => {
+        if(userType === 'coordinator') {
+            async function getAlerts() {
+                const options = {
+                    method: 'POST',
+                    url: 'http://localhost:3001/api/getUserDashboardAlerts',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    data: {
+                        'user_id': userId,
+                    },
+                };
+
+                let result = await axios(options);
+                console.log(result);
+            }
+            getAlerts();
+        }
+        else if(userType === 'student') {
+            async function getStudentId() {
+                const options = {
+                    method: 'POST',
+                    url: 'http://localhost:3001/api/getAllClasses',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    data: {
+                        'user_id': userId,
+                        'is_active': 1
+                    },
+                };
+    
+                let result = await axios(options);
+                // console.log(result.data[0].student_id);
+                setStudentId(result.data[0].student_id);
+            }
+            getStudentId();
+        }
+    }, [token, userId]);
+
+    useEffect(() => {
+        if(studentId) {
+            async function getUpcomingQuizzes() {
+                const options = {
+                    method: 'POST',
+                    url: 'http://localhost:3001/api/getInstances',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    data: {
+                        'student_id': studentId,
+                        'type': 'quiz',
+                        'is_complete': 0
+                    }
+                };
+        
+                let result = await axios(options);
+                console.log(result);
+                setUpcomingQuizzes(result.data);
+            }
+            async function getUpcomingMeetings() {
+                const options = {
+                    method: 'POST',
+                    url: 'http://localhost:3001/api/getInstances',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    data: {
+                        'student_id': studentId,
+                        'type': 'meeting',
+                        'is_complete': 0
+                    }
+                };
+        
+                let result = await axios(options);
+                console.log(result);
+                setUpcomingMeetings(result.data);
+            }
+            async function getUpcomingPrs() {
+                const options = {
+                    method: 'POST',
+                    url: 'http://localhost:3001/api/getInstances',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    data: {
+                        'student_id': studentId,
+                        'type': 'survey',
+                        'is_complete': 0
+                    }
+                };
+        
+                let result = await axios(options);
+                console.log(result);
+                setUpcomingPrs(result.data);
+            }
+            getUpcomingQuizzes();
+            getUpcomingMeetings();
+            getUpcomingPrs();
+        }
+    }, [token, studentId]);
+
+    return (
+        <Fragment>
+            <Typography className={classes.pageTitle} variant='h3'>Welcome</Typography>
+
+            <Typography className={classes.detailText} variant='h5'>Upcoming Quizzes</Typography>
+            <div className={classes.formList}>
+                <List component='nav'>
+                    {upcomingQuizzes.length === 0 && 
+                        <Card variant='elevation' className={classes.formCard}>
+                            <CardContent>
+                                <Typography>No upcoming quizzes.</Typography>
+                            </CardContent>
+                        </Card>
+                    }
+                    {upcomingQuizzes.map((quiz, index) => 
+                        <Card variant='outlined' key={index} className={classes.formCard}>
+                            <CardActionArea>
+                                <CardContent>
+                                    <Typography color='textSecondary' gutterBottom>
+                                        {quiz.title}
+                                    </Typography>
+                                    <Typography>{quiz.description}</Typography>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    )}
+                </List>
             </div>
-        );
-    }
+
+            <Typography className={classes.detailText} variant='h5'>Upcoming Meetings</Typography>
+            <div className={classes.formList}>
+                <List component='nav'>
+                    {upcomingMeetings.length === 0 && 
+                        <Card variant='elevation' className={classes.formCard}>
+                            <CardContent>
+                                <Typography>No upcoming meetings.</Typography>
+                            </CardContent>
+                        </Card>
+                    }
+                    {upcomingMeetings.map((meeting, index) => 
+                        <Card variant='outlined' key={index} className={classes.formCard}>
+                            <CardActionArea>
+                                <CardContent>
+                                    <Typography color='textSecondary' gutterBottom>
+                                        {meeting.title}
+                                    </Typography>
+                                    <Typography>{meeting.description}</Typography>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    )}
+                </List>
+            </div>
+
+            <Typography className={classes.detailText} variant='h5'>Upcoming Peer Reviews</Typography>
+            <div className={classes.formList}>
+                <List component='nav'>
+                    {upcomingPrs.length === 0 && 
+                        <Card variant='elevation' className={classes.formCard}>
+                            <CardContent>
+                                <Typography>No upcoming peer reviews.</Typography>
+                            </CardContent>
+                        </Card>
+                    }
+                    {upcomingPrs.map((pr, index) => 
+                        <Card variant='outlined' key={index} className={classes.formCard}>
+                            <CardActionArea>
+                                <CardContent>
+                                    <Typography color='textSecondary' gutterBottom>
+                                        {pr.title}
+                                    </Typography>
+                                    <Typography>{pr.description}</Typography>
+                                </CardContent>
+                            </CardActionArea>
+                        </Card>
+                    )}
+                </List>
+            </div>
+        </Fragment>
+    );
 }
 
 export default Home
