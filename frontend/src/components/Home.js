@@ -162,81 +162,86 @@ const Home = ({ userId, userType, token, loggedIn }) => {
     return (
         <Fragment>
             <Typography className={classes.pageTitle} variant='h3'>Welcome</Typography>
+            {userType === 'student' && 
+                <Fragment>
+                    <Typography className={classes.detailText} variant='h5'>Upcoming Quizzes</Typography>
+                    <div className={classes.formList}>
+                        <List component='nav'>
+                            {upcomingQuizzes.length === 0 && 
+                                <Card variant='elevation' className={classes.formCard}>
+                                    <CardContent>
+                                        <Typography>No upcoming quizzes.</Typography>
+                                    </CardContent>
+                                </Card>
+                            }
+                            {upcomingQuizzes.map((quiz, index) => 
+                                <Card variant='outlined' key={index} className={classes.formCard}>
+                                    <CardActionArea>
+                                        <CardContent>
+                                            <Typography color='textSecondary' gutterBottom>
+                                                {quiz.title}
+                                            </Typography>
+                                            <Typography>{quiz.description}</Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            )}
+                        </List>
+                    </div>
 
-            <Typography className={classes.detailText} variant='h5'>Upcoming Quizzes</Typography>
-            <div className={classes.formList}>
-                <List component='nav'>
-                    {upcomingQuizzes.length === 0 && 
-                        <Card variant='elevation' className={classes.formCard}>
-                            <CardContent>
-                                <Typography>No upcoming quizzes.</Typography>
-                            </CardContent>
-                        </Card>
-                    }
-                    {upcomingQuizzes.map((quiz, index) => 
-                        <Card variant='outlined' key={index} className={classes.formCard}>
-                            <CardActionArea>
-                                <CardContent>
-                                    <Typography color='textSecondary' gutterBottom>
-                                        {quiz.title}
-                                    </Typography>
-                                    <Typography>{quiz.description}</Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    )}
-                </List>
-            </div>
+                    <Typography className={classes.detailText} variant='h5'>Upcoming Meetings</Typography>
+                    <div className={classes.formList}>
+                        <List component='nav'>
+                            {upcomingMeetings.length === 0 && 
+                                <Card variant='elevation' className={classes.formCard}>
+                                    <CardContent>
+                                        <Typography>No upcoming meetings.</Typography>
+                                    </CardContent>
+                                </Card>
+                            }
+                            {upcomingMeetings.map((meeting, index) => 
+                                <Card variant='outlined' key={index} className={classes.formCard}>
+                                    <CardActionArea>
+                                        <CardContent>
+                                            <Typography color='textSecondary' gutterBottom>
+                                                {meeting.title}
+                                            </Typography>
+                                            <Typography>{meeting.description}</Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            )}
+                        </List>
+                    </div>
 
-            <Typography className={classes.detailText} variant='h5'>Upcoming Meetings</Typography>
-            <div className={classes.formList}>
-                <List component='nav'>
-                    {upcomingMeetings.length === 0 && 
-                        <Card variant='elevation' className={classes.formCard}>
-                            <CardContent>
-                                <Typography>No upcoming meetings.</Typography>
-                            </CardContent>
-                        </Card>
-                    }
-                    {upcomingMeetings.map((meeting, index) => 
-                        <Card variant='outlined' key={index} className={classes.formCard}>
-                            <CardActionArea>
-                                <CardContent>
-                                    <Typography color='textSecondary' gutterBottom>
-                                        {meeting.title}
-                                    </Typography>
-                                    <Typography>{meeting.description}</Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    )}
-                </List>
-            </div>
-
-            <Typography className={classes.detailText} variant='h5'>Upcoming Peer Reviews</Typography>
-            <div className={classes.formList}>
-                <List component='nav'>
-                    {upcomingPrs.length === 0 && 
-                        <Card variant='elevation' className={classes.formCard}>
-                            <CardContent>
-                                <Typography>No upcoming peer reviews.</Typography>
-                            </CardContent>
-                        </Card>
-                    }
-                    {upcomingPrs.map((pr, index) => 
-                        <Card variant='outlined' key={index} className={classes.formCard}>
-                            <CardActionArea>
-                                <CardContent>
-                                    <Typography color='textSecondary' gutterBottom>
-                                        {pr.title}
-                                    </Typography>
-                                    <Typography>{pr.description}</Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    )}
-                </List>
-            </div>
+                    <Typography className={classes.detailText} variant='h5'>Upcoming Peer Reviews</Typography>
+                    <div className={classes.formList}>
+                        <List component='nav'>
+                            {upcomingPrs.length === 0 && 
+                                <Card variant='elevation' className={classes.formCard}>
+                                    <CardContent>
+                                        <Typography>No upcoming peer reviews.</Typography>
+                                    </CardContent>
+                                </Card>
+                            }
+                            {upcomingPrs.map((pr, index) => 
+                                <Card variant='outlined' key={index} className={classes.formCard}>
+                                    <CardActionArea>
+                                        <CardContent>
+                                            <Typography color='textSecondary' gutterBottom>
+                                                {pr.title}
+                                            </Typography>
+                                            <Typography>{pr.description}</Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            )}
+                        </List>
+                    </div>
+                </Fragment>
+                
+            }
+            
         </Fragment>
     );
 }
