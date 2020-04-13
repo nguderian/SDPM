@@ -1,15 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -25,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     },
     formList: {
         flexGrow: 1,
-        maxHeight: '20%',
+        height: '20%',
         overflowY: 'scroll',
         border: '1px solid gray',
         borderRadius: '5px',
@@ -68,7 +63,6 @@ const Home = ({ userId, userType, token, loggedIn }) => {
                 };
 
                 let result = await axios(options);
-                console.log(result);
                 setUpcomingAlerts(result.data);
             }
             getAlerts();
@@ -94,7 +88,7 @@ const Home = ({ userId, userType, token, loggedIn }) => {
             }
             getStudentId();
         }
-    }, [token, userId]);
+    }, [token, userId, userType]);
 
     useEffect(() => {
         if(studentId) {
@@ -257,7 +251,7 @@ const Home = ({ userId, userType, token, loggedIn }) => {
                             {upcomingAlerts.map((alert, index) => 
                                 <Card variant='outlined' key={index} className={classes.formCard}>
                                     <CardActionArea component={Link} to={{
-                                        pathname: '/coordinator/Alert/ViewAlert/alert.title',
+                                        pathname: `/coordinator/Alert/ViewAlert/${alert.title}`,
                                         state: { alert: alert }
                                     }}>
                                         <CardContent>
