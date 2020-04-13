@@ -30,12 +30,71 @@ class classes {
 
     }
 
+    static async getUserInfo(req, res, next) {
+
+        const { user_id } = req.body;
+        let result;
+        let team_id, class_id, class_info, team_names, team_info;
+
+        try {
+            result = await sequelize.query('CALL get_user(?)', {
+                replacements: [user_id], type: sequelize.QueryTypes.CALL
+            });
+        }
+        catch (error) {
+            console.log(error);
+            res.send({ status: "failed" });
+        }
+
+        if (result[0].type = 'student') {
+            try {
+                class_info = await sequelize.query('CALL get_current_class(?)', {
+                    replacements: [user_id], type: sequelize.QueryTypes.CALL
+                });
+                team_id = class_info[0].team_id;
+                result[0].team_id = team_id;
+                
+            } catch (error) {
+                console.log(error);
+                res.send({ status: "failed" });
+            }
+            
+            try 
+            {
+                team_names = await sequelize.query('CALL get_team_names(?)', {
+                    replacements: [team_id], type: sequelize.QueryTypes.CALL
+                });
+                result[0].team = team_names;
+
+            } catch (error) {
+                console.log(error);
+                res.send({ status: "failed" });
+            }
+
+            try {
+                team_info = await sequelize.query('CALL get_team(?)', {
+                    replacements: [team_id], type: sequelize.QueryTypes.CALL
+                });
+                result[0].project_name = team_info[0].project_name;
+                result[0].sponsor_name = team_info[0].sponsor_name;
+            } catch (error) {
+                console.log(error);
+                res.send({ status: "failed" });
+            }
+
+            console.log(result);
+        }
+
+
+        res.send(result);
+    }
+
     static async getAllClasses(req, res, next) {
 
         const { user_id, is_active } = req.body;
         let status = {};
         let returnClasses;
-        
+
         let userType = await sequelize.query(
             'CALL get_user_type(?)',
             { replacements: [user_id], type: sequelize.QueryTypes.CALL });
@@ -93,7 +152,7 @@ class classes {
             next;
         }
         if (returnStudents[0] == null)
-            res.send({"result": "No students found"});
+            res.send({ "result": "No students found" });
         else {
             res.send(returnStudents);
         }
@@ -119,8 +178,8 @@ class classes {
 
         res.send(returnTeams);
     }
-    
-    
+
+
 
 }
 
