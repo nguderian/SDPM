@@ -72,6 +72,7 @@ const Home = ({ userId, userType, token, loggedIn }) => {
                     },
                     data: {
                         'user_id': userId,
+                        'is_viewed': 0
                     },
                 };
 

@@ -60,6 +60,9 @@ const ViewAlert = ({ userId, userType, token, loggedIn, location }) => {
                                 <Typography color='textPrimary' gutterBottom>
                                     {alert.first_name} {alert.last_name}
                                 </Typography>
+                                <Typography color='textPrimary' gutterBottom>
+                                    {alert.name}
+                                </Typography>
                             </CardContent>
                         </Card>
                     </Grid>

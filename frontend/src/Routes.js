@@ -16,6 +16,7 @@ import TakePRContainer from './components/containers/student/peerReview/TakePRCo
 import CreateSurveyContainer from './components/containers/coordinator/forms/peerReview/CreateSurveyContainer';
 import NewSurveyContainer from './components/containers/coordinator/forms/peerReview/NewSurveyCJontainer';
 import ViewAlertContainer from './components/containers/coordinator/alerts/ViewAlertContainer';
+import SubmittedQuizContainer from './components/containers/coordinator/forms/quiz/SubmittedQuizContainer';
 import { createBrowserHistory } from 'history';
 
 const routes = () => {
@@ -51,6 +52,9 @@ const routes = () => {
                     <Route path='/student/Quiz/ViewQuizzes' exact component={ViewQuizzesContainer} />
                     <Route path='/student/Quiz/:title' render={(props) => <TakeQuizContainer {...props}/>} />
 
+                    {/* View submissions */}
+                    <Route path='/viewSubmission/Quiz/:title' render={(props) => <SubmittedQuizContainer {...props} />} />
+                    
                     {/* complete a peer review */}
                     <Route path='/student/PeerReview/ViewPeerReviews' exact component={ViewPRsContainer} />
                     <Route path='/student/PeerReview/:title' render={(props) => <TakePRContainer {...props} />} />
