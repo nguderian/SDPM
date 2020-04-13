@@ -1,4 +1,4 @@
-import NewQuiz from '../../../coordinator/forms/NewQuiz';
+import ViewAlert from '../../../coordinator/alerts/ViewAlert';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
@@ -11,6 +11,6 @@ const mapStateToProps = state => {
     }
 }
 
-const NewQuizContainer = connect(mapStateToProps)(NewQuiz);
+const ViewAlertContainer = connect(mapStateToProps)(ViewAlert);
 
-export default NewQuizContainer;
+export default ViewAlertContainer;

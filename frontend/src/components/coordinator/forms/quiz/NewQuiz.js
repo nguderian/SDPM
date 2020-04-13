@@ -13,7 +13,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import NewQuestion from './questions/NewQuestion'
 import DeleteQuestion from './questions/DeleteQuestion';
 import EditQuestion from './questions/EditQuestion';
-import FormCreated from '../../common/FormCreated';
+import FormCreated from '../../../common/FormCreated';
 import FormControl from '@material-ui/core/FormControl';
 import FormControllabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
