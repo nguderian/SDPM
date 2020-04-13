@@ -5,6 +5,7 @@ import List from '@material-ui/core/List';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
+import CompleteForm from './common/CompleteForm';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -44,6 +45,18 @@ const Home = ({ userId, userType, token, loggedIn }) => {
     const [upcomingMeetings, setUpcomingMeetings] = useState([]);
     const [upcomingPrs, setUpcomingPrs] = useState([]);
     const [upcomingAlerts, setUpcomingAlerts] = useState([]);
+    const [quizToShow, setQuizToShow] = useState({
+        showQuiz: false,
+        quizAtIndex: ''
+    });
+    const [prToShow, setPrToShow] = useState({
+        showPr: false,
+        prAtIndex: {}
+    });
+    const [meetingToShow, setMeetingToShow] = useState({
+        showMeeting: false,
+        meetingAtIndex: {}
+    });
 
     // if user is coordinator then we only want to show the alerts on this page
     // but if they're a student then we want to load the studentId to get forms
@@ -155,6 +168,18 @@ const Home = ({ userId, userType, token, loggedIn }) => {
         }
     }, [token, studentId]);
 
+    const handleQuizCardClick = (index) => {
+        setQuizToShow({ showQuiz: true, quizAtIndex: upcomingQuizzes[index] });
+    };
+
+    const handlePrCardClick = (index) => {
+        setPrToShow({ showPr: true, prAtIndex: upcomingPrs[index] });
+    };
+
+    const handleMeetingCardClick = (index) => {
+        setMeetingToShow({ showMeeting: true, meetingAtIndex: upcomingMeetings[index] });
+    };
+
     return (
         <Fragment>
             <Typography className={classes.pageTitle} variant='h3'>Welcome</Typography>
@@ -172,7 +197,7 @@ const Home = ({ userId, userType, token, loggedIn }) => {
                             }
                             {upcomingQuizzes.map((quiz, index) => 
                                 <Card variant='outlined' key={index} className={classes.formCard}>
-                                    <CardActionArea>
+                                    <CardActionArea onClick={() => handleQuizCardClick(index)}>
                                         <CardContent>
                                             <Typography color='textSecondary' gutterBottom>
                                                 {quiz.title}
@@ -197,7 +222,7 @@ const Home = ({ userId, userType, token, loggedIn }) => {
                             }
                             {upcomingMeetings.map((meeting, index) => 
                                 <Card variant='outlined' key={index} className={classes.formCard}>
-                                    <CardActionArea>
+                                    <CardActionArea onClick={() => handleMeetingCardClick(index)}>
                                         <CardContent>
                                             <Typography color='textSecondary' gutterBottom>
                                                 {meeting.title}
@@ -222,7 +247,7 @@ const Home = ({ userId, userType, token, loggedIn }) => {
                             }
                             {upcomingPrs.map((pr, index) => 
                                 <Card variant='outlined' key={index} className={classes.formCard}>
-                                    <CardActionArea>
+                                    <CardActionArea onClick={() => handlePrCardClick(index)}>
                                         <CardContent>
                                             <Typography color='textSecondary' gutterBottom>
                                                 {pr.title}
@@ -272,6 +297,52 @@ const Home = ({ userId, userType, token, loggedIn }) => {
                     </div>
                 </Fragment>
             }
+            
+            {quizToShow.showQuiz && <CompleteForm 
+                open={quizToShow.showQuiz}
+                onClose={() => setQuizToShow({ showQuiz: false, quizAtIndex: '' })}
+                formTitle={quizToShow.quizAtIndex.title}
+                formDescription={quizToShow.quizAtIndex.description}
+                buttonText='Take this quiz'
+                routeForward={{ 
+                    pathname: `/student/Quiz/${quizToShow.quizAtIndex.title}`, 
+                    state: { 
+                        formId: quizToShow.quizAtIndex.form_id, 
+                        instanceId: quizToShow.quizAtIndex.instance_id, 
+                        studentId: studentId
+                    }
+                }}
+            />}
+
+            {prToShow.showPr && <CompleteForm 
+                open={prToShow.showPr}
+                onClose={() => setPrToShow({ showPr: false, prAtIndex: {} })}
+                formTitle={prToShow.prAtIndex.title}
+                formDescription={prToShow.prAtIndex.description}
+                buttonText='Complete Peer Review'
+                routeForward={{
+                    pathname: `/student/PeerReview/${prToShow.prAtIndex.title}`,
+                    state: {
+                        pr: prToShow.prAtIndex,
+                        studentId: studentId
+                    }
+                }}
+            />}
+
+            {meetingToShow.showMeeting && <CompleteForm 
+                open={meetingToShow.showMeeting}
+                onClose={() => setMeetingToShow({ showMeeting: false, meetingAtIndex: {} })}
+                formTitle={meetingToShow.meetingAtIndex.title}
+                formDescription={meetingToShow.meetingAtIndex.description}
+                buttonText='Take Attendance'
+                routeForward={{
+                    pathname: `/student/Meeting/${meetingToShow.meetingAtIndex.title}`,
+                    state: {
+                        meeting: meetingToShow.meetingAtIndex,
+                        studentId: studentId
+                    }
+                }}
+            />}
         </Fragment>
     );
 }
