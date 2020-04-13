@@ -106,7 +106,7 @@ router.post('/insertClass', requireAuth, classesControler.insertClass);
 router.post('/getAllClasses', requireAuth, classesControler.getAllClasses);
 router.post('/getStudentsInClass', requireAuth, classesControler.getStudentsInClass);
 router.post('/getTeamsInClass', requireAuth, classesControler.getTeamsInClass);
-
+router.post('/getUserInfo', requireAuth, classesControler.getUserInfo);
 
 // Alerts
 router.post('/getUserDashboardAlerts', requireAuth, alertsController.getUserDashboardAlerts);
