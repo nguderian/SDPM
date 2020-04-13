@@ -353,14 +353,28 @@ class form {
 
     static async getInstance(req, res, next) {
 
-        const { instance_id } = req.body;
+        const { instance_id, user_id } = req.body;
         let formId;
-        let formType;
+        let formType, type;
 
+        // getting user_type (type)
+        try {
+            let result = await sequelize.query('CALL get_user_type(?)',
+                { replacements: [user_id], type: sequelize.QueryTypes.CALL });
+            console.log(result);
+            type = result[0]['type'];
+
+        } catch (error) {
+            console.log(error);
+            res.send({ status: "Could not get user type" });
+        }
+        
+        // getting form_id (formId)
         try {
             let result = await sequelize.query('CALL get_form_id(?)',
                 { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
 
+            console.log(result);
             formId = result[0]['form_id'];
 
         } catch (error) {
@@ -368,6 +382,7 @@ class form {
             res.send({ status: "Could not get form type" });
         }
 
+        // getting form_type (formType)
         try {
             let result = await sequelize.query('CALL get_form_type(?)',
                 { replacements: [formId], type: sequelize.QueryTypes.CALL });
@@ -379,6 +394,7 @@ class form {
             res.send({ status: "Could not get form type" });
         }
 
+        // if survey, format
         if (formType === 'survey') {
             let returnSurvey;
             try {
@@ -451,14 +467,14 @@ class form {
                     "key_text": returnSurvey[i].key_text
                 });*/
             }
-
-            res.send({ survey: resultForm });
+            // res.send({ survey: resultForm });
         }
+        // if quiz, format accordingly
         else if (formType === 'quiz') {
             let returnQuiz;
             try {
                 returnQuiz = await sequelize.query('CALL get_quiz(?)',
-                    { replacements: [form_id], type: sequelize.QueryTypes.CALL });
+                    { replacements: [formId], type: sequelize.QueryTypes.CALL });
                 //console.log(JSON.stringify(returnQuiz, null, " "));
             } catch (error) {
                 console.log(error);
@@ -468,6 +484,16 @@ class form {
             resultForm.title = returnQuiz[0].title;
             resultForm.description = returnQuiz[0].description;
             resultForm.type = returnQuiz[0].type;
+
+            try {
+                let formGrade = await sequelize.query('CALL get_instance_grade(?)',
+                { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
+                resultForm.grade = formGrade[0]['grade'];
+            } catch (error) {
+                console.log(error);
+                res.send({ status: "Could not get grade" });
+            }
+
             if (type == 'coordinator') {
                 resultForm.threshold = returnQuiz[0].form_threshold;
             }
@@ -487,7 +513,7 @@ class form {
                         });
                     } else if (type == 'coordinator') {
                         resultForm.questions.push({
-                            // "question_id": returnQuiz[i].question_id,
+                            "question_id": returnQuiz[i].question_id,
                             "question_text": returnQuiz[i].question_text,
                             "question_type": returnQuiz[i].question_type
                         });
@@ -508,7 +534,7 @@ class form {
                         });
                     } else if (type == 'coordinator') {
                         resultForm.questions.push({
-                            // "question_id": returnQuiz[i].question_id,
+                            "question_id": returnQuiz[i].question_id,
                             "question_text": returnQuiz[i].question_text,
                             "question_type": returnQuiz[i].question_type
                         });
@@ -533,7 +559,19 @@ class form {
             }
 
         }
-
+        for (var i in resultForm.questions) {
+            try {
+                let formAnswer = await sequelize.query('CALL get_form_answer_text(?,?)',
+                        { replacements: [instance_id, resultForm.questions[i].question_id], type: sequelize.QueryTypes.CALL });
+                resultForm.questions[i].answer_text = formAnswer[0]['answer_text'];
+            } catch (error) {
+                console.log(error);
+                res.send({ status: "Could not get form answers" });
+            }
+        }
+        
+        
+        res.send(resultForm);
     }
 
     static async getForm(req, res, next) {
