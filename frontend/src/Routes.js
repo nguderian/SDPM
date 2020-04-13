@@ -15,6 +15,7 @@ import ViewPRsContainer from './components/containers/student/peerReview/ViewPRs
 import TakePRContainer from './components/containers/student/peerReview/TakePRContainer';
 import CreateSurveyContainer from './components/containers/coordinator/forms/peerReview/CreateSurveyContainer';
 import NewSurveyContainer from './components/containers/coordinator/forms/peerReview/NewSurveyCJontainer';
+import ViewAlertContainer from './components/containers/coordinator/alerts/ViewAlertContainer';
 import { createBrowserHistory } from 'history';
 
 const routes = () => {
@@ -23,10 +24,16 @@ const routes = () => {
         <Fragment>
             <Router history={history}>
                 <NavBarContainer/>
-                <Switch> 
-                    <Route path='/Home' exact component={HomeContainer} />
+                <Switch>
                     <Route path='/' exact component={SignInContainer}/>
+                    <Route path='/Home' exact component={HomeContainer} />
+                    
+                    {/* alerts */}
+                    <Route path='/coordinator/Alert/ViewAlert/:title' render={(props) => <ViewAlertContainer {...props} />} />
+                    
+                    {/* classes */}
                     <Route path='/AdminClassPage' exact component={AdminClassPage} />
+
                     {/* quiz creation */}
                     <Route path='/coordinator/Quiz/CreateQuiz' exact component={CreateQuizContainer} />
                     <Route path='/coordinator/Quiz/:title' render={(props) => <NewQuizContainer {...props} />} />

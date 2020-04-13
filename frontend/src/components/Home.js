@@ -11,6 +11,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     pageTitle: {
@@ -47,7 +48,7 @@ const Home = ({ userId, userType, token, loggedIn }) => {
     const [upcomingQuizzes, setUpcomingQuizzes] = useState([]);
     const [upcomingMeetings, setUpcomingMeetings] = useState([]);
     const [upcomingPrs, setUpcomingPrs] = useState([]);
-    console.log(userId, userType, token);
+    const [upcomingAlerts, setUpcomingAlerts] = useState([]);
 
     // if user is coordinator then we only want to show the alerts on this page
     // but if they're a student then we want to load the studentId to get forms
@@ -68,6 +69,7 @@ const Home = ({ userId, userType, token, loggedIn }) => {
 
                 let result = await axios(options);
                 console.log(result);
+                setUpcomingAlerts(result.data);
             }
             getAlerts();
         }
@@ -239,9 +241,43 @@ const Home = ({ userId, userType, token, loggedIn }) => {
                         </List>
                     </div>
                 </Fragment>
-                
             }
-            
+            {userType === 'coordinator' && 
+                <Fragment>
+                    <Typography className={classes.detailText} variant='h5'>Current Alerts</Typography>
+                    <div className={classes.formList}>
+                        <List component='nav'>
+                            {upcomingAlerts.length === 0 && 
+                                <Card variant='elevation' className={classes.formCard}>
+                                    <CardContent>
+                                        <Typography>No current alerts.</Typography>
+                                    </CardContent>
+                                </Card>
+                            }
+                            {upcomingAlerts.map((alert, index) => 
+                                <Card variant='outlined' key={index} className={classes.formCard}>
+                                    <CardActionArea component={Link} to={{
+                                        pathname: '/coordinator/Alert/ViewAlert/alert.title',
+                                        state: { alert: alert }
+                                    }}>
+                                        <CardContent>
+                                            <Typography color='secondary' gutterBottom>
+                                                {alert.project_name} - {alert.first_name} {alert.last_name}
+                                            </Typography>
+                                            <Typography color='textSecondary' gutterBottom>
+                                                Form Type: {alert.type}
+                                            </Typography>
+                                            <Typography>
+                                                {alert.title}
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            )}
+                        </List>
+                    </div>
+                </Fragment>
+            }
         </Fragment>
     );
 }
