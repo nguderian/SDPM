@@ -254,6 +254,7 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                                         {quiz.title}
                                     </Typography>
                                     <Typography>{quiz.description}</Typography>
+                                    <Typography>Grade Received: {quiz.grade}</Typography>
                                 </CardContent>
                             </CardActionArea>
                         </Card>

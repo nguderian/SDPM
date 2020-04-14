@@ -109,6 +109,7 @@ const SubmittedQuiz = ({ userId, userType, token, loggedIn, location }) => {
                 />
             </form>
 
+            <Typography variant='h5' className={classes.pageTitle}>Grade Received: {quiz.grade}</Typography>
             <div className={classes.questions}>
                 {quiz['questions'].map((question, index) => 
                     <Card variant='outlined' key={index} className={classes.questionCard}>
