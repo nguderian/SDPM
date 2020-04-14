@@ -11,15 +11,17 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import ClassIcon from '@material-ui/icons/Class';
 import SettingsIcon from '@material-ui/icons/Settings';
-import CreateIcon from '@material-ui/icons/Create';
 import SearchIcon from '@material-ui/icons/Search';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import RateReviewIcon from '@material-ui/icons/RateReview';
+import AuthActions from '../storeConfig/actions/auth/AuthActions';
+import { useDispatch } from 'react-redux';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -45,9 +47,8 @@ const StyledNav = withStyles({
 
 const NavBar = ({ user_id, userType, token, loggedIn }) => {
     const classes = useStyles();
-    const logged = loggedIn;
-
-    // console.log(user_id, loggedIn, userType);
+    const dispatch = useDispatch();
+    const history = useHistory();
 
     const [state, setState] = useState({
       left: false
@@ -62,7 +63,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
     };
 
     const sideList = side => {
-      if(logged && userType === 'student') {
+      if(loggedIn && userType === 'student') {
         return (
           <div
             className={classes.list}
@@ -120,7 +121,7 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
                 <ListItemIcon><HomeIcon/></ListItemIcon>
                 <ListItemText primary='Home'/>
               </ListItem>
-              <ListItem button component={Link} to='/coordinator/ViewClasses'>
+              <ListItem button component={Link} to='/coordinator/CoordinatorClassPage'>
                 <ListItemIcon><ClassIcon/></ListItemIcon>
                 <ListItemText primary='Class'/>
               </ListItem>
@@ -150,12 +151,25 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
         )
       }
     }
- 
+    
+    async function logout(event) {
+      await dispatch(AuthActions.logout());
+
+      history.push('/');
+    };
+    
     return (
       <div>
           <StyledNav position="static" className={classes.root}>
               <Toolbar>
-                  <IconButton edge="start" className={classes.menuButton} color="black" aria-label="menu" onClick={toggleDrawer('left', true)}>
+                  <IconButton 
+                    edge="start" 
+                    className={classes.menuButton} 
+                    color="black" 
+                    aria-label="menu" 
+                    onClick={toggleDrawer('left', true)}
+                    disabled={!loggedIn}
+                  >
                       <MenuIcon />
                   </IconButton>
                   <Drawer open={state.left} onClose={toggleDrawer('left', false)}>
@@ -164,7 +178,14 @@ const NavBar = ({ user_id, userType, token, loggedIn }) => {
                   <Typography variant="h6" className={classes.title}>
                       Senior Design Project Manager
                   </Typography>
-                  <Button color="black">Logout</Button>
+                  {loggedIn &&
+                    <Button 
+                      color="black"
+                      onClick={logout}
+                    >
+                      Logout
+                    </Button>
+                  }
               </Toolbar>
           </StyledNav> 
       </div>

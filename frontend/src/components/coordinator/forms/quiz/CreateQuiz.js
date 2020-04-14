@@ -1,6 +1,5 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -72,7 +71,7 @@ const CreateQuiz = ({ userId, userType, token, loggedIn }) => {
             setAllQuizzes(result.data);
         }
         getAllQuizzes();
-    }, [])
+    }, [token, userId])
 
     return (
         <div className={classes.root}>

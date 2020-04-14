@@ -13,7 +13,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import NewQuestion from './questions/NewQuestion'
 import DeleteQuestion from './questions/DeleteQuestion';
 import EditQuestion from './questions/EditQuestion';
-import FormCreated from '../../common/FormCreated';
+import FormCreated from '../../../common/FormCreated';
 import FormControl from '@material-ui/core/FormControl';
 import FormControllabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -190,16 +190,16 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
 
                 console.log(arr);
                 setQuiz({ 
-                    ['title']: quiz.title, 
-                    ['description']: quiz.description, 
-                    ['alertValue']: quiz.threshold, 
-                    ['hasAlertValue']: quiz.threshold === '' ? false : true,
-                    ['questions']: arr,
+                    title: quiz.title, 
+                    description: quiz.description, 
+                    alertValue: quiz.threshold, 
+                    hasAlertValue: quiz.threshold === '' ? false : true,
+                    questions: arr,
                 });
             }
             getFormDetails();
         }
-    }, [formId]);
+    }, [formId, userId, token]);
     
     useEffect(() => {
         // only get all active classes
@@ -222,7 +222,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
             setClassList(result.data);
         }
         getClasses();
-    }, []);
+    }, [userId, token]);
 
     // event handlers
     const handleModificationParameters = (parameters, values) => {
@@ -239,11 +239,11 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
     };
 
     const handleQuizTitleChange = event => {
-        setQuiz({ ...quiz, ['title']: event.target.value });
+        setQuiz({ ...quiz, title: event.target.value });
     };
 
     const handleQuizDescriptionChange = event => {
-        setQuiz({ ...quiz, ['description']: event.target.value });
+        setQuiz({ ...quiz, description: event.target.value });
     };
 
     const handleClassChange = event => {
@@ -270,14 +270,14 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
 
         let arr = quiz['questions'];
         arr = arr.concat(question);
-        setQuiz({ ...quiz, ['questions']: arr })
+        setQuiz({ ...quiz, questions: arr })
     };
 
     const deleteQuestion = (shouldDelete) => {
         if(shouldDelete) {
             let arr = [...quiz['questions']]; // make a copy of our state
             arr.splice(modificationParameters.indexToModify, 1);
-            setQuiz({ ...quiz, ['questions']: arr })
+            setQuiz({ ...quiz, questions: arr })
         }
     };
 
@@ -303,7 +303,7 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
             let arr = quiz['questions'];
             arr[modificationParameters.indexToModify] = question;
 
-            setQuiz({ ...quiz, ['questions']: arr })
+            setQuiz({ ...quiz, questions: arr })
         }
     };
 
@@ -340,11 +340,11 @@ const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
     };
 
     const handleHasAlertValueChange = event => {
-        setQuiz({ ...quiz, ['hasAlertValue']: event.target.checked });
+        setQuiz({ ...quiz, hasAlertValue: event.target.checked });
     };
 
     const handleAlertValueChange = (event, value) => {
-        setQuiz({ ...quiz, ['alertValue']: value });
+        setQuiz({ ...quiz, alertValue: value });
     };
 
     const handleCloseFormCreatedDialog = () => {

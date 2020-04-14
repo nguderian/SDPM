@@ -1,5 +1,4 @@
 import TakeQuiz from '../../../student/quiz/TakeQuiz';
-import {onLogin} from '../../../../storeConfig/actions';
 import {connect} from 'react-redux';
 
 const mapStateToProps = state =>{
@@ -8,19 +7,10 @@ const mapStateToProps = state =>{
         token: state.token,
         loggedIn:state.loggedIn,
         userType:state.userType,
-        loggedIn:state.ipAddress,
+        ipAddress:state.ipAddress,
     }
 }
 
-// const mapDispatchToProps = dispatch => {
-//     return{
-//         onLogin(payload){
-//             dispatch(
-//                 onLogin(payload)
-//             )
-//         }
-//     }
-// }
 
 const TakeQuizContainer =  connect(mapStateToProps)(TakeQuiz);
 

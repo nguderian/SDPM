@@ -66,10 +66,16 @@ export default function MaterialTableDemo({ userId, userType, token, loggedIn })
   const [classList, setClassList] = useState([]);
   const [currentClass,setCurrentClass] = useState('');
   const [studentList, setStudentList] = useState([]);
+  const [classAlerts, setClassAlerts] = useState([]);
   const [columns, setColumns] = useState([
     { title: 'First Name', field: 'first_name' },
     { title: 'Last Name', field: 'last_name' },
     { title: 'Group', field: 'project_name', type: 'numeric' },
+  ]);
+  const [alertColumns, setAlertColumns] = useState([
+    { title: 'First Name', field: 'first_name' },
+    { title: 'Last Name', field: 'last_name' },
+    { title: 'Alert From', field: 'title'},
   ]);
 
   useEffect(() => {
@@ -88,7 +94,6 @@ export default function MaterialTableDemo({ userId, userType, token, loggedIn })
         };
 
         let result = await axios(options);
-        console.log(result);
         setClassList(result.data);
     }
     getAllClasses();
@@ -110,10 +115,33 @@ useEffect(() => {
         };
 
         let result = await axios(options);
-        console.log(result);
         setStudentList(result.data);
     }
     getAllStudents();
+  }
+}, [currentClass]);
+
+useEffect(() => {
+  if(currentClass){
+    async function getClassAlerts() {
+        const options = {
+            method: 'POST',
+            url: 'http://localhost:3001/api/getUserAlertsForClass',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            data: {
+              'user_id': userId,
+              'class_id': currentClass,
+              'is_viewed': 0
+            },
+        };
+
+        let result = await axios(options);
+        setClassAlerts(result.data);
+    }
+    getClassAlerts();
   }
 }, [currentClass]);
 
@@ -159,8 +187,8 @@ useEffect(() => {
     <MaterialTable
       icons = {tableIcons}
       title="Notifications"
-      columns={columns}
-      data={studentList}
+      columns={alertColumns}
+      data={classAlerts}
     /></Grid>
     </Grid>
     </div>

@@ -96,6 +96,7 @@ router.post('/assignForm', requireAuth, formController.assignForm);
 router.post('/getAttendance', requireAuth, formController.getAttendance);
 router.post('/getQuestionTypes', requireAuth, formController.getQuestionTypes);
 router.post('/takeAttendance', requireAuth, formController.takeAttendance);
+router.post('/getInstance', requireAuth, formController.getInstance);
 
 // CSV Upload
 router.post('/studentUpload', requireAuth, upload.single('file'), csvUploadController.uploadStudentCSV);
@@ -106,6 +107,7 @@ router.post('/insertClass', requireAuth, classesControler.insertClass);
 router.post('/getAllClasses', requireAuth, classesControler.getAllClasses);
 router.post('/getStudentsInClass', requireAuth, classesControler.getStudentsInClass);
 router.post('/getTeamsInClass', requireAuth, classesControler.getTeamsInClass);
+router.post('/getUserInfo', requireAuth, classesControler.getUserInfo);
 
 
 // Alerts

@@ -1,8 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -13,7 +11,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CompleteForm from '../../common/CompleteForm';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
@@ -110,7 +107,7 @@ const ViewPRs = ({ userId, userType, token, loggedIn }) => {
         }
         getActiveClasses();
         getInactiveClasses();
-    }, []);
+    }, [token, userId]);
 
     useEffect(() => {
         if(activeStudentId) {
@@ -155,7 +152,7 @@ const ViewPRs = ({ userId, userType, token, loggedIn }) => {
             getUpcomingPrs();
             getCompletedPrs();
         }
-    }, [activeStudentId]);
+    }, [activeStudentId, token]);
 
     const handleActiveClassChange = event => {
         setActiveStudentId(event.target.value);   

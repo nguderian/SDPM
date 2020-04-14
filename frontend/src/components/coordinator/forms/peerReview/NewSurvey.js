@@ -13,7 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Slider from '@material-ui/core/Slider';
 import FormControllabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox';
-import FormCreated from '../../common/FormCreated';
+import FormCreated from '../../../common/FormCreated';
 import DateFnsUtils from '@date-io/date-fns'
 import { 
     MuiPickersUtilsProvider,
@@ -118,7 +118,7 @@ const NewSurvey = ({ userId, userType, token, loggedIn }) => {
             setClassList(result.data);
         }
         getClasses()
-    }, []);
+    }, [token, userId]);
 
     const handleSurveyTitleChange = event => {
         setSurveyTitle(event.target.value);

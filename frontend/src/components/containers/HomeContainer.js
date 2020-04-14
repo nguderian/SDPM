@@ -1,5 +1,5 @@
-import NavBar from '../NavBar';
-import {connect} from 'react-redux';
+import Home from '../Home';
+import { connect } from 'react-redux';
 
 const mapStateToProps = state =>{
     return {
@@ -11,6 +11,6 @@ const mapStateToProps = state =>{
     }
 }
 
-const NavBarContainer =  connect(mapStateToProps)(NavBar);
+const HomeContainer = connect(mapStateToProps)(Home);
 
-export default NavBarContainer;
+export default HomeContainer;
