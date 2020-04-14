@@ -8,7 +8,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const TakeFreeResponse = ({ question, handleChange, index }) => {
+const TakeFreeResponse = ({ question, handleChange, index, viewingSubmission }) => {
     const classes = useStyles(); 
 
     const handleAnswerChange = event => {
@@ -23,6 +23,8 @@ const TakeFreeResponse = ({ question, handleChange, index }) => {
                 fullWidth={true}
                 label='Enter Answer'
                 onChange={handleAnswerChange}
+                disabled={viewingSubmission}
+                value={viewingSubmission ? question.answer_text : ''}
             />
         </form>
     )

@@ -8,7 +8,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const TakeFillBlank = ({ question, handleChange, index }) => {
+const TakeFillBlank = ({ question, handleChange, index, viewingSubmission }) => {
     const classes = useStyles();
 
     const handleAnswerChange = event => {
@@ -23,6 +23,8 @@ const TakeFillBlank = ({ question, handleChange, index }) => {
                 fullWidth={true}
                 label='Enter Answer'
                 onChange={handleAnswerChange}
+                disabled={viewingSubmission}
+                value={viewingSubmission ? question.answer_text : ''}
             />
         </form>
     )

@@ -167,6 +167,7 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
                                     question={question}
                                     handleChange={captureAnswer}
                                     index={index}
+                                    viewingSubmission={false}
                                 />
                             }
                             {question.question_type === 'fill_blank' && 
@@ -174,6 +175,7 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
                                     question={question}
                                     handleChange={captureAnswer}
                                     index={index}
+                                    viewingSubmission={false}
                                 />
                             }
                             {question.question_type === 'free_response' && 
@@ -181,6 +183,7 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
                                     question={question}
                                     handleChange={captureAnswer}
                                     index={index}
+                                    viewingSubmission={false}
                                 />
                             }
                         </CardContent>

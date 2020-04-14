@@ -14,7 +14,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const TakeMultipleChoice = ({ question, handleChange, index }) => {
+const TakeMultipleChoice = ({ question, handleChange, index, viewingSubmission }) => {
     const classes = useStyles();
     const [selected, setSelected] = useState();
 
@@ -26,13 +26,14 @@ const TakeMultipleChoice = ({ question, handleChange, index }) => {
     return (
         <div className={classes.root}>
             <FormControl component='fieldset'>
-                <RadioGroup value={selected} onChange={handleAnswerChange}>
+                <RadioGroup value={viewingSubmission ? question.answer_text : selected} onChange={handleAnswerChange}>
                     {question.answers.map((answer, index) => 
                         <FormControlLabel 
                             key={index}
                             value={answer.key_text} 
                             control={<Radio color='primary' />} 
                             label={answer.key_text}
+                            disabled={viewingSubmission}
                         />
                     )}
                 </RadioGroup>
