@@ -8,6 +8,7 @@ import TakeFillBlank from '../../../student/quiz/questions/TakeFillBlank';
 import TakeMultipleChoice from '../../../student/quiz/questions/TakeMultipleChoice';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import TakeFreeResponse from '../../../student/quiz/questions/TakeFreeResponse';
@@ -36,6 +37,17 @@ const useStyles = makeStyles(theme => ({
         maxHeight: '70%',
         overflowY: 'scroll'
     },
+    gridItem: {
+        width: '70%',
+        border: '1px solid gray',
+        borderRadius: '5px',
+        marginTop: theme.spacing(2),
+        flexGrow: 1,
+        maxHeight: '90%',
+        overflowY: 'scroll',
+        display: 'inline-block',
+        textAlign: 'left'
+    },
     questionCard: {
         marginLeft: theme.spacing(7),
         marginRight: theme.spacing(7),
@@ -51,7 +63,15 @@ const useStyles = makeStyles(theme => ({
     button: {
         textAlign: 'center',
         marginTop: theme.spacing(2)
-    }
+    },
+    gridContainer: {
+        textAlign: 'center',
+        overflow: 'hidden'
+    },
+    gridItemText: {
+        display: 'inline-block',
+        textAlign: 'left'
+    },
 }))
 
 const SubmittedQuiz = ({ userId, userType, token, loggedIn, location }) => {
@@ -110,36 +130,114 @@ const SubmittedQuiz = ({ userId, userType, token, loggedIn, location }) => {
             </form>
 
             <Typography variant='h5' className={classes.pageTitle}>Grade Received: {quiz.grade}</Typography>
-            <div className={classes.questions}>
-                {quiz['questions'].map((question, index) => 
-                    <Card variant='outlined' key={index} className={classes.questionCard}>
-                        <CardContent>
-                            <Typography>{question.question_text}</Typography>
-                            {question.question_type === 'multiple_choice' && 
-                                <TakeMultipleChoice 
-                                    question={question}
-                                    index={index}
-                                    viewingSubmission={true}
-                                />
-                            }
-                            {question.question_type === 'fill_blank' && 
-                                <TakeFillBlank 
-                                    question={question}
-                                    index={index}
-                                    viewingSubmission={true}
-                                />
-                            }
-                            {question.question_type === 'free_response' && 
-                                <TakeFreeResponse 
-                                    question={question}
-                                    index={index}
-                                    viewingSubmission={true}
-                                />
-                            }
-                        </CardContent>
-                    </Card>
-                )}
-            </div>
+            {userType === 'coordinator' ? 
+                <Grid container spacing={3} className={classes.gridContainer}>
+                    <Grid item xs={6}>
+                        <Typography variant='h6' className={classes.gridItemText}>Submission</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Typography variant='h6' className={classes.gridItemText}>Correct Answers</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <div className={classes.gridItem}>
+                            {quiz['questions'].map((question, index) => 
+                                <Card variant='outlined' key={index} className={classes.questionCard}>
+                                    <CardContent>
+                                        <Typography>{question.question_text}</Typography>
+                                        {question.question_type === 'multiple_choice' && 
+                                            <TakeMultipleChoice 
+                                                question={question}
+                                                index={index}
+                                                viewingSubmission={true}
+                                            />
+                                        }
+                                        {question.question_type === 'fill_blank' && 
+                                            <TakeFillBlank 
+                                                question={question}
+                                                index={index}
+                                                viewingSubmission={true}
+                                            />
+                                        }
+                                        {question.question_type === 'free_response' && 
+                                            <TakeFreeResponse 
+                                                question={question}
+                                                index={index}
+                                                viewingSubmission={true}
+                                            />
+                                        }
+                                    </CardContent>
+                                </Card>
+                            )}
+                        </div>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <div className={classes.gridItem}>
+                            {quiz['questions'].map((question, index) => 
+                                <Card variant='outlined' key={index} className={classes.questionCard}>
+                                    <CardContent>
+                                        <Typography>{question.question_text}</Typography>
+                                        {question.question_type === 'multiple_choice' && 
+                                            <TakeMultipleChoice 
+                                                question={question}
+                                                index={index}
+                                                viewingSubmission={true}
+                                                userType={userType}
+                                            />
+                                        }
+                                        {question.question_type === 'fill_blank' && 
+                                            <TakeFillBlank 
+                                                question={question}
+                                                index={index}
+                                                viewingSubmission={true}
+                                                userType={userType}
+                                            />
+                                        }
+                                        {question.question_type === 'free_response' && 
+                                            <TakeFreeResponse 
+                                                question={question}
+                                                index={index}
+                                                viewingSubmission={true}
+                                                userType={userType}
+                                            />
+                                        }
+                                    </CardContent>
+                                </Card>
+                            )}
+                        </div>
+                    </Grid>
+                </Grid> :
+                <div className={classes.questions}>
+                    {quiz['questions'].map((question, index) => 
+                        <Card variant='outlined' key={index} className={classes.questionCard}>
+                            <CardContent>
+                                <Typography>{question.question_text}</Typography>
+                                {question.question_type === 'multiple_choice' && 
+                                    <TakeMultipleChoice 
+                                        question={question}
+                                        index={index}
+                                        viewingSubmission={true}
+                                    />
+                                }
+                                {question.question_type === 'fill_blank' && 
+                                    <TakeFillBlank 
+                                        question={question}
+                                        index={index}
+                                        viewingSubmission={true}
+                                    />
+                                }
+                                {question.question_type === 'free_response' && 
+                                    <TakeFreeResponse 
+                                        question={question}
+                                        index={index}
+                                        viewingSubmission={true}
+                                    />
+                                }
+                            </CardContent>
+                        </Card>
+                    )}
+                </div>
+            }
+            
             
             <div className={classes.button}>
                 <Button
