@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button'; 
 import FormSubmitted from '../../common/FormSubmitted';
 import Slider from '@material-ui/core/Slider';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
@@ -46,7 +47,13 @@ const useStyles = makeStyles(theme => ({
     slider: {
         width: '60%',
         marginTop: theme.spacing(5),
-    }
+    },
+    progress: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '25%'
+    },
 }));
 
 function isEmpty(obj) {
@@ -193,6 +200,10 @@ const TakePR = ({ userId, userType, token, loggedIn, location }) => {
     };
 
     return (
+        quizAnswers.length === 0 ? 
+        <div className={classes.progress}>
+            <CircularProgress />
+        </div> :
         <Fragment>
             <Typography variant="h4" className={classes.pageTitle}>{pr.title}{teamData.project_name}</Typography>
 

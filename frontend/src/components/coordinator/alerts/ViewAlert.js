@@ -6,6 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     pageTitle: {
@@ -60,6 +61,9 @@ const ViewAlert = ({ userId, userType, token, loggedIn, location }) => {
                                 <Typography color='textPrimary' gutterBottom>
                                     {alert.first_name} {alert.last_name}
                                 </Typography>
+                                <Typography color='textPrimary' gutterBottom>
+                                    {alert.name}
+                                </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
@@ -84,7 +88,12 @@ const ViewAlert = ({ userId, userType, token, loggedIn, location }) => {
             <div className={classes.button}>
                 <Button 
                     variant='outlined' 
-                    color='primary' 
+                    color='primary'
+                    component={Link}
+                    to={{
+                        pathname: `/viewSubmission/Quiz/${alert.title}`,
+                        state: { instanceId: alert.instance_id }    
+                    }}
                 >
                     Go to {alert.type}
                 </Button>

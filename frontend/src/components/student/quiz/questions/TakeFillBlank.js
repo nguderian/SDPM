@@ -8,9 +8,19 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const TakeFillBlank = ({ question, handleChange, index }) => {
+const TakeFillBlank = ({ question, handleChange, index, viewingSubmission, userType }) => {
     const classes = useStyles();
-
+    let answer = '';
+    if(viewingSubmission && userType === 'coordinator') {
+        answer = question.answers[0].key_text
+    }
+    else if(viewingSubmission && userType === 'student') {
+        answer = question.answer_text;
+    }
+    else {
+        answer = question.answer_text
+    }
+    
     const handleAnswerChange = event => {
         handleChange(event.target.value, index)
     };
@@ -23,6 +33,8 @@ const TakeFillBlank = ({ question, handleChange, index }) => {
                 fullWidth={true}
                 label='Enter Answer'
                 onChange={handleAnswerChange}
+                disabled={viewingSubmission}
+                value={viewingSubmission ? answer : ''}
             />
         </form>
     )
