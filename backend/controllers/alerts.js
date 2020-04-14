@@ -35,6 +35,40 @@ class alerts {
 
     }
 
+    static async getAllUserDashboardAlerts(req, res, next){
+
+        const { user_id } = req.body;
+        let result;
+
+        try{
+            result = await sequelize.query('CALL get_all_user_dashboard_alerts(?)',
+            { replacements : [ user_id ], type : sequelize.QueryTypes.CALL});
+        }catch(error){
+            console.log(error);
+            res.send({ status : "get dashboard alerts failed"});
+        }
+
+        res.send(result);
+
+    }
+
+    static async getAllUserAlertsForClass(req, res, next){
+
+        const { user_id, class_id } = req.body;
+        let result;
+
+        try{
+            result = await sequelize.query('CALL get_all_user_dashboard_alerts_class(?,?)',
+            { replacements : [ user_id, class_id ], type : sequelize.QueryTypes.CALL});
+        }catch(error){
+            console.log(error);
+            res.send({ status : "get dashboard alerts failed"});
+        }
+
+        res.send(result);
+
+    }
+
     static async setAlertViewed(req, res, next){
 
         const { alert_id } = req.body;

@@ -114,6 +114,8 @@ router.post('/getUserInfo', requireAuth, classesControler.getUserInfo);
 router.post('/getUserDashboardAlerts', requireAuth, alertsController.getUserDashboardAlerts);
 router.post('/setAlertViewed', requireAuth, alertsController.setAlertViewed);
 router.post('/getUserAlertsForClass', requireAuth, alertsController.getUserAlertsForClass);
+router.post('/getAllUserDashboardAlerts', requireAuth, alertsController.getAllUserDashboardAlerts);
+router.post('/getAllUserAlertsForClass', requireAuth, alertsController.getAllUserAlertsForClass);
 
 // Testing for the frontend JSON.
 router.post('/frontendTest', requireAuth, frontendTestController.frontendTest);
