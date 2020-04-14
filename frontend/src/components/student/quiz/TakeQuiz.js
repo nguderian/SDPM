@@ -8,6 +8,7 @@ import TakeFillBlank from './questions/TakeFillBlank';
 import TakeMultipleChoice from './questions/TakeMultipleChoice';
 import Button from '@material-ui/core/Button';
 import FormSubmitted from '../../common/FormSubmitted';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import TakeFreeResponse from './questions/TakeFreeResponse';
 
@@ -44,7 +45,13 @@ const useStyles = makeStyles(theme =>({
     submitButton: {
         textAlign: 'center',
         marginTop: theme.spacing(2)
-    }
+    }, 
+    progress: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '25%'
+    },
 }));
 
 
@@ -143,6 +150,10 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
     }
 
     return(
+        quiz.questions.length === 0 ? 
+        <div className={classes.progress}>
+            <CircularProgress />
+        </div> :
         <Fragment>
             {console.log(quiz)}
             <Typography variant="h4" className={classes.pageTitle}>{quiz['title']}</Typography>
@@ -167,6 +178,7 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
                                     question={question}
                                     handleChange={captureAnswer}
                                     index={index}
+                                    viewingSubmission={false}
                                 />
                             }
                             {question.question_type === 'fill_blank' && 
@@ -174,6 +186,7 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
                                     question={question}
                                     handleChange={captureAnswer}
                                     index={index}
+                                    viewingSubmission={false}
                                 />
                             }
                             {question.question_type === 'free_response' && 
@@ -181,6 +194,7 @@ const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
                                     question={question}
                                     handleChange={captureAnswer}
                                     index={index}
+                                    viewingSubmission={false}
                                 />
                             }
                         </CardContent>

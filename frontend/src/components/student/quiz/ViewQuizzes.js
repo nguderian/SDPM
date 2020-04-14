@@ -67,7 +67,9 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
     const [inactiveStudentId, setInactiveStudentId] = useState('');
     const [quizToShow, setQuizToShow] = useState({
         showQuiz: false,
-        quizAtIndex: ''
+        quizAtIndex: '',
+        upcoming: false,
+        completed: false
     });
 
     useEffect(() => {
@@ -167,10 +169,10 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
     
     const handleQuizCardClick = (index, type) => {
         if(type === 'upcoming') {
-            setQuizToShow({ showQuiz: true, quizAtIndex: upcomingQuizzes[index] });
+            setQuizToShow({ showQuiz: true, quizAtIndex: upcomingQuizzes[index], upcoming: true, completed: false });
         }
         else if(type === 'completed') {
-            setQuizToShow({ showQuiz: true, quizAtIndex: completedQuizzes[index] });
+            setQuizToShow({ showQuiz: true, quizAtIndex: completedQuizzes[index], upcoming: false, completed: true });
         }
     };
 
@@ -252,6 +254,7 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                                         {quiz.title}
                                     </Typography>
                                     <Typography>{quiz.description}</Typography>
+                                    <Typography>Grade Received: {quiz.grade}</Typography>
                                 </CardContent>
                             </CardActionArea>
                         </Card>
@@ -260,17 +263,17 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                 </List>
             </div>
 
-            {quizToShow['showQuiz'] && <CompleteForm 
-                open={quizToShow['showQuiz']}
+            {quizToShow.showQuiz && <CompleteForm 
+                open={quizToShow.showQuiz}
                 onClose={() => setQuizToShow({ showQuiz: false, quizAtIndex: '' })}
-                formTitle={quizToShow['quizAtIndex'].title}
-                formDescription={quizToShow['quizAtIndex'].description}
-                buttonText='Take this quiz'
+                formTitle={quizToShow.quizAtIndex.title}
+                formDescription={quizToShow.quizAtIndex.description}
+                buttonText={quizToShow.upcoming ? 'Take this quiz' : 'View this submission'}
                 routeForward={{ 
-                    pathname: `/student/Quiz/${quizToShow['quizAtIndex'].title}`, 
+                    pathname: quizToShow.upcoming ? `/student/Quiz/${quizToShow.quizAtIndex.title}` : `/viewSubmission/Quiz/${quizToShow.quizAtIndex.title}`, 
                     state: { 
-                        formId: quizToShow['quizAtIndex'].form_id, 
-                        instanceId: quizToShow['quizAtIndex'].instance_id, 
+                        formId: quizToShow.quizAtIndex.form_id, 
+                        instanceId: quizToShow.quizAtIndex.instance_id, 
                         studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId
                     }
                 }}

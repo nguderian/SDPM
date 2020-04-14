@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Divider from '@material-ui/core/Divider';
@@ -32,14 +33,18 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
         maxHeight: 500,
         overflowY: 'scroll',
-        // border: '2px solid gray',
-        // borderRadius: '5px',
         marginLeft: theme.spacing(7),
         marginRight: theme.spacing(7)
     },
     surveyDescription: {
         fontSize: 14
-    }
+    },
+    progress: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '25%'
+    },
 }));
 
 const CreateSurvey = ({ userId, userType, token, loggedIn }) => {
@@ -78,21 +83,26 @@ const CreateSurvey = ({ userId, userType, token, loggedIn }) => {
             <Divider className={classes.templateContainer}/>
 
             <div className={classes.surveyList}>
-                <List component='nav'>
-                    {allSurveys.map((survey, index) => 
-                        <Card variant='outlined' key={index} className={classes.templateContainer}>
-                            <CardActionArea>
-                                <CardContent>
-                                    <Typography color='textSecondary' gutterBottom>
-                                        {survey.title}
-                                    </Typography>
-                                    <Typography className={classes.surveyDescription}>{survey.description}</Typography>
-                                    <Typography>{survey.form_id}</Typography>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    )}
-                </List>
+                {allSurveys.length === 0 ?
+                    <div className={classes.progress}>
+                        <CircularProgress />
+                    </div> :
+                    <List component='nav'>
+                        {allSurveys.map((survey, index) => 
+                            <Card variant='outlined' key={index} className={classes.templateContainer}>
+                                <CardActionArea>
+                                    <CardContent>
+                                        <Typography color='textSecondary' gutterBottom>
+                                            {survey.title}
+                                        </Typography>
+                                        <Typography className={classes.surveyDescription}>{survey.description}</Typography>
+                                        <Typography>{survey.form_id}</Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        )}
+                    </List>
+                }
             </div>
         </div>
     )

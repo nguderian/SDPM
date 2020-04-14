@@ -7,12 +7,13 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
     root: {
-      flexGrow: 1,
+      flexGrow: 1
     },
     createButton: {
       margin: theme.spacing(7),
@@ -40,11 +41,15 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
         maxHeight: 500,
         overflowY: 'scroll',
-        // border: '2px solid gray',
-        // borderRadius: '5px',
         marginLeft: theme.spacing(7),
         marginRight: theme.spacing(7)
-    }
+    },
+    progress: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '25%'
+    },
 }));
   
 const CreateQuiz = ({ userId, userType, token, loggedIn }) => {
@@ -83,45 +88,28 @@ const CreateQuiz = ({ userId, userType, token, loggedIn }) => {
             <Divider className={classes.templateContainer}/>
             
             <div className={classes.quizList}>
-                <List component='nav'>
-                    {allQuizzes.map((quiz, index) =>
-                        <Card variant='outlined' key={index} className={classes.templateContainer}>
-                        <CardActionArea component={Link} to={{ pathname: `/coordinator/Quiz/${quiz.title}`, state: { formId: quiz.form_id }}}>
-                            <CardContent>
-                                <Typography color='textSecondary' gutterBottom>
-                                    {quiz.title}
-                                </Typography>
-                                <Typography className={classes.quizDescription}>{quiz.description}</Typography>
-                                <Typography>{quiz.form_id}</Typography>
-                            </CardContent>
-                        </CardActionArea>
-                            
-                        </Card>
-                    )}
-                </List>
+                {allQuizzes.length === 0 ? 
+                    <div className={classes.progress}>
+                        <CircularProgress />
+                    </div> :
+                    <List component='nav'>
+                        {allQuizzes.map((quiz, index) =>
+                            <Card variant='outlined' key={index} className={classes.templateContainer}>
+                            <CardActionArea component={Link} to={{ pathname: `/coordinator/Quiz/${quiz.title}`, state: { formId: quiz.form_id }}}>
+                                <CardContent>
+                                    <Typography color='textSecondary' gutterBottom>
+                                        {quiz.title}
+                                    </Typography>
+                                    <Typography className={classes.quizDescription}>{quiz.description}</Typography>
+                                    <Typography>{quiz.form_id}</Typography>
+                                </CardContent>
+                            </CardActionArea>
+                                
+                            </Card>
+                        )}
+                    </List>
+                }
             </div>
-            
-            
-            
-            {/* <Pagination 
-                page={page}
-                count={10}
-                onChange={handlePageChange}
-            >
-            {allForms.map((form, index) => 
-                <PaginationItem>
-                        <Card variant='outlined' key={index} className={classes.templateContainer}>
-                        <CardContent>
-                            <Typography className={classes.formTitle} color='textSecondary' gutterBottom>
-                                {form.title}
-                            </Typography>
-                            <Typography>{form.description}</Typography>
-                        </CardContent>
-                    </Card>
-                </PaginationItem>
-            )}
-            
-            </Pagination> */}
         </div>
     );
 }

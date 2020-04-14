@@ -14,8 +14,21 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const TakeMultipleChoice = ({ question, handleChange, index }) => {
+const TakeMultipleChoice = ({ question, handleChange, index, viewingSubmission, userType }) => {
     const classes = useStyles();
+    let answer = '';
+    if(viewingSubmission && userType === 'coordinator') {
+        question.answers.forEach(answerChoice => {
+            if(answerChoice.is_correct === 1) answer = answerChoice.key_text
+        });
+    }
+    else if(viewingSubmission && userType === 'student') {
+        answer = question.answer_text;
+    }
+    else {
+        answer = question.answer_text
+    }
+    
     const [selected, setSelected] = useState();
 
     const handleAnswerChange = event => {
@@ -26,13 +39,14 @@ const TakeMultipleChoice = ({ question, handleChange, index }) => {
     return (
         <div className={classes.root}>
             <FormControl component='fieldset'>
-                <RadioGroup value={selected} onChange={handleAnswerChange}>
+                <RadioGroup value={viewingSubmission ? answer : selected} onChange={handleAnswerChange}>
                     {question.answers.map((answer, index) => 
                         <FormControlLabel 
                             key={index}
                             value={answer.key_text} 
                             control={<Radio color='primary' />} 
                             label={answer.key_text}
+                            disabled={viewingSubmission}
                         />
                     )}
                 </RadioGroup>
