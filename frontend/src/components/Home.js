@@ -6,8 +6,10 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CompleteForm from './common/CompleteForm';
-import axios from 'axios';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+
 
 const useStyles = makeStyles(theme => ({
     pageTitle: {
@@ -35,6 +37,12 @@ const useStyles = makeStyles(theme => ({
         marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2)
     }, 
+    progress: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '25%'
+    },
 }));
 
 
@@ -180,8 +188,12 @@ const Home = ({ userId, userType, token, loggedIn }) => {
     const handleMeetingCardClick = (index) => {
         setMeetingToShow({ showMeeting: true, meetingAtIndex: upcomingMeetings[index] });
     };
-
+    
     return (
+        userType === 'student' && upcomingPrs.length === 0 || userType === 'coordinator' && upcomingAlerts.length === 0 ?
+        <div className={classes.progress}>
+            <CircularProgress />
+        </div> :
         <Fragment>
             <Typography className={classes.pageTitle} variant='h3'>Welcome</Typography>
             {userType === 'student' && 

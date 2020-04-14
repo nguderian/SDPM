@@ -8,6 +8,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button'; 
 import FormSubmitted from '../../common/FormSubmitted';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
@@ -46,7 +47,13 @@ const useStyles = makeStyles(theme => ({
     submitButton: {
         textAlign: 'center',
         marginTop: theme.spacing(2)
-    }
+    },
+    progress: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '25%'
+    },
 }));
 
 function isEmpty(obj) {
@@ -173,6 +180,10 @@ const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
 
 
     return (
+        attendance.teamMembers.length === 0 ? 
+        <div className={classes.progress}>
+            <CircularProgress />
+        </div> :
         <Fragment>
             <Typography variant="h4" className={classes.pageTitle}>{meeting.title}</Typography>
 
