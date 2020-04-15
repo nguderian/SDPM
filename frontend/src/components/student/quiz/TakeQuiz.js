@@ -132,18 +132,14 @@ const TakeQuiz = ({ userId, token, location }) => {
             data: body
         };
 
-        console.log(options);
         let response = await axios(options);
-        console.log(response);
         let responseOK = response && response.status === 200 && response.statusText === 'OK';
         let success = true;
         if(responseOK) {
             success = success && true;
-            console.log('form Submitted!');
         }
         else {
             success = success && false;
-            console.log('something went wrong');
         }
 
         setSubmitted(success);
@@ -155,7 +151,6 @@ const TakeQuiz = ({ userId, token, location }) => {
             <CircularProgress />
         </div> :
         <Fragment>
-            {console.log(quiz)}
             <Typography variant="h4" className={classes.pageTitle}>{quiz['title']}</Typography>
 
             <form className={classes.quizDetail} noValidate autoComplete='off'>

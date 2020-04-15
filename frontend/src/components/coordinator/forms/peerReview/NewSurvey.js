@@ -181,17 +181,13 @@ const NewSurvey = ({ userId, userType, token }) => {
         };
 
         let response = await axios(options);
-        console.log(response);
         let responseOK = response && response.status === 200 && response.statusText === 'OK';
         let success = true;
         let newFormId = response.data.form_id;
         if(responseOK) {
-            console.log(newFormId);
             success = success && true;
         }
         else {
-            // send alert showing error and what the error was
-            console.log('something went wrong');
             success = success && false;
         }
 
@@ -215,14 +211,11 @@ const NewSurvey = ({ userId, userType, token }) => {
         }
 
         response = await axios(options);
-        console.log(response);
         responseOK = response && response.status === 200 && response.statusText === 'OK';
         if(responseOK) {
             success = success && true;
         }
         else {
-            // send alert showing error and what the error was
-            console.log('something went wrong');
             success = success && false;
         }
 
@@ -231,7 +224,6 @@ const NewSurvey = ({ userId, userType, token }) => {
 
     return (
         <Fragment>
-            {console.log(alertValue)}
             <Typography variant="h4" className={classes.pageTitle}>Create a New Peer Review</Typography>
             <form className={classes.surveyTitle} noValidate autoComplete="off">
                 <TextField

@@ -85,7 +85,6 @@ const ViewPRs = ({ userId, token }) => {
             };
 
             let result = await axios(options);
-            console.log(result);
             setActiveClasses(result.data);
         }
         async function getInactiveClasses() {
@@ -127,7 +126,6 @@ const ViewPRs = ({ userId, token }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setUpcomingPrs(result.data);
             }
             async function getCompletedPrs() {
@@ -146,7 +144,6 @@ const ViewPRs = ({ userId, token }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setCompletedPrs(result.data);
             }
             getUpcomingPrs();

@@ -188,7 +188,6 @@ const NewQuiz = ({ userId, userType, token, location }) => {
                     arr.push(question);
                 });
 
-                console.log(arr);
                 setQuiz({ 
                     title: quiz.title, 
                     description: quiz.description, 
@@ -407,19 +406,14 @@ const NewQuiz = ({ userId, userType, token, location }) => {
             data: body
         };
 
-        console.log(options);
         let response = await axios(options);
-        console.log(response);
         let responseOK = response && response.status === 200 && response.statusText === 'OK';
         let success = true;
         let newFormId = response.data.form_id;
         if(responseOK) {
-            console.log(newFormId);
             success = success && true;
         }
         else {
-            // send alert showing error and what the error was
-            console.log('something went wrong');
             success = success && false;
         }
 
@@ -442,19 +436,12 @@ const NewQuiz = ({ userId, userType, token, location }) => {
                 data: body
             };
 
-            console.log(options);
             let response = await axios(options);
-            console.log(response);
-            let responseOK = response && response.status === 200 && response.statusText === 'OK';
-            
+            let responseOK = response && response.status === 200 && response.statusText === 'OK';            
             if(responseOK) {
-                console.log('successful instance created');
-                success = success && true;
-                
+                success = success && true;   
             }
             else {
-                // send alert showing error and what the error was
-                console.log('something went wrong');
                 success = success && false;
             }
         }

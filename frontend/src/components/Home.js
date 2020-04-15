@@ -105,7 +105,6 @@ const Home = ({ userId, userType, token }) => {
                 };
     
                 let result = await axios(options);
-                // console.log(result.data[0].student_id);
                 setStudentId(result.data[0].student_id);
             }
             getStudentId();
@@ -130,7 +129,6 @@ const Home = ({ userId, userType, token }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setUpcomingQuizzes(result.data);
             }
             async function getUpcomingMeetings() {
@@ -149,7 +147,6 @@ const Home = ({ userId, userType, token }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setUpcomingMeetings(result.data);
             }
             async function getUpcomingPrs() {
@@ -168,7 +165,6 @@ const Home = ({ userId, userType, token }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setUpcomingPrs(result.data);
             }
             getUpcomingQuizzes();

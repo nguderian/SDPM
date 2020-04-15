@@ -88,7 +88,6 @@ const ViewQuizzes = ({ userId, token }) => {
             };
 
             let result = await axios(options);
-            console.log(result);
             setActiveClasses(result.data);
         }
         async function getInactiveClasses() {
@@ -130,7 +129,6 @@ const ViewQuizzes = ({ userId, token }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setUpcomingQuizzes(result.data);
             }
             async function getCompletedQuizzes() {
@@ -149,7 +147,6 @@ const ViewQuizzes = ({ userId, token }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setCompletedQuizzes(result.data);
             }
             getUpcomingQuizzes();

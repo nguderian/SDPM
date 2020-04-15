@@ -101,7 +101,6 @@ const SubmittedQuiz = ({ userId, userType, token, location }) => {
             
             const result = await axios(options);
             const quiz = result.data;
-            console.log(quiz);
             setQuiz({
                 title: quiz.title,
                 description: quiz.description,

@@ -72,7 +72,6 @@ const CreateQuiz = ({ userId, token }) => {
             };
 
             let result = await axios(options);
-            console.log(result);
             setAllQuizzes(result.data);
         }
         getAllQuizzes();

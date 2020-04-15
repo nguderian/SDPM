@@ -67,7 +67,6 @@ const CreateSurvey = ({ userId, token }) => {
             };
 
             let result = await axios(options);
-            console.log(result);
             setAllSurveys(result.data);
         }
         getAllSurveys();

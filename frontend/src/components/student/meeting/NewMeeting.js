@@ -120,17 +120,13 @@ const NewMeeting = ({ userId, userType, token, location }) => {
             data: body
         }
 
-        console.log(options);
         let response = await axios(options);
-        console.log(response);
         let responseOK = response && response.status === 200 && response.statusText === 'OK';
         let success = true;
         if(responseOK) {
-            console.log('meeting made');
             success = success && true;
         }
         else {
-            console.log('something went wrong');
             success = success && true;
         }
 

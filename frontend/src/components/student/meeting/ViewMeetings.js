@@ -96,7 +96,6 @@ const ViewMeetings = ({ userId, token }) => {
             };
 
             let result = await axios(options);
-            console.log(result);
             setActiveClasses(result.data);
         }
         async function getInactiveClasses() {
@@ -138,7 +137,6 @@ const ViewMeetings = ({ userId, token }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setUpcomingMeetings(result.data);
             }
             async function getCompletedMeetings() {
@@ -157,7 +155,6 @@ const ViewMeetings = ({ userId, token }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setCompletedMeetings(result.data);
             }
             getUpcomingMeetings();
