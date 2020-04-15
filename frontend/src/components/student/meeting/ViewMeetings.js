@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const ViewMeetings = ({ userId, userType, token, loggedIn }) => {
+const ViewMeetings = ({ userId, token }) => {
     const classes = useStyles();
     const [upcomingMeetings, setUpcomingMeetings] = useState([]);
     const [completedMeetings, setCompletedMeetings] = useState([]);

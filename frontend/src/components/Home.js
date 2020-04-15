@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const Home = ({ userId, userType, token, loggedIn }) => {
+const Home = ({ userId, userType, token }) => {
     const classes = useStyles();
     const [studentId, setStudentId] = useState('');
     const [upcomingQuizzes, setUpcomingQuizzes] = useState([]);

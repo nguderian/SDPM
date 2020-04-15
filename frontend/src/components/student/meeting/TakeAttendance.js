@@ -65,7 +65,7 @@ function isEmpty(obj) {
     return true;
 };
 
-const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
+const TakeAttendance = ({ token, location }) => {
     const classes = useStyles();
     const { meeting, studentId } = location.state;
     const [teamData, setTeamData] = useState({});

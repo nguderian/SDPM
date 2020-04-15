@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const ViewAlert = ({ userId, userType, token, loggedIn, location }) => {
+const ViewAlert = ({ location }) => {
     const classes = useStyles();
     const { alert } = location.state;
     console.log(alert);

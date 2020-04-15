@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme =>({
 }));
 
 
-const TakeQuiz = ({ userId, userType, token, loggedIn, location }) => {
+const TakeQuiz = ({ userId, token, location }) => {
     const classes = useStyles();
     const { formId, instanceId, studentId } = location.state;
     const [quiz, setQuiz] = useState({

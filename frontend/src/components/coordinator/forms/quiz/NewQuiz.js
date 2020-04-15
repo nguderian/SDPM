@@ -88,7 +88,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const NewQuiz = ({ userId, userType, token, loggedIn, location }) => {
+const NewQuiz = ({ userId, userType, token, location }) => {
     let formattedStart = new Date();
     let formattedEnd = new Date();
     formattedStart = formatDate(formattedStart);

@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const ViewPRs = ({ userId, userType, token, loggedIn }) => {
+const ViewPRs = ({ userId, token }) => {
     const classes = useStyles();
     const [upcomingPrs, setUpcomingPrs] = useState([]);
     const [completedPrs, setCompletedPrs] = useState([]);

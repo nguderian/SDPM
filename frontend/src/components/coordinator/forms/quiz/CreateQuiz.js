@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
   
-const CreateQuiz = ({ userId, userType, token, loggedIn }) => {
+const CreateQuiz = ({ userId, token }) => {
     const classes = useStyles();
     const [allQuizzes, setAllQuizzes] = useState([]);
 

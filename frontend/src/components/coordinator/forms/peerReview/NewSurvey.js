@@ -81,7 +81,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const NewSurvey = ({ userId, userType, token, loggedIn }) => {
+const NewSurvey = ({ userId, userType, token }) => {
     let formattedStart = new Date();
     formattedStart = formatDate(formattedStart);
     let formattedEnd = new Date();

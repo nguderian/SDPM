@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const NewMeeting = ({ userId, userType, token, loggedIn, location }) => {
+const NewMeeting = ({ userId, userType, token, location }) => {
     let formattedStart = new Date();
     formattedStart = formatDate(formattedStart);
     let formattedEnd = new Date();

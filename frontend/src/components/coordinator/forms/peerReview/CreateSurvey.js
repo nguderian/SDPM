@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const CreateSurvey = ({ userId, userType, token, loggedIn }) => {
+const CreateSurvey = ({ userId, token }) => {
     const classes = useStyles();
     const [allSurveys, setAllSurveys] = useState([]);
 

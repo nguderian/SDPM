@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const SignIn = ({ userId, userType, token, loggedIn }) => {
+const SignIn = ({ loggedIn }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();

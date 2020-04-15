@@ -74,7 +74,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const SubmittedQuiz = ({ userId, userType, token, loggedIn, location }) => {
+const SubmittedQuiz = ({ userId, userType, token, location }) => {
     const classes = useStyles();
     const { instanceId } = location.state;
     const [quiz, setQuiz] = useState({

@@ -65,7 +65,7 @@ function isEmpty(obj) {
     return true;
 };
 
-const TakePR = ({ userId, userType, token, loggedIn, location }) => {
+const TakePR = ({ userId, token, location }) => {
     const classes = useStyles();
     const { pr, studentId } = location.state;
     const [teamData, setTeamData] = useState({});
