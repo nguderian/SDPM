@@ -95,7 +95,6 @@ const CreateSurvey = ({ userId, token }) => {
                                             {survey.title}
                                         </Typography>
                                         <Typography className={classes.surveyDescription}>{survey.description}</Typography>
-                                        <Typography>{survey.form_id}</Typography>
                                     </CardContent>
                                 </CardActionArea>
                             </Card>

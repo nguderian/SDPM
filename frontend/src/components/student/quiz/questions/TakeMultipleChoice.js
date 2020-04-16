@@ -4,6 +4,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -53,6 +54,14 @@ const TakeMultipleChoice = ({ question, handleChange, index, viewingSubmission, 
             </FormControl>
         </div>
     )
+}
+
+TakeMultipleChoice.propTypes = {
+    question: PropTypes.object.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    index: PropTypes.number.isRequired,
+    viewingSubmission: PropTypes.bool.isRequired,
+    userType: PropTypes.string.isRequired
 }
 
 export default TakeMultipleChoice;

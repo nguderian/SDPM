@@ -7,6 +7,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CompleteForm from './common/CompleteForm';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -354,6 +355,12 @@ const Home = ({ userId, userType, token }) => {
             />}
         </Fragment>
     );
+}
+
+Home.propTypes = {
+    userId: PropTypes.number.isRequired,
+    userType: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired
 }
 
 export default Home

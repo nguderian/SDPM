@@ -12,6 +12,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CompleteForm from '../../common/CompleteForm';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -291,6 +292,11 @@ const ViewMeetings = ({ userId, token }) => {
             />}
         </Fragment>
     )
+}
+
+ViewMeetings.propTypes = {
+    userId: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired,
 }
 
 export default ViewMeetings;
