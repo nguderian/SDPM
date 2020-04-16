@@ -44,7 +44,7 @@ const FormSubmitted = ({
     )
 }
 
-FormSubmitted.PropTypes = {
+FormSubmitted.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     confirmationText: PropTypes.string,

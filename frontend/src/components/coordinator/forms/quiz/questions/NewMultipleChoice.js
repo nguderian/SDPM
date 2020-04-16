@@ -120,8 +120,9 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
     );
 }
 
-NewMultipleChoice.PropTypes = {
+NewMultipleChoice.propTypes = {
     possibleAnswers: PropTypes.func.isRequired,
     correctAnswers: PropTypes.func.isRequired
 }
+
 export default NewMultipleChoice;

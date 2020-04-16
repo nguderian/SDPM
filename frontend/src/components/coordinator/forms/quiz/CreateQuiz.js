@@ -113,7 +113,7 @@ const CreateQuiz = ({ userId, token }) => {
     );
 }
 
-CreateQuiz.PropTypes - {
+CreateQuiz.propTypes = {
     userId: PropTypes.number.isRequired,
     token: PropTypes.string.isRequired
 }

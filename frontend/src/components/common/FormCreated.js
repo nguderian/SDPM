@@ -53,7 +53,7 @@ const FormCreated = ({
     )
 }
 
-FormCreated.PropTypes = {
+FormCreated.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     confirmationText: PropTypes.string,

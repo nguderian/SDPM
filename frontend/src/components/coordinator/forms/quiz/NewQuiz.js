@@ -636,7 +636,7 @@ const NewQuiz = ({ userId, userType, token, location }) => {
     );
 }
 
-NewQuiz.PropTypes - {
+NewQuiz.propTypes = {
     userId: PropTypes.number.isRequired,
     userType: PropTypes.string.isRequired,
     token: PropTypes.string.isRequired,

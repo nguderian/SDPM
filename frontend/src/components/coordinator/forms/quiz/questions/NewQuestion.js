@@ -124,7 +124,7 @@ const NewQuestion = ({ open, onClose, add }) => {
     );
 }
 
-NewQuestion.PropTypes = {
+NewQuestion.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     add: PropTypes.func.isRequired

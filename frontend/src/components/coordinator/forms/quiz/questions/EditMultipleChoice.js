@@ -110,7 +110,7 @@ const EditMultipleChoice = ({ possibleAnswers, correctAnswers, question }) => {
     );
 }
 
-EditMultipleChoice.PropTypes = {
+EditMultipleChoice.propTypes = {
     possibleAnswers: PropTypes.func.isRequired,
     correctAnswers: PropTypes.func.isRequired,
     question: PropTypes.object.isRequired,

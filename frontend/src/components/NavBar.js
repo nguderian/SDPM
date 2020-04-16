@@ -194,7 +194,7 @@ const NavBar = ({ userType, loggedIn }) => {
 }
 
 NavBar.propTypes = {
-  userType: PropTypes.number.isRequired,
+  userType: PropTypes.string.isRequired,
   loggedIn: PropTypes.bool.isRequired
 }
 

@@ -39,7 +39,7 @@ const DeleteQuestion = ({ open, onClose, deleteQuestion }) => {
     );
 }
 
-DeleteQuestion.PropTypes = {
+DeleteQuestion.propTypes = {
     open: PropTypes.bool.isRequired,
     onclose: PropTypes.func.isRequired,
     deleteQuestion: PropTypes.func

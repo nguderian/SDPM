@@ -36,7 +36,7 @@ const NewFillBlank = ({ fillBlank }) => {
     );
 }
 
-NewFillBlank.PropTypes = {
+NewFillBlank.propTypes = {
     fillBlank: PropTypes.func.isRequired
 }
 

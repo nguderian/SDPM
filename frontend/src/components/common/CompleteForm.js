@@ -47,7 +47,7 @@ const CompleteForm = ({
     )
 }
 
-CompleteForm.PropTypes = {
+CompleteForm.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     formTitle: PropTypes.string,

@@ -128,7 +128,7 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
     );
 }
 
-EditQuestion.PropTypes = {
+EditQuestion.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     editQuestion: PropTypes.func.isRequired,

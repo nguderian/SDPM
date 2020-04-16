@@ -40,7 +40,7 @@ const EditFillBlank = ({ fillBlank, question }) => {
     );
 }
 
-EditFillBlank.PropTypes = {
+EditFillBlank.propTypes = {
     fillBlank: PropTypes.func.isRequired,
     question: PropTypes.object.isRequired
 }

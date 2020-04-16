@@ -253,7 +253,7 @@ const SubmittedQuiz = ({ userId, userType, token, location }) => {
     );
 }
 
-SubmittedQuiz.PropTypes - {
+SubmittedQuiz.propTypes = {
     userId: PropTypes.number.isRequired,
     userType: PropTypes.string.isRequired,
     token: PropTypes.string.isRequired,
