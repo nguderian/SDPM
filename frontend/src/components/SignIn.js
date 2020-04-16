@@ -108,7 +108,7 @@ const SignIn = ({ loggedIn }) => {
                     >
                         Sign In
                     </Button>
-                    <Grid container='spacing'>
+                    <Grid container>
                         <Grid item xs>
                             <Link variant='body2'>
                                 Forgot Password?
