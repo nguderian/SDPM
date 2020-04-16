@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     },
     formList: {
         flexGrow: 1,
-        height: '20%',
+        maxHeight: 700,
         overflowY: 'scroll',
         border: '1px solid gray',
         borderRadius: '5px',

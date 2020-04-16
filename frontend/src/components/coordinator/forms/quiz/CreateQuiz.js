@@ -100,7 +100,6 @@ const CreateQuiz = ({ userId, token }) => {
                                         {quiz.title}
                                     </Typography>
                                     <Typography className={classes.quizDescription}>{quiz.description}</Typography>
-                                    <Typography>{quiz.form_id}</Typography>
                                 </CardContent>
                             </CardActionArea>
                                 

@@ -50,7 +50,6 @@ const useStyles = makeStyles(theme => ({
         marginLeft: theme.spacing(1),
     },
     createButton: {
-        margin: theme.spacing(1),
         textAlign: 'center',
         marginTop: theme.spacing(2),
     },
@@ -461,6 +460,7 @@ const NewQuiz = ({ userId, userType, token, location }) => {
                     variant="outlined" 
                     fullWidth={true}
                     value={quiz['title']}
+                    required
                     onChange={handleQuizTitleChange}
                 />
             </form>
@@ -556,9 +556,11 @@ const NewQuiz = ({ userId, userType, token, location }) => {
                     />
                 }
             </div>
-            <Button className={classes.createButton} variant="contained" color="primary" onClick={handleAddQuestion}>
-                Add Question 
-            </Button>
+            <div className={classes.createButton}>
+                <Button variant="contained" color="primary" onClick={handleAddQuestion}>
+                    Add Question 
+                </Button>
+            </div>
             {addQuestionOpen && <NewQuestion 
                 open={addQuestionOpen} 
                 onClose={() => setAddQuestionOpen(false)}
@@ -599,13 +601,16 @@ const NewQuiz = ({ userId, userType, token, location }) => {
                     )}
                 </Grid>
             </div>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={createForm}
-                className={classes.createButton}>
-                Create Quiz
-            </Button>
+            <div className={classes.createButton}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={createForm}
+                >
+                    Create Quiz
+                </Button>
+            </div>
+            
             {modificationParameters.deleteQuestionOpen && <DeleteQuestion 
                 open={modificationParameters.deleteQuestionOpen}
                 onClose={() => handleModificationParameters(["deleteQuestionOpen"], [false])}
