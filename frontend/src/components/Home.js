@@ -186,7 +186,7 @@ const Home = ({ userId, userType, token }) => {
     };
     
     return (
-        userType === 'student' && upcomingPrs.length === 0 || userType === 'coordinator' && upcomingAlerts.length === 0 ?
+        (userType === 'student' && upcomingPrs.length === 0) || (userType === 'coordinator' && upcomingAlerts.length === 0) ?
         <div className={classes.progress}>
             <CircularProgress />
         </div> :
