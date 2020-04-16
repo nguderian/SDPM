@@ -54,7 +54,6 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(2)
     }, 
     createButton: {
-        margin: theme.spacing(1),
         textAlign: 'center',
         marginTop: theme.spacing(2),
     },
@@ -231,7 +230,8 @@ const NewSurvey = ({ userId, userType, token }) => {
                     helperText={surveyTitle === '' ? "Peer Review Title is required." : ''} 
                     label="Peer Review Title" 
                     variant="outlined" 
-                    fullWidth={true} 
+                    fullWidth={true}
+                    required
                     onChange={handleSurveyTitleChange}
                 />
             </form>
@@ -313,13 +313,16 @@ const NewSurvey = ({ userId, userType, token }) => {
                     </CardContent>
                 </Card>
             }
-            <Button 
-                variant='contained'
-                color='primary'
-                onClick={createSurvey}
-                className={classes.createButton}>
-                Create Peer Review
-            </Button>
+            <div className={classes.createButton}>
+                <Button 
+                    variant='contained'
+                    color='primary'
+                    onClick={createSurvey}
+                >
+                    Create Peer Review
+                </Button>
+            </div>
+            
             {formCreated && <FormCreated 
                 open={formCreated}
                 onClose={() => handleCloseFormCreateDialog()}
