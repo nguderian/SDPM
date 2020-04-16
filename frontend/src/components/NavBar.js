@@ -45,7 +45,7 @@ const StyledNav = withStyles({
   }
 })(AppBar);
 
-const NavBar = ({ user_id, userType, token, loggedIn }) => {
+const NavBar = ({ userType, loggedIn }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();

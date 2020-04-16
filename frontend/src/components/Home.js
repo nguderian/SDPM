@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const Home = ({ userId, userType, token, loggedIn }) => {
+const Home = ({ userId, userType, token }) => {
     const classes = useStyles();
     const [studentId, setStudentId] = useState('');
     const [upcomingQuizzes, setUpcomingQuizzes] = useState([]);
@@ -105,7 +105,6 @@ const Home = ({ userId, userType, token, loggedIn }) => {
                 };
     
                 let result = await axios(options);
-                // console.log(result.data[0].student_id);
                 setStudentId(result.data[0].student_id);
             }
             getStudentId();
@@ -130,7 +129,6 @@ const Home = ({ userId, userType, token, loggedIn }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setUpcomingQuizzes(result.data);
             }
             async function getUpcomingMeetings() {
@@ -149,7 +147,6 @@ const Home = ({ userId, userType, token, loggedIn }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setUpcomingMeetings(result.data);
             }
             async function getUpcomingPrs() {
@@ -168,7 +165,6 @@ const Home = ({ userId, userType, token, loggedIn }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setUpcomingPrs(result.data);
             }
             getUpcomingQuizzes();
@@ -190,7 +186,7 @@ const Home = ({ userId, userType, token, loggedIn }) => {
     };
     
     return (
-        userType === 'student' && upcomingPrs.length === 0 || userType === 'coordinator' && upcomingAlerts.length === 0 ?
+        (userType === 'student' && upcomingPrs.length === 0) || (userType === 'coordinator' && upcomingAlerts.length === 0) ?
         <div className={classes.progress}>
             <CircularProgress />
         </div> :

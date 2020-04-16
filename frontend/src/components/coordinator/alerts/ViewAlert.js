@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
@@ -40,10 +40,10 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const ViewAlert = ({ userId, userType, token, loggedIn, location }) => {
+const ViewAlert = ({ location }) => {
     const classes = useStyles();
     const { alert } = location.state;
-    console.log(alert);
+    
     return (
         <Fragment>
             <Typography className={classes.pageTitle} variant='h4'>

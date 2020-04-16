@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const ViewPRs = ({ userId, userType, token, loggedIn }) => {
+const ViewPRs = ({ userId, token }) => {
     const classes = useStyles();
     const [upcomingPrs, setUpcomingPrs] = useState([]);
     const [completedPrs, setCompletedPrs] = useState([]);
@@ -85,7 +85,6 @@ const ViewPRs = ({ userId, userType, token, loggedIn }) => {
             };
 
             let result = await axios(options);
-            console.log(result);
             setActiveClasses(result.data);
         }
         async function getInactiveClasses() {
@@ -127,7 +126,6 @@ const ViewPRs = ({ userId, userType, token, loggedIn }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setUpcomingPrs(result.data);
             }
             async function getCompletedPrs() {
@@ -146,7 +144,6 @@ const ViewPRs = ({ userId, userType, token, loggedIn }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setCompletedPrs(result.data);
             }
             getUpcomingPrs();

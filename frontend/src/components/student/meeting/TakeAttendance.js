@@ -65,7 +65,7 @@ function isEmpty(obj) {
     return true;
 };
 
-const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
+const TakeAttendance = ({ token, location }) => {
     const classes = useStyles();
     const { meeting, studentId } = location.state;
     const [teamData, setTeamData] = useState({});
@@ -114,7 +114,6 @@ const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
                 const teamMembers = result.data.team_members;
 
                 let arr = [];
-                console.log(teamMembers);
                 teamMembers.forEach(teamMember => {
                     let obj = {
                         student_id: teamMember.student_id,
@@ -161,18 +160,14 @@ const TakeAttendance = ({ userId, userType, token, loggedIn, location }) => {
             data: body
         }
 
-        console.log(options);
         let response = await axios(options);
-        console.log(response);
         let responseOK = response && response.status === 200 && response.statusText === 'OK';
         let success = true;
         if(responseOK) {
             success = success && true;
-            console.log('form Submitted!');
         }
         else {
             success = success && false;
-            console.log('something went wrong');
         }
 
         setSubmitted(success);

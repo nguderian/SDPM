@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 
-const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
+const ViewQuizzes = ({ userId, token }) => {
     const classes = useStyles();
     const [upcomingQuizzes, setUpcomingQuizzes] = useState([]);
     const [completedQuizzes, setCompletedQuizzes] = useState([]);
@@ -88,7 +88,6 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
             };
 
             let result = await axios(options);
-            console.log(result);
             setActiveClasses(result.data);
         }
         async function getInactiveClasses() {
@@ -130,7 +129,6 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setUpcomingQuizzes(result.data);
             }
             async function getCompletedQuizzes() {
@@ -149,7 +147,6 @@ const ViewQuizzes = ({ userId, userType, token, loggedIn }) => {
                 };
         
                 let result = await axios(options);
-                console.log(result);
                 setCompletedQuizzes(result.data);
             }
             getUpcomingQuizzes();

@@ -74,7 +74,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-const SubmittedQuiz = ({ userId, userType, token, loggedIn, location }) => {
+const SubmittedQuiz = ({ userId, userType, token, location }) => {
     const classes = useStyles();
     const { instanceId } = location.state;
     const [quiz, setQuiz] = useState({
@@ -101,7 +101,6 @@ const SubmittedQuiz = ({ userId, userType, token, loggedIn, location }) => {
             
             const result = await axios(options);
             const quiz = result.data;
-            console.log(quiz);
             setQuiz({
                 title: quiz.title,
                 description: quiz.description,
