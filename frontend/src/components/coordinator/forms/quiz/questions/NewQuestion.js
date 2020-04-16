@@ -13,6 +13,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import NewFillBlank from './NewFillBlank';
 import NewMultipleChoice from './NewMultipleChoice';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -25,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const NewQuestion = ({ open, onClose, add, formType }) => {
+const NewQuestion = ({ open, onClose, add }) => {
     const classes = useStyles();
     const [questionType, setQuestionType] = useState('');
     const [questionText, setQuestionText] = useState('');
@@ -55,18 +56,6 @@ const NewQuestion = ({ open, onClose, add, formType }) => {
     };
 
     const handleConfirm = () => {
-        // if(questionType === null) {
-        //     // render alert dialog with appropriate text
-        //     setOpenAlertDialog(true);
-        //     return (
-        //         <AlertDialog open={openAlertDialog} onClose={handleAlertDialog} alertMessage="You must choose a question type"/>
-        //     )
-        // }
-        // else if(questionText === '') {
-            
-        // }
-        // else if(questionType === 'Free Response')
-
         onClose();
         add(questionType, questionText, fillBlankAnswer, mcAnswers, isCorrectMCAnswer);
     };
@@ -119,7 +108,7 @@ const NewQuestion = ({ open, onClose, add, formType }) => {
                         helperText={questionText === '' ? "Question text is required" : ''} 
                         onChange={handleQuestionTextChange}
                     />
-                    {questionType === 'multiple_choice' && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} formType={formType}/>}
+                    {questionType === 'multiple_choice' && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} />}
                     {questionType === 'fill_blank' && <NewFillBlank fillBlank={storeFillBlankAnswer}/>}
                 </DialogContent>
                 <DialogActions>
@@ -133,6 +122,12 @@ const NewQuestion = ({ open, onClose, add, formType }) => {
             </Dialog>
         </Fragment>
     );
+}
+
+NewQuestion.PropTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    add: PropTypes.func.isRequired
 }
 
 export default NewQuestion;

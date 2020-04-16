@@ -5,7 +5,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-
+import PropTypes from 'prop-types';
 
 const DeleteQuestion = ({ open, onClose, deleteQuestion }) => {
     // event handlers
@@ -36,8 +36,13 @@ const DeleteQuestion = ({ open, onClose, deleteQuestion }) => {
                 </DialogActions>
             </Dialog>
         </div>
-        
     );
+}
+
+DeleteQuestion.PropTypes = {
+    open: PropTypes.bool.isRequired,
+    onclose: PropTypes.func.isRequired,
+    deleteQuestion: PropTypes.func
 }
 
 export default DeleteQuestion;

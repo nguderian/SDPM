@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Divider from '@material-ui/core/Divider';
 import CardActionArea from '@material-ui/core/CardActionArea';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -104,6 +105,11 @@ const CreateSurvey = ({ userId, token }) => {
             </div>
         </div>
     )
+}
+
+CreateSurvey.propTypes = {
+    userId: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired
 }
 
 export default CreateSurvey;

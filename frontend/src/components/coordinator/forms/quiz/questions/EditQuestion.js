@@ -12,6 +12,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import EditFillBlank from './EditFillBlank';
 import EditMultipleChoice from './EditMultipleChoice';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -125,6 +126,13 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
             </Dialog>
         </Fragment>
     );
+}
+
+EditQuestion.PropTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    editQuestion: PropTypes.func.isRequired,
+    question: PropTypes.object.isRequired
 }
 
 export default EditQuestion;

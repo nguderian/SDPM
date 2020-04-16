@@ -8,6 +8,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -111,4 +112,10 @@ const CreateQuiz = ({ userId, token }) => {
         </div>
     );
 }
+
+CreateQuiz.PropTypes - {
+    userId: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired
+}
+
 export default CreateQuiz;

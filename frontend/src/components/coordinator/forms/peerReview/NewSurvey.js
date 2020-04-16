@@ -19,7 +19,7 @@ import {
     MuiPickersUtilsProvider,
     DateTimePicker
 } from '@material-ui/pickers/';
-
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 const formatDate = dateTime => {
@@ -336,6 +336,12 @@ const NewSurvey = ({ userId, userType, token }) => {
             />}
         </Fragment>
     )
+}
+
+NewSurvey.propTypes = {
+    userId: PropTypes.number.isRequired,
+    userType: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired
 }
 
 export default NewSurvey;

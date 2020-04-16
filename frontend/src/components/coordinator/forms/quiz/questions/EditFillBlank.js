@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { FormControl, TextField } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -39,5 +40,9 @@ const EditFillBlank = ({ fillBlank, question }) => {
     );
 }
 
+EditFillBlank.PropTypes = {
+    fillBlank: PropTypes.func.isRequired,
+    question: PropTypes.object.isRequired
+}
 
 export default EditFillBlank;
