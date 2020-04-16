@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
@@ -41,6 +42,14 @@ const FormSubmitted = ({
             </Dialog>
         </Fragment>
     )
+}
+
+FormSubmitted.PropTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    confirmationText: PropTypes.string,
+    submittedTex: PropTypes.string,
+    routeBack: PropTypes.object.isRequired
 }
 
 export default FormSubmitted;

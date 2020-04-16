@@ -565,7 +565,6 @@ const NewQuiz = ({ userId, userType, token, location }) => {
                 open={addQuestionOpen} 
                 onClose={() => setAddQuestionOpen(false)}
                 add={addQuestion}
-                formType='quiz'
                 />}
             <Divider className={classes.divider} variant="fullWidth"/>
             <div className={classes.questionList}>
