@@ -124,7 +124,6 @@ const NewSurvey = ({ userId, userType, token, location }) => {
                 };
 
                 const result = await axios(options);
-                console.log(result);
                 const survey = result.data.survey;
                 setSurveyInfo({ 
                     title: survey.title, 
