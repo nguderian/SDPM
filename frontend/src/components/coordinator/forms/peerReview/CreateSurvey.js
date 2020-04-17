@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Divider from '@material-ui/core/Divider';
 import CardActionArea from '@material-ui/core/CardActionArea';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -74,7 +75,7 @@ const CreateSurvey = ({ userId, token }) => {
     
     return (
         <div className={classes.root}>
-            <Button className={classes.createButton} variant="contained" color="primary" component={Link} to='/coordinator/Survey/NewSurvey'>
+            <Button className={classes.createButton} variant="contained" color="primary" component={Link} to={{ pathname: '/coordinator/Survey/New', state: {} }}>
                 Create New
             </Button>
 
@@ -89,13 +90,12 @@ const CreateSurvey = ({ userId, token }) => {
                     <List component='nav'>
                         {allSurveys.map((survey, index) => 
                             <Card variant='outlined' key={index} className={classes.templateContainer}>
-                                <CardActionArea>
+                                <CardActionArea component={Link} to={{ pathname: `/coordinator/Survey/${survey.title}`, state: { formId: survey.form_id} }}>
                                     <CardContent>
                                         <Typography color='textSecondary' gutterBottom>
                                             {survey.title}
                                         </Typography>
                                         <Typography className={classes.surveyDescription}>{survey.description}</Typography>
-                                        <Typography>{survey.form_id}</Typography>
                                     </CardContent>
                                 </CardActionArea>
                             </Card>
@@ -105,6 +105,11 @@ const CreateSurvey = ({ userId, token }) => {
             </div>
         </div>
     )
+}
+
+CreateSurvey.propTypes = {
+    userId: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired
 }
 
 export default CreateSurvey;

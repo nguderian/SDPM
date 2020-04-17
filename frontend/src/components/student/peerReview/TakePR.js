@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import FormSubmitted from '../../common/FormSubmitted';
 import Slider from '@material-ui/core/Slider';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
@@ -249,6 +250,12 @@ const TakePR = ({ userId, token, location }) => {
             />}
         </Fragment>
     )
+}
+
+TakePR.propTypes = {
+    userId: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired,
+    location: PropTypes.object.isRequired
 }
 
 export default TakePR;

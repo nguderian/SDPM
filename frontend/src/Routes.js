@@ -41,7 +41,7 @@ const routes = () => {
                     
                     {/* survey creation */}
                     <Route path='/coordinator/Survey/CreateSurvey' exact component={CreateSurveyContainer} />
-                    <Route path='/coordinator/Survey/NewSurvey' exact component={NewSurveyContainer} />
+                    <Route path='/coordinator/Survey/:title' render={(props) => <NewSurveyContainer {...props} />} />
                     
                     {/* meetings */}
                     <Route path='/student/Meeting/ViewMeetings' exact component={ViewMeetingsContainer} />

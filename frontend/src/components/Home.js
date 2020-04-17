@@ -7,6 +7,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CompleteForm from './common/CompleteForm';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -23,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     },
     formList: {
         flexGrow: 1,
-        height: '20%',
+        maxHeight: 700,
         overflowY: 'scroll',
         border: '1px solid gray',
         borderRadius: '5px',
@@ -354,6 +355,12 @@ const Home = ({ userId, userType, token }) => {
             />}
         </Fragment>
     );
+}
+
+Home.propTypes = {
+    userId: PropTypes.number.isRequired,
+    userType: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired
 }
 
 export default Home

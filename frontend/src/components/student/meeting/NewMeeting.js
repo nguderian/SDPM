@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DateFnsUtils from '@date-io/date-fns'
 import { MuiPickersUtilsProvider, DateTimePicker } from '@material-ui/pickers';
+import PropTypes from 'prop-types';
 import FormCreated from '../../common/FormCreated';
 import axios from 'axios';
 
@@ -199,6 +200,13 @@ const NewMeeting = ({ userId, userType, token, location }) => {
             />}
         </Fragment>
     )
+}
+
+NewMeeting.propTypes = {
+    userId: PropTypes.number.isRequired,
+    userType: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
+    location: PropTypes.object.isRequired
 }
 
 export default NewMeeting;

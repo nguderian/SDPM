@@ -11,6 +11,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CompleteForm from '../../common/CompleteForm';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
@@ -241,7 +242,7 @@ const ViewPRs = ({ userId, token }) => {
                     }
                     {completedPrs.map((pr, index) => 
                         <Card variant='outlined' key={index} className={classes.prCard}>
-                            <CardActionArea onClick={() => handlePrCardClick(index, 'completed')}>
+                            <CardActionArea>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {pr.title}
@@ -271,6 +272,11 @@ const ViewPRs = ({ userId, token }) => {
             />}
         </Fragment>
     )
+}
+
+ViewPRs.propTypes = {
+    userId: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired
 }
 
 export default ViewPRs;

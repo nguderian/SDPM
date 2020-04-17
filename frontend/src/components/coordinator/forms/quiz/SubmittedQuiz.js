@@ -12,6 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import TakeFreeResponse from '../../../student/quiz/questions/TakeFreeResponse';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     pageTitle: {
@@ -250,6 +251,13 @@ const SubmittedQuiz = ({ userId, userType, token, location }) => {
             </div>
         </Fragment>   
     );
+}
+
+SubmittedQuiz.propTypes = {
+    userId: PropTypes.number.isRequired,
+    userType: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
+    location: PropTypes.object.isRequired
 }
 
 export default SubmittedQuiz;

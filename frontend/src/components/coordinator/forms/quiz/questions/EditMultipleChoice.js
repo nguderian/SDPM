@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import { 
-    Typography,
-    FormGroup, 
-    FormControlLabel, 
-    Checkbox, 
-    TextField  
-} from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import TextField from '@material-ui/core/TextField';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -111,5 +110,10 @@ const EditMultipleChoice = ({ possibleAnswers, correctAnswers, question }) => {
     );
 }
 
+EditMultipleChoice.propTypes = {
+    possibleAnswers: PropTypes.func.isRequired,
+    correctAnswers: PropTypes.func.isRequired,
+    question: PropTypes.object.isRequired,
+}
 
 export default EditMultipleChoice;

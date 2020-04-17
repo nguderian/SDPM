@@ -9,6 +9,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button'; 
 import FormSubmitted from '../../common/FormSubmitted';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
@@ -243,6 +244,11 @@ const TakeAttendance = ({ token, location }) => {
             />}
         </Fragment>
     )
+}
+
+TakeAttendance.propTypes = {
+    token: PropTypes.string.isRequired,
+    location: PropTypes.object.isRequired
 }
 
 export default TakeAttendance;
