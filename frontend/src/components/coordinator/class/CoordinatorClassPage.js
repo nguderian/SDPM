@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import MaterialTable from 'material-table';
+import ReactDOM from "react-dom";
 import { forwardRef } from 'react';
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -24,6 +25,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import { useHistory } from 'react-router-dom';
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -67,6 +69,7 @@ export default function MaterialTableDemo({ userId, userType, token, loggedIn })
   const [currentClass,setCurrentClass] = useState('');
   const [studentList, setStudentList] = useState([]);
   const [classAlerts, setClassAlerts] = useState([]);
+  const history = useHistory();
   const [columns, setColumns] = useState([
     { title: 'First Name', field: 'first_name' },
     { title: 'Last Name', field: 'last_name' },
@@ -75,6 +78,7 @@ export default function MaterialTableDemo({ userId, userType, token, loggedIn })
   const [alertColumns, setAlertColumns] = useState([
     { title: 'First Name', field: 'first_name' },
     { title: 'Last Name', field: 'last_name' },
+    { title: 'Group', field: 'project_name', type: 'numeric' },
     { title: 'Alert From', field: 'title'},
   ]);
 
@@ -148,7 +152,21 @@ useEffect(() => {
   const handleClassChange = event => {
     setCurrentClass(event.target.value);  
 };
+  /*function handleRowClick(data) {
+    // history.push('/coordinator/Alert/ViewAlert/${alert.title}', {state: {
+    //   formId: quizToShow.quizAtIndex.form_id, 
+    //   instanceId: quizToShow.quizAtIndex.instance_id, 
+    //   studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId
+    // }});
+    console.log(data)
+  }*/
 
+  const handleRowClick = (event, rowData) => {
+    console.log(rowData)
+        history.push(`/coordinator/Alert/ViewAlert/${rowData.title}`, {
+        alert: rowData
+     });
+  };
   return (
     <div>
     <div style={{ display: 'flex', flexDirection: 'row'}}>
@@ -179,7 +197,7 @@ useEffect(() => {
       title="Student/Group Roster"
       columns={columns}
       data={studentList}
-      
+
     /></Grid>
 
 
@@ -189,6 +207,7 @@ useEffect(() => {
       title="Notifications"
       columns={alertColumns}
       data={classAlerts}
+      onRowClick={handleRowClick}
     /></Grid>
     </Grid>
     </div>
