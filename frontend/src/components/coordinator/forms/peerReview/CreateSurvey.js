@@ -75,7 +75,7 @@ const CreateSurvey = ({ userId, token }) => {
     
     return (
         <div className={classes.root}>
-            <Button className={classes.createButton} variant="contained" color="primary" component={Link} to='/coordinator/Survey/NewSurvey'>
+            <Button className={classes.createButton} variant="contained" color="primary" component={Link} to={{ pathname: '/coordinator/Survey/New', state: {} }}>
                 Create New
             </Button>
 
@@ -90,7 +90,7 @@ const CreateSurvey = ({ userId, token }) => {
                     <List component='nav'>
                         {allSurveys.map((survey, index) => 
                             <Card variant='outlined' key={index} className={classes.templateContainer}>
-                                <CardActionArea>
+                                <CardActionArea component={Link} to={{ pathname: `/coordinator/Survey/${survey.title}`, state: { formId: survey.form_id} }}>
                                     <CardContent>
                                         <Typography color='textSecondary' gutterBottom>
                                             {survey.title}
