@@ -263,7 +263,7 @@ const ViewMeetings = ({ userId, token }) => {
                     }
                     {completedMeetings.map((meeting, index) => 
                         <Card variant='outlined' key={index} className={classes.meetingCard}>
-                            <CardActionArea onClick={() => handleMeetingCardClick(index, 'completed')}>
+                            <CardActionArea>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {meeting.title}

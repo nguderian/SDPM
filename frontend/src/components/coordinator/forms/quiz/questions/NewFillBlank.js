@@ -29,6 +29,7 @@ const NewFillBlank = ({ fillBlank }) => {
                     label="Correct Answer"
                     placeholder="Enter Correct Answer"
                     variant="outlined"
+                    required
                     onChange={handleTextFieldChange}
                 />
             </FormControl>

@@ -242,7 +242,7 @@ const ViewPRs = ({ userId, token }) => {
                     }
                     {completedPrs.map((pr, index) => 
                         <Card variant='outlined' key={index} className={classes.prCard}>
-                            <CardActionArea onClick={() => handlePrCardClick(index, 'completed')}>
+                            <CardActionArea>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {pr.title}
