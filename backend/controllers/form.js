@@ -422,7 +422,7 @@ class form {
                     var current_question_control = 0;
                     if (type == 'coordinator') {
                         resultForm.questions.push({
-                            //"question_id": returnSurvey[i].question_id,
+                            "question_id": returnSurvey[i].question_id,
                             "question_text": returnSurvey[i].question_text,
                             "question_type": returnSurvey[i].question_type,
                             "question_threshold": returnSurvey[i].question_threshold
@@ -444,7 +444,7 @@ class form {
 
                     if (type == 'coordinator') {
                         resultForm.questions.push({
-                            //"question_id": returnSurvey[i].question_id,
+                            "question_id": returnSurvey[i].question_id,
                             "question_text": returnSurvey[i].question_text,
                             "question_type": returnSurvey[i].question_type,
                             "question_threshold": returnSurvey[i].question_threshold
@@ -460,6 +460,27 @@ class form {
                     //resultForm.questions[current_question_control].answers = new Array();
                     current_question_id = returnSurvey[i].question_id;
 
+                }
+
+                try {
+                    let result = await sequelize.query('CALL get_student_team_instance(?)',
+                    { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
+                    let team_id = result[0]['team_id'];
+                    let student_id = result[0]['student_id'];
+                } catch (error) {
+                    console.log(error);
+                    res.send({ status: "Could not get team members" });
+                }
+
+                let teamInfo;
+
+                try {
+                    let result = await sequelize.query('CALL get_team_names(?)',
+                    { replacements: [team_id], type: sequelize.QueryTypes.CALL });
+                    teamInfo = result;
+                } catch (error) {
+                    console.log(error);
+                    res.send({ status: "Could not get team members" });
                 }
 
 
@@ -807,7 +828,15 @@ class form {
                     next;
                 }
             }
-          
+
+            try {
+                let result = await sequelize.query(
+                    'Update form_instances SET is_complete = 1 where instance_id =?',
+                    { replacements: [instance_id], type: sequelize.QueryTypes.Update })
+        
+            } catch (error) {
+                console.log(error);
+            }
             try {
                 triggerCheck(student_id, instance_id, form_id, results);
             } catch (error) {
@@ -828,7 +857,7 @@ class form {
                     let callSurvey = await sequelize.query(`CALL submit_quiz(?,?,?,?)`,
                         { replacements: [results[i].answer_text, instance_id, results[i].question_id, student_id], type: sequelize.QueryTypes.CALL });
                     // res.send({ status: "Success" });
-                    console.log(`Insert ${results[i].question_id} and ${results[i].answer_text}`);
+                    //console.log(`Insert ${results[i].question_id} and ${results[i].answer_text}`);
                     status.status2 = "Submit quiz success";
                     next;
                 } catch (error) {

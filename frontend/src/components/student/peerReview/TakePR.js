@@ -65,7 +65,7 @@ function isEmpty(obj) {
     return true;
 };
 
-const TakePR = ({ userId, userType, token, loggedIn, location }) => {
+const TakePR = ({ userId, token, location }) => {
     const classes = useStyles();
     const { pr, studentId } = location.state;
     const [teamData, setTeamData] = useState({});
@@ -109,7 +109,6 @@ const TakePR = ({ userId, userType, token, loggedIn, location }) => {
                 };
                 
                 let result = await axios(options);
-                console.log(result);
                 setTeamMembers(result.data.team_members);
             }
             getTeamMembers()
@@ -131,9 +130,7 @@ const TakePR = ({ userId, userType, token, loggedIn, location }) => {
                         'user_id': userId
                     }
                 };
-                console.log(teamMembers);
                 const result = await axios(options);
-                console.log(result);
                 const survey = result.data.survey;
 
                 let arr = [];
@@ -182,18 +179,14 @@ const TakePR = ({ userId, userType, token, loggedIn, location }) => {
             data: body
         };
 
-        console.log(options);
         let response = await axios(options);
-        console.log(response);
         let responseOK = response && response.status === 200 && response.statusText === 'OK';
         let success = true;
         if(responseOK) {
             success = success && true;
-            console.log('form Submitted!');
         }
         else {
             success = success && false;
-            console.log('something went wrong');
         }
 
         setSubmitted(success);

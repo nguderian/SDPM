@@ -7,6 +7,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session');
 const lti = require('./canvas/lti');
+const cron = require("node-cron");
+const fs = require("fs");
+const alerts = require('./controllers/alerts');
 
 const app = express();
 
@@ -76,6 +79,11 @@ app.post('/launch_lti', lti.handleLaunch);
 var server = http.createServer(app);
 app.set('port', nconf.get('http:port'));
 server.listen(nconf.get("http:port"));
+
+cron.schedule("*/45 * * * * *", function() {
+  alerts.sendEmailAlerts();
+  console.log("running a task every minute");
+});
 
 server.on('listening', onListening);
 

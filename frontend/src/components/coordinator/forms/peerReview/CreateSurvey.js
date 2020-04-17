@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const CreateSurvey = ({ userId, userType, token, loggedIn }) => {
+const CreateSurvey = ({ userId, token }) => {
     const classes = useStyles();
     const [allSurveys, setAllSurveys] = useState([]);
 
@@ -67,7 +67,6 @@ const CreateSurvey = ({ userId, userType, token, loggedIn }) => {
             };
 
             let result = await axios(options);
-            console.log(result);
             setAllSurveys(result.data);
         }
         getAllSurveys();

@@ -37,11 +37,11 @@ class register {
             }
         }
         else if(type == 'student'){
-            const { degree_id, sd1_term, sd1_year, sd2_term, sd2_year } = req.body;
+            const { class_id } = req.body;
             
             try{
-                await sequelize.query('CALL insert_student(?,?,?,?,?,?,?)',
-                {replacements : [degree_id, sd1_term, sd1_year, sd2_term, sd2_year, null, new_user_id],
+                await sequelize.query('CALL insert_student(?,?)',
+                {replacements : [ new_user_id, class_id ],
                 type : sequelize.QueryTypes.CALL});
             }catch(error){
                 res.send({ status: "Insert error" });

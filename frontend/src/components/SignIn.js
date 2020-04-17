@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const SignIn = ({ userId, userType, token, loggedIn }) => {
+const SignIn = ({ loggedIn }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const history = useHistory();
@@ -108,7 +108,7 @@ const SignIn = ({ userId, userType, token, loggedIn }) => {
                     >
                         Sign In
                     </Button>
-                    <Grid container='spacing'>
+                    <Grid container>
                         <Grid item xs>
                             <Link variant='body2'>
                                 Forgot Password?

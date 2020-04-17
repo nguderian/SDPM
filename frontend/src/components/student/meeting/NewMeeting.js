@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const NewMeeting = ({ userId, userType, token, loggedIn, location }) => {
+const NewMeeting = ({ userId, userType, token, location }) => {
     let formattedStart = new Date();
     formattedStart = formatDate(formattedStart);
     let formattedEnd = new Date();
@@ -120,17 +120,13 @@ const NewMeeting = ({ userId, userType, token, loggedIn, location }) => {
             data: body
         }
 
-        console.log(options);
         let response = await axios(options);
-        console.log(response);
         let responseOK = response && response.status === 200 && response.statusText === 'OK';
         let success = true;
         if(responseOK) {
-            console.log('meeting made');
             success = success && true;
         }
         else {
-            console.log('something went wrong');
             success = success && true;
         }
 

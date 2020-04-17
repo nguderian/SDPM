@@ -54,15 +54,15 @@ exports.handleLaunch = (req, res, next) => {
           req.session.context_id = provider.context_id;
           req.session.coursename = provider.context_title;
           req.session.username = provider.display_name;
-          console.log(req.session.username);
           console.log("UserID: " + req.session.userId);
           console.log("Email: " + req.session.email);
+          console.log("Course: " + req.session.coursename);
           if(req.session.isTutor){  //to implement: teacher has different view from student
             console.log("This is a teacher");
-            return res.redirect(301, 'http://localhost:3000/login');
+            return res.redirect(301, 'http://localhost:3000');
           }else{
             console.log("This is a student");
-            return res.redirect(301, 'http://localhost:3000/login');
+            return res.redirect(301, 'http://localhost:3000');
           };
         });
       } else {

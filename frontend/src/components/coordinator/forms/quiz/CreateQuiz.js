@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
   
-const CreateQuiz = ({ userId, userType, token, loggedIn }) => {
+const CreateQuiz = ({ userId, token }) => {
     const classes = useStyles();
     const [allQuizzes, setAllQuizzes] = useState([]);
 
@@ -72,7 +72,6 @@ const CreateQuiz = ({ userId, userType, token, loggedIn }) => {
             };
 
             let result = await axios(options);
-            console.log(result);
             setAllQuizzes(result.data);
         }
         getAllQuizzes();
