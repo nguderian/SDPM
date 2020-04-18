@@ -78,7 +78,9 @@ const ViewMeetings = ({ userId, token }) => {
     const [inactiveStudentId, setInactiveStudentId] = useState('');
     const [meetingToShow, setMeetingToShow] = useState({
         showMeeting: false,
-        meetingAtIndex: {}
+        meetingAtIndex: {},
+        upcoming: false,
+        completed: false
     });
 
     useEffect(() => {
@@ -173,10 +175,10 @@ const ViewMeetings = ({ userId, token }) => {
 
     const handleMeetingCardClick = (index, type) => {
         if(type === 'upcoming') {
-            setMeetingToShow({ showMeeting: true, meetingAtIndex: upcomingMeetings[index] });
+            setMeetingToShow({ showMeeting: true, meetingAtIndex: upcomingMeetings[index], upcoming: true, completed: false });
         }
         else if(type === 'completed') {
-            setMeetingToShow({ showMeeting: true, meetingAtIndex: completedMeetings[index] });
+            setMeetingToShow({ showMeeting: true, meetingAtIndex: completedMeetings[index], upcoming: false, completed: true });
         }
     };
 
@@ -236,7 +238,6 @@ const ViewMeetings = ({ userId, token }) => {
                     }
                     {upcomingMeetings.map((meeting, index) => 
                         <Card variant='outlined' key={index} className={classes.meetingCard}>
-                            {/* <CardActionArea component={Link} to={{ pathname: `/student/Meeting/${meeting.title}`, state: { formId: meeting.form_id, instanceId: meeting.instance_id, studentId: studentId }}}> */}
                             <CardActionArea onClick={() => handleMeetingCardClick(index, 'upcoming')}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
@@ -263,7 +264,7 @@ const ViewMeetings = ({ userId, token }) => {
                     }
                     {completedMeetings.map((meeting, index) => 
                         <Card variant='outlined' key={index} className={classes.meetingCard}>
-                            <CardActionArea>
+                            <CardActionArea onClick={() => handleMeetingCardClick(index, 'completed')}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {meeting.title}
@@ -281,12 +282,13 @@ const ViewMeetings = ({ userId, token }) => {
                 onClose={() => setMeetingToShow({ showMeeting: false, meetingAtIndex: {} })}
                 formTitle={meetingToShow['meetingAtIndex'].title}
                 formDescription={meetingToShow['meetingAtIndex'].description}
-                buttonText='Take Attendance'
+                buttonText={meetingToShow.upcoming ? 'Take Attendance' : 'View this submission'}
                 routeForward={{
-                    pathname: `/student/Meeting/${meetingToShow['meetingAtIndex'].title}`,
+                    pathname: meetingToShow.upcoming ? `/student/Meeting/${meetingToShow['meetingAtIndex'].title}` : `/viewSubmission/Meeting/${meetingToShow.meetingAtIndex.title}`,
                     state: {
                         meeting: meetingToShow['meetingAtIndex'],
-                        studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId
+                        studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId,
+                        instanceId: meetingToShow.meetingAtIndex.instance_id
                     }
                 }}
             />}
