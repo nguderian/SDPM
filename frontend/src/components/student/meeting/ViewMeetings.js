@@ -279,7 +279,7 @@ const ViewMeetings = ({ userId, token }) => {
 
             {meetingToShow['showMeeting'] && <CompleteForm 
                 open={meetingToShow['showMeeting']}
-                onClose={() => setMeetingToShow({ showMeeting: false, meetingAtIndex: {} })}
+                onClose={() => setMeetingToShow({ showMeeting: false, meetingAtIndex: {}, upcoming: false, completed: false })}
                 formTitle={meetingToShow['meetingAtIndex'].title}
                 formDescription={meetingToShow['meetingAtIndex'].description}
                 buttonText={meetingToShow.upcoming ? 'Take Attendance' : 'View this submission'}

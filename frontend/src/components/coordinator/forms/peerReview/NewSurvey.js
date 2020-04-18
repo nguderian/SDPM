@@ -97,7 +97,7 @@ const NewSurvey = ({ userId, userType, token, location }) => {
     const [surveyInfo, setSurveyInfo] = useState({
         title: '',
         description: '', 
-        loadingInfo: true
+        loadingInfo: formId === '' ? false : true
     });
     const [classList, setClassList] = useState([]);
     const [selectedClass, setSelectedClass] = useState('');

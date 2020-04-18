@@ -75,7 +75,7 @@ const CreateSurvey = ({ userId, token }) => {
     
     return (
         <div className={classes.root}>
-            <Button className={classes.createButton} variant="contained" color="primary" component={Link} to={{ pathname: '/coordinator/Survey/New', state: {} }}>
+            <Button className={classes.createButton} variant="contained" color="primary" component={Link} to={{ pathname: '/coordinator/Survey/New', state: { formId: '' } }}>
                 Create New
             </Button>
 

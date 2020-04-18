@@ -263,7 +263,7 @@ const ViewQuizzes = ({ userId, token }) => {
 
             {quizToShow.showQuiz && <CompleteForm 
                 open={quizToShow.showQuiz}
-                onClose={() => setQuizToShow({ showQuiz: false, quizAtIndex: '' })}
+                onClose={() => setQuizToShow({ showQuiz: false, quizAtIndex: '', upcoming: false, completed: false })}
                 formTitle={quizToShow.quizAtIndex.title}
                 formDescription={quizToShow.quizAtIndex.description}
                 buttonText={quizToShow.upcoming ? 'Take this quiz' : 'View this submission'}
