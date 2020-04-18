@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button'; 
 import Slider from '@material-ui/core/Slider';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
@@ -22,7 +23,7 @@ const useStyles = makeStyles(theme => ({
         marginBottom: theme.spacing(2),
         marginTop: theme.spacing(2)
     },
-    submitButton: {
+    goBack: {
         textAlign: 'center',
         marginTop: theme.spacing(2)
     },
@@ -35,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     prCards: {
         justifyContent: 'center',
         alignItems: 'center',
-        width: '50%',
+        width: '40%',
         margin: '0 auto',
         border: '1px solid gray',
         borderRadius: '5px',
@@ -56,10 +57,14 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-
 const SubmittedSurvey = ({ userId, token, location }) => {
     const classes = useStyles();
     const { instanceId } = location.state;
+    const [pr, setPr] = useState({
+        title: '',
+        description: '',
+        questions: []
+    });
 
     useEffect(() => {
         async function getInstance() {
@@ -75,18 +80,76 @@ const SubmittedSurvey = ({ userId, token, location }) => {
                     'instance_id': instanceId
                 }
             };
-    
+           
             const result = await axios(options);
-            console.log(result);
+            
+            const survey = result.data;
+            setPr({
+                title: survey.title,
+                description: survey.description,
+                questions: survey.questions
+            });
         }
         getInstance();
-    }, [token, instanceId]);
+    }, [token, instanceId, userId]);
 
     return (
+        pr.questions.length === 0 ? 
+        <div className={classes.progress}>
+            <CircularProgress />
+        </div> :
         <Fragment>
-            <h1>Hi</h1>
+            <Typography variant="h4" className={classes.pageTitle}>{pr.title}</Typography>
+
+            <form className={classes.surveyDetail} noValidate autoComplete='off'>
+                <TextField 
+                    disabled
+                    variant='outlined'
+                    value={pr.description}
+                    multiline={true}
+                    fullWidth
+                />
+            </form>
+
+            <div className={classes.prCards}>
+                {pr.questions[0].answers.map((answer, index) => 
+                    <Card variant='outlined' key={index} className={classes.prCard}>
+                        <CardContent>
+                            <Typography>{answer.first_name} {answer.last_name}</Typography>
+                            <Typography>{pr.questions[0].question_text}</Typography>
+                            <Slider 
+                                className={classes.slider}
+                                defaultValue={parseInt(answer.answer_text)}
+                                valueLabelDisplay='on'
+                                step={1}
+                                marks
+                                min={1}
+                                max={10}
+                                disabled
+                            />
+                        </CardContent>
+                        
+                    </Card>
+                )}
+            </div>
+
+            <div className={classes.goBack}>
+                <Button
+                    variant='contained'
+                    color='primary'
+                    component={Link}
+                    to='/student/PeerReview/ViewPeerReviews'
+                >
+                    Go to peer reviews
+                </Button>
+            </div>
         </Fragment>
     );
+}
+
+SubmittedSurvey.propTypes = {
+    token: PropTypes.string.isRequired,
+    location: PropTypes.object.isRequired
 }
 
 export default SubmittedSurvey;
