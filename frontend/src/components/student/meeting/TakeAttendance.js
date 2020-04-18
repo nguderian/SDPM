@@ -197,7 +197,7 @@ const TakeAttendance = ({ token, location }) => {
                 {attendance.teamMembers.map((teamMember, index) => 
                     <Card variant='outlined' key={index} className={classes.meetingCard}>
                         <CardContent>
-                            <Typography>{`${teamMember.first_name}  ${teamMember.last_name}`}</Typography>
+                            <Typography>{teamMember.first_name} {teamMember.last_name}</Typography>
 
                             <FormControlLabel className={classes.checkBox}
                                 control={
