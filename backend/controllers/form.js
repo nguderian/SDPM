@@ -504,7 +504,7 @@ class form {
                         { replacements: [instance_id, resultForm.questions[i].question_id], type: sequelize.QueryTypes.CALL });
                     console.log(result);
                     let name = await sequelize.query('CALL get_name_student_id(?)',
-                    { replacements: [teamInfo[j]['student_id']], type: sequelize.QueryTypes.CALL });
+                        { replacements: [teamInfo[j]['student_id']], type: sequelize.QueryTypes.CALL });
                     resultForm.questions[i].answers.push({
                         "student_id": teamInfo[j]['student_id'],
                         "first_name": name[0]['first_name'],
@@ -843,7 +843,7 @@ class form {
 
             const { results } = req.body;
 
-            for (let i = 0; i < results.length; i++) {
+            for (var i in results) {
                 try {
                     // Submit the survey instance.
                     let callSurvey = await sequelize.query(`CALL submit_survey(?,?,?,?)`,
@@ -858,22 +858,23 @@ class form {
                     next;
                 }
             }
+            
+            
+                try {
+                    let result = await sequelize.query(
+                        'Update form_instances SET is_complete = 1 where instance_id =?',
+                        { replacements: [instance_id], type: sequelize.QueryTypes.Update })
 
-            try {
-                let result = await sequelize.query(
-                    'Update form_instances SET is_complete = 1 where instance_id =?',
-                    { replacements: [instance_id], type: sequelize.QueryTypes.Update })
-
-            } catch (error) {
-                console.log(error);
-            }
-            try {
-                triggerCheck(student_id, instance_id, form_id, results);
-            } catch (error) {
-                console.log(error);
-            }
-            //res.send(status);
-
+                } catch (error) {
+                    console.log(error);
+                }
+                try {
+                    triggerCheck(student_id, instance_id, form_id, results);
+                } catch (error) {
+                    console.log(error);
+                }
+                //res.send(status);
+            
         }
 
         if (type === 'quiz') {
@@ -1206,7 +1207,7 @@ class form {
         try {
             result = await sequelize.query('CALL get_completed_meeting(?)',
                 { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
-                console.log(result);
+            console.log(result);
         } catch (error) {
             console.log(error);
         }
