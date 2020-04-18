@@ -368,7 +368,7 @@ class form {
             console.log(error);
             res.send({ status: "Could not get user type" });
         }
-        
+
         // getting form_id (formId)
         try {
             let result = await sequelize.query('CALL get_form_id(?)',
@@ -462,31 +462,57 @@ class form {
 
                 }
 
-                try {
-                    let result = await sequelize.query('CALL get_student_team_instance(?)',
-                    { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
-                    let team_id = result[0]['team_id'];
-                    let student_id = result[0]['student_id'];
-                } catch (error) {
-                    console.log(error);
-                    res.send({ status: "Could not get team members" });
-                }
 
-                let teamInfo;
 
-                try {
-                    let result = await sequelize.query('CALL get_team_names(?)',
-                    { replacements: [team_id], type: sequelize.QueryTypes.CALL });
-                    teamInfo = result;
-                } catch (error) {
-                    console.log(error);
-                    res.send({ status: "Could not get team members" });
-                }
 
 
                 /*resultForm.questions[current_question_control].answers.push({
                     "key_text": returnSurvey[i].key_text
                 });*/
+            }
+
+            let team_id, student_id;
+            try {
+                let result = await sequelize.query('CALL get_student_team_instance(?)',
+                    { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
+                team_id = result[0]['team_id'];
+                student_id = result[0]['student_id'];
+            } catch (error) {
+                console.log(error);
+                res.send({ status: "Could not get team members" });
+            }
+            console.log(team_id);
+            console.log(student_id);
+
+            let teamInfo;
+
+            try {
+                let result = await sequelize.query('CALL get_team_names(?)',
+                    { replacements: [team_id], type: sequelize.QueryTypes.CALL });
+                teamInfo = result;
+            } catch (error) {
+                console.log(error);
+                res.send({ status: "Could not get team members" });
+            }
+            console.log(teamInfo);
+            //each question
+            for (var i in resultForm.questions) {
+                resultForm.questions[i].answers = new Array();
+                for (var j in teamInfo) {
+
+                    let result = await sequelize.query('CALL get_survey_answer(?,?)',
+                        { replacements: [instance_id, resultForm.questions[i].question_id], type: sequelize.QueryTypes.CALL });
+                    console.log(result);
+                    let name = await sequelize.query('CALL get_name_student_id(?)',
+                    { replacements: [teamInfo[j]['student_id']], type: sequelize.QueryTypes.CALL });
+                    resultForm.questions[i].answers.push({
+                        "student_id": teamInfo[j]['student_id'],
+                        "first_name": name[0]['first_name'],
+                        "last_name": name[0]['last_name'],
+                        "answer_text": result[j]['answer_text']
+                    })
+                }
+
             }
             // res.send({ survey: resultForm });
         }
@@ -508,7 +534,7 @@ class form {
 
             try {
                 let formGrade = await sequelize.query('CALL get_instance_grade(?)',
-                { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
+                    { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
                 resultForm.grade = formGrade[0]['grade'];
             } catch (error) {
                 console.log(error);
@@ -579,19 +605,23 @@ class form {
                 }
             }
 
-        }
-        for (var i in resultForm.questions) {
-            try {
-                let formAnswer = await sequelize.query('CALL get_form_answer_text(?,?)',
+            for (var i in resultForm.questions) {
+                try {
+                    let formAnswer = await sequelize.query('CALL get_form_answer_text(?,?)',
                         { replacements: [instance_id, resultForm.questions[i].question_id], type: sequelize.QueryTypes.CALL });
-                resultForm.questions[i].answer_text = formAnswer[0]['answer_text'];
-            } catch (error) {
-                console.log(error);
-                res.send({ status: "Could not get form answers" });
+                    resultForm.questions[i].answer_text = formAnswer[0]['answer_text'];
+                } catch (error) {
+                    console.log(error);
+                    res.send({ status: "Could not get form answers" });
+                }
             }
+
         }
-        
-        
+        else if (formType == 'meeting') {
+
+        }
+
+
         res.send(resultForm);
     }
 
@@ -833,7 +863,7 @@ class form {
                 let result = await sequelize.query(
                     'Update form_instances SET is_complete = 1 where instance_id =?',
                     { replacements: [instance_id], type: sequelize.QueryTypes.Update })
-        
+
             } catch (error) {
                 console.log(error);
             }
@@ -1176,12 +1206,28 @@ class form {
         try {
             result = await sequelize.query('CALL get_completed_meeting(?)',
                 { replacements: [instance_id], type: sequelize.QueryTypes.CALL });
+                console.log(result);
         } catch (error) {
             console.log(error);
         }
 
+        var resultMeeting = {};
+        resultMeeting.title = result[0]['title'];
+        resultMeeting.description = result[0]['description'];
+        resultMeeting.start_date = result[0]['start_date'];
+        resultMeeting.end_date = result[0]['end_date'];
+        resultMeeting.users = new Array();
+        for (var i in result) {
+            resultMeeting.users.push({
+                "first_name": result[i]['first_name'],
+                "last_name": result[i]['last_name'],
+                "did_attend": result[i]['did_attend'],
+                "reason": result[i]['reason']
+            })
+        }
+
         // return all info for attendance.
-        res.send(result);
+        res.send(resultMeeting);
 
     }
 
@@ -1421,7 +1467,7 @@ async function triggerCheck(student_id, instance_id, form_id, results) {
         for (let i = 0; i < results.length; i++) {
             //Get question threshold
             let question = await sequelize.query('CALL get_form_question(?)', { replacements: [results[i].question_id], type: sequelize.QueryTypes.CALL });
-            
+
             if (question[0].question_threshold != null && question[0].question_threshold > results[i].answer_text) {
                 //Insert into alerts array
                 let newAlert = await sequelize.query(`CALL insert_alert_history(?,?)`, {
