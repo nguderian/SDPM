@@ -141,11 +141,11 @@ const ViewPRs = ({ userId, token }) => {
                     },
                     data: {
                         'student_id': activeStudentId,
-                        'type': 'meeting',
+                        'type': 'survey',
                         'is_complete': 1
                     }
                 };
-        
+                
                 let result = await axios(options);
                 setCompletedPrs(result.data);
             }
