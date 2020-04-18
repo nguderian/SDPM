@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     prCards: {
         justifyContent: 'center',
         alignItems: 'center',
-        width: '50%',
+        width: '40%',
         margin: '0 auto',
         border: '1px solid gray',
         borderRadius: '5px',
@@ -144,7 +144,6 @@ const TakePR = ({ userId, token, location }) => {
                     }
                     arr.push(obj);
                 });
-
                 setQuizAnswers(arr);
             }
             getQuiz();
@@ -153,7 +152,7 @@ const TakePR = ({ userId, token, location }) => {
     }, [teamMembers, token, userId, pr]);
 
     const handleParticipationGrade = (index, event, value) => {
-        quizAnswers[index].answer_text = value;
+        quizAnswers[index].answer_text = value.toString();
         setQuizAnswers({ ...quizAnswers })
     };
 
@@ -167,7 +166,6 @@ const TakePR = ({ userId, token, location }) => {
             'instance_id': pr.instance_id,
             'student_id': studentId,
             'results': quizAnswers, 
-            'user_id': userId
         };
         
         const options = {

@@ -67,7 +67,9 @@ const ViewPRs = ({ userId, token }) => {
     const [inactiveStudentId, setInactiveStudentId] = useState('');
     const [prToShow, setPrToShow] = useState({
         showPr: false,
-        prAtIndex: {}
+        prAtIndex: {}, 
+        upcoming: false,
+        completed: false,
     });
 
     useEffect(() => {
@@ -139,11 +141,11 @@ const ViewPRs = ({ userId, token }) => {
                     },
                     data: {
                         'student_id': activeStudentId,
-                        'type': 'meeting',
+                        'type': 'survey',
                         'is_complete': 1
                     }
                 };
-        
+                
                 let result = await axios(options);
                 setCompletedPrs(result.data);
             }
@@ -162,10 +164,10 @@ const ViewPRs = ({ userId, token }) => {
 
     const handlePrCardClick = (index, type) => {
         if(type === 'upcoming') {
-            setPrToShow({ showPr: true, prAtIndex: upcomingPrs[index] });
+            setPrToShow({ showPr: true, prAtIndex: upcomingPrs[index], upcoming: true, completed: false });
         }
         else if(type === 'completed') {
-            setPrToShow({ showPr: true, prAtIndex: completedPrs[index] });
+            setPrToShow({ showPr: true, prAtIndex: completedPrs[index], upcoming: false, completed: true });
         }
     };
 
@@ -242,7 +244,7 @@ const ViewPRs = ({ userId, token }) => {
                     }
                     {completedPrs.map((pr, index) => 
                         <Card variant='outlined' key={index} className={classes.prCard}>
-                            <CardActionArea>
+                            <CardActionArea onClick={() => handlePrCardClick(index, 'completed')}>
                                 <CardContent>
                                     <Typography color='textSecondary' gutterBottom>
                                         {pr.title}
@@ -258,15 +260,16 @@ const ViewPRs = ({ userId, token }) => {
             
             {prToShow.showPr && <CompleteForm 
                 open={prToShow.showPr}
-                onClose={() => setPrToShow({ showPr: false, prAtIndex: {} })}
+                onClose={() => setPrToShow({ showPr: false, prAtIndex: {}, upcoming: false, completed: false })}
                 formTitle={prToShow.prAtIndex.title}
                 formDescription={prToShow.prAtIndex.description}
-                buttonText='Complete Peer Review'
+                buttonText={prToShow.upcoming ? 'Complete Peer Review' : 'View this submission'}
                 routeForward={{
-                    pathname: `/student/PeerReview/${prToShow.prAtIndex.title}`,
+                    pathname: prToShow.upcoming ? `/student/PeerReview/${prToShow.prAtIndex.title}` : `/viewSubmission/PeerReview/${prToShow.prAtIndex.title}`,
                     state: {
                         pr: prToShow.prAtIndex,
-                        studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId
+                        studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId,
+                        instanceId: prToShow.prAtIndex.instance_id
                     }
                 }}
             />}

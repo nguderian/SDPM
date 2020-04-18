@@ -182,4 +182,9 @@ const SubmittedMeeting = ({ token, location }) => {
     );
 }
 
+SubmittedMeeting.propTypes = {
+    token: PropTypes.string.isRequired,
+    location: PropTypes.object.isRequired
+}
+
 export default SubmittedMeeting;
