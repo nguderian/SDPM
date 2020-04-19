@@ -28,8 +28,8 @@ class register {
         // Based on user type, insert into respected table.
         if(type == 'coordinator'){
             try{
-                await sequelize.query('CALL insert_coordinator(?,?)',
-                {replacements : [1, new_user_id],
+                await sequelize.query('CALL insert_coordinator(?)',
+                {replacements : [ new_user_id],
                 type : sequelize.QueryTypes.CALL});
             }catch(error){
                 res.send({ status: "Insert error" });
