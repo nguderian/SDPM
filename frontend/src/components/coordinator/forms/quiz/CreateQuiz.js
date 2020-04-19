@@ -98,7 +98,7 @@ const CreateQuiz = ({ userId, token }) => {
                         <CircularProgress />
                     </div> :
                     <List component='nav'>
-                        {allSurveys.length === 0 && 
+                        {allQuizzes.length === 0 && 
                             <Card variant='elevation' className={classes.templateContainer}>
                                 <CardContent>
                                     <Typography>No previous quizzes</Typography>

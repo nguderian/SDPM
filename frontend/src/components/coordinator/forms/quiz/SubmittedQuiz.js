@@ -114,7 +114,7 @@ const SubmittedQuiz = ({ userId, userType, token, location }) => {
             setIsLoading(false);
         }
         getSubmission();
-        stopLoading():
+        stopLoading();
     }, [token, instanceId, userId]);
 
     return (
