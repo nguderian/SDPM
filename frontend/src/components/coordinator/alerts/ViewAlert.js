@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
@@ -8,6 +8,8 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
     pageTitle: {
@@ -41,10 +43,38 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const ViewAlert = ({ location }) => {
+const ViewAlert = ({ token, location }) => {
     const classes = useStyles();
     const { alert } = location.state;
-    console.log(location.state);
+    const history = useHistory();
+    
+    async function markAlertViewed() {
+        const options = {
+            method: 'POST',
+            url: 'http://localhost:3001/api/setAlertViewed',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                alert_id: alert.alert_id
+            }
+        }
+
+        let success = true;
+        let response = await axios(options);
+        
+        let responseOK = response && response.status === 200 && response.statusText === 'OK';
+        if(responseOK) {
+            success = success && true;
+        }
+        else {
+            success = success && false;
+        }
+
+        history.push('/Home');
+    }
+
     return (
         <Fragment>
             <Typography className={classes.pageTitle} variant='h4'>
@@ -92,19 +122,28 @@ const ViewAlert = ({ location }) => {
                     color='primary'
                     component={Link}
                     to={{
-                        pathname: `/viewSubmission/Quiz/${alert.title}`,
+                        pathname: alert.type === 'quiz' ? `/viewSubmission/Quiz/${alert.title}` : `/viewSubmission/PeerReview/${alert.title}`,
                         state: { instanceId: alert.instance_id }    
                     }}
                 >
                     Go to {alert.type}
                 </Button>
             </div>
-            
+            <div className={classes.button}>
+                <Button 
+                    variant='outlined'
+                    color='secondary'
+                    onClick={markAlertViewed}
+                >
+                    Mark Alert Viewed
+                </Button>
+            </div>
         </Fragment>
     )
 }
 
 ViewAlert.propTypes = {
+    token: PropTypes.string.isRequired,
     location: PropTypes.object.isRequired
 }
 

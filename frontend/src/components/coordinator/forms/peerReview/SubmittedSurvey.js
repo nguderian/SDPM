@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const SubmittedSurvey = ({ userId, token, location }) => {
+const SubmittedSurvey = ({ userId, userType, token, location }) => {
     const classes = useStyles();
     const { instanceId } = location.state;
     const [pr, setPr] = useState({
@@ -83,18 +83,19 @@ const SubmittedSurvey = ({ userId, token, location }) => {
             };
            
             const result = await axios(options);
-            
+               
             const survey = result.data;
             setPr({
                 title: survey.title,
                 description: survey.description,
-                questions: survey.questions
+                questions: survey.questions[0].answers
             });
         }
         async function stopLoading() {
             setIsLoading(false);
         }
         getInstance();
+        stopLoading();
     }, [token, instanceId, userId]);
 
     return (
@@ -114,9 +115,8 @@ const SubmittedSurvey = ({ userId, token, location }) => {
                     fullWidth
                 />
             </form>
-
             <div className={classes.prCards}>
-                {pr.questions[0].answers.map((answer, index) => 
+                {pr.questions.map((answer, index) => 
                     <Card variant='outlined' key={index} className={classes.prCard}>
                         <CardContent>
                             <Typography>{answer.first_name} {answer.last_name}</Typography>
@@ -142,7 +142,7 @@ const SubmittedSurvey = ({ userId, token, location }) => {
                     variant='contained'
                     color='primary'
                     component={Link}
-                    to='/student/PeerReview/ViewPeerReviews'
+                    to={userType === 'student' ? '/student/PeerReview/ViewPeerReviews' : '/Home'}
                 >
                     Go to peer reviews
                 </Button>

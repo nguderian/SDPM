@@ -35,7 +35,7 @@ const TakeFreeResponse = ({ question, handleChange, index, viewingSubmission, us
                 label='Enter Answer'
                 onChange={handleAnswerChange}
                 disabled={viewingSubmission}
-                value={viewingSubmission ? answer : ''}
+                value={viewingSubmission ? answer : null}
             />
         </form>
     )
