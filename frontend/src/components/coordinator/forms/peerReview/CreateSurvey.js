@@ -93,6 +93,13 @@ const CreateSurvey = ({ userId, token }) => {
                         <CircularProgress />
                     </div> :
                     <List component='nav'>
+                        {allSurveys.length === 0 && 
+                            <Card variant='elevation' className={classes.templateContainer}>
+                                <CardContent>
+                                    <Typography>No previous peer reviews</Typography>
+                                </CardContent>
+                            </Card>
+                        }
                         {allSurveys.map((survey, index) => 
                             <Card variant='outlined' key={index} className={classes.templateContainer}>
                                 <CardActionArea component={Link} to={{ pathname: `/coordinator/Survey/${survey.title}`, state: { formId: survey.form_id} }}>

@@ -98,6 +98,13 @@ const CreateQuiz = ({ userId, token }) => {
                         <CircularProgress />
                     </div> :
                     <List component='nav'>
+                        {allSurveys.length === 0 && 
+                            <Card variant='elevation' className={classes.templateContainer}>
+                                <CardContent>
+                                    <Typography>No previous quizzes</Typography>
+                                </CardContent>
+                            </Card>
+                        }
                         {allQuizzes.map((quiz, index) =>
                             <Card variant='outlined' key={index} className={classes.templateContainer}>
                             <CardActionArea component={Link} to={{ pathname: `/coordinator/Quiz/${quiz.title}`, state: { formId: quiz.form_id }}}>
