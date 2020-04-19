@@ -857,6 +857,7 @@ class form {
                     status.status3 = "Failed";
                     next;
                 }
+                
             }
             
             
@@ -1465,7 +1466,7 @@ async function triggerCheck(student_id, instance_id, form_id, results) {
     //console.log(coordinator_user_id);
 
     if (type === 'survey') {
-        for (let i = 0; i < results.length; i++) {
+        for (var i in results) {
             //Get question threshold
             let question = await sequelize.query('CALL get_form_question(?)', { replacements: [results[i].question_id], type: sequelize.QueryTypes.CALL });
 
