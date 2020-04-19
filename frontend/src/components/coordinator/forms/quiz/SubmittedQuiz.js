@@ -249,9 +249,9 @@ const SubmittedQuiz = ({ userId, userType, token, location }) => {
                     variant='contained'
                     color='primary'
                     component={Link}
-                    to='/student/Quiz/ViewQuizzes'
+                    to={userType === 'student' ? '/student/Quiz/ViewQuizzes' : '/Home'}
                 >
-                    Go to forms
+                    {userType === 'student' ? 'Go to quizzes' : 'Go Home'}
                 </Button>
             </div>
         </Fragment>   

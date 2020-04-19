@@ -35,7 +35,7 @@ const TakeFillBlank = ({ question, handleChange, index, viewingSubmission, userT
                 label='Enter Answer'
                 onChange={handleAnswerChange}
                 disabled={viewingSubmission}
-                value={viewingSubmission ? answer : ''}
+                value={viewingSubmission ? answer : null}
             />
         </form>
     )
