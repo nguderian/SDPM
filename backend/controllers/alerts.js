@@ -95,15 +95,17 @@ class alerts {
         } catch (error) {
             console.log(error);
         }
+        console.log(userList);
 
         for (var i in userList) {
             let alertList;
             try {
-                alertList = await sequelize.query('CALL get_all_unemailed_alerts(?)',
-                    { replacements: [userList[i].user_id], type: sequelize.QueryTypes.CALL });
+                alertList = await sequelize.query('CALL get_all_unemailed_alerts(?,?)',
+                    { replacements: [userList[i].user_id, 0], type: sequelize.QueryTypes.CALL });
             } catch (error) {
                 console.log(error);
             }
+            console.log(alertList);
             
             if (alertList != '') {
                 let message = 'Alerts for Senior Design:\n\n';
@@ -113,7 +115,8 @@ class alerts {
                     message = message + ("Assignment: " + alertList[j].title + "\n");
                     message = message + ("Grade: " + alertList[j].grade + "\n\n");
                 }
-                let subjectLine = "View Alerts for Senior Design Students";
+                console.log(message);
+                let subjectLine = "View Alerts for Senior Design Students EMMANUEL";
                 mailer.sendEmail(userList[i].email, subjectLine, message);
 
                 for (var j in alertList) {
