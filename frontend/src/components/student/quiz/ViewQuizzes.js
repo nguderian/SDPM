@@ -222,7 +222,7 @@ const ViewQuizzes = ({ userId, token }) => {
             
             <Typography className={classes.detailText} variant='h5'>Upcoming</Typography>
             <div className={classes.quizList}>
-                {isLoading ? 
+                {activeStudentId && isLoading ? 
                     <div className={classes.progress}>
                         <CircularProgress />
                     </div> :
@@ -252,7 +252,7 @@ const ViewQuizzes = ({ userId, token }) => {
             
             <Typography className={classes.detailText} variant='h5'>Completed</Typography>
             <div className={classes.quizList}>
-                {isLoading ? 
+                {activeStudentId && isLoading ? 
                     <div className={classes.progress}>
                         <CircularProgress />
                     </div> :

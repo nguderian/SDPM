@@ -220,7 +220,7 @@ const ViewPRs = ({ userId, token }) => {
 
             <Typography className={classes.detailText} variant='h5'>Upcoming</Typography>
             <div className={classes.prList}>
-                {isLoading ? 
+                {activeStudentId && isLoading ? 
                     <div className={classes.progress}>
                         <CircularProgress />
                     </div> :
@@ -250,7 +250,7 @@ const ViewPRs = ({ userId, token }) => {
             
             <Typography className={classes.detailText} variant='h5'>Completed</Typography>
             <div className={classes.prList}>
-                {isLoading ? 
+                {activeStudentId && isLoading ? 
                     <div className={classes.progress}>
                         <CircularProgress />
                     </div> :
