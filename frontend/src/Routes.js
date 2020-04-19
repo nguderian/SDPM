@@ -19,6 +19,8 @@ import CreateSurveyContainer from './components/containers/coordinator/forms/pee
 import NewSurveyContainer from './components/containers/coordinator/forms/peerReview/NewSurveyCJontainer';
 import ViewAlertContainer from './components/containers/coordinator/alerts/ViewAlertContainer';
 import SubmittedQuizContainer from './components/containers/coordinator/forms/quiz/SubmittedQuizContainer';
+import SubmittedMeetingContainer from './components/containers/student/meeting/SubmittedMeetingContainer';
+import SubmittedSurveyContainer from './components/containers/coordinator/forms/peerReview/SubmittedSurveyContainer';
 import { createBrowserHistory } from 'history';
 
 const routes = () => {
@@ -43,7 +45,7 @@ const routes = () => {
                     
                     {/* survey creation */}
                     <Route path='/coordinator/Survey/CreateSurvey' exact component={CreateSurveyContainer} />
-                    <Route path='/coordinator/Survey/NewSurvey' exact component={NewSurveyContainer} />
+                    <Route path='/coordinator/Survey/:title' render={(props) => <NewSurveyContainer {...props} />} />
                     
                     {/* meetings */}
                     <Route path='/student/Meeting/ViewMeetings' exact component={ViewMeetingsContainer} />
@@ -56,6 +58,8 @@ const routes = () => {
 
                     {/* View submissions */}
                     <Route path='/viewSubmission/Quiz/:title' render={(props) => <SubmittedQuizContainer {...props} />} />
+                    <Route path='/viewSubmission/Meeting/:title' render={(props) => <SubmittedMeetingContainer {...props} />} />
+                    <Route path='/viewSubmission/PeerReview/:title' render={(props) => <SubmittedSurveyContainer {...props} /> } />
                     
                     {/* complete a peer review */}
                     <Route path='/student/PeerReview/ViewPeerReviews' exact component={ViewPRsContainer} />

@@ -12,6 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import TakeFreeResponse from '../../../student/quiz/questions/TakeFreeResponse';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     pageTitle: {
@@ -83,6 +84,7 @@ const SubmittedQuiz = ({ userId, userType, token, location }) => {
         grade: '',
         questions: []
     });
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getSubmission() {
@@ -108,11 +110,15 @@ const SubmittedQuiz = ({ userId, userType, token, location }) => {
                 questions: quiz.questions
             });
         }
-        getSubmission()
+        async function stopLoading() {
+            setIsLoading(false);
+        }
+        getSubmission();
+        stopLoading();
     }, [token, instanceId, userId]);
 
     return (
-        quiz.questions.length === 0 ? 
+        isLoading ? 
         <div className={classes.progress}>
             <CircularProgress />
         </div> :
@@ -250,6 +256,13 @@ const SubmittedQuiz = ({ userId, userType, token, location }) => {
             </div>
         </Fragment>   
     );
+}
+
+SubmittedQuiz.propTypes = {
+    userId: PropTypes.number.isRequired,
+    userType: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
+    location: PropTypes.object.isRequired
 }
 
 export default SubmittedQuiz;

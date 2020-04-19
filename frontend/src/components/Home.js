@@ -7,9 +7,9 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CompleteForm from './common/CompleteForm';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-
 
 const useStyles = makeStyles(theme => ({
     pageTitle: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     },
     formList: {
         flexGrow: 1,
-        height: '20%',
+        maxHeight: 700,
         overflowY: 'scroll',
         border: '1px solid gray',
         borderRadius: '5px',
@@ -53,6 +53,7 @@ const Home = ({ userId, userType, token }) => {
     const [upcomingMeetings, setUpcomingMeetings] = useState([]);
     const [upcomingPrs, setUpcomingPrs] = useState([]);
     const [upcomingAlerts, setUpcomingAlerts] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [quizToShow, setQuizToShow] = useState({
         showQuiz: false,
         quizAtIndex: ''
@@ -87,7 +88,11 @@ const Home = ({ userId, userType, token }) => {
                 let result = await axios(options);
                 setUpcomingAlerts(result.data);
             }
+            async function stopLoading() {
+                setIsLoading(false);
+            }
             getAlerts();
+            stopLoading();
         }
         else if(userType === 'student') {
             async function getStudentId() {
@@ -167,9 +172,13 @@ const Home = ({ userId, userType, token }) => {
                 let result = await axios(options);
                 setUpcomingPrs(result.data);
             }
+            async function stopLoading() {
+                setIsLoading(false);
+            }
             getUpcomingQuizzes();
             getUpcomingMeetings();
             getUpcomingPrs();
+            stopLoading();
         }
     }, [token, studentId]);
 
@@ -186,7 +195,7 @@ const Home = ({ userId, userType, token }) => {
     };
     
     return (
-        (userType === 'student' && upcomingPrs.length === 0) || (userType === 'coordinator' && upcomingAlerts.length === 0) ?
+        isLoading ?
         <div className={classes.progress}>
             <CircularProgress />
         </div> :
@@ -354,6 +363,12 @@ const Home = ({ userId, userType, token }) => {
             />}
         </Fragment>
     );
+}
+
+Home.propTypes = {
+    userId: PropTypes.number.isRequired,
+    userType: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired
 }
 
 export default Home

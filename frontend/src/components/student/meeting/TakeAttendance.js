@@ -9,6 +9,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button'; 
 import FormSubmitted from '../../common/FormSubmitted';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
@@ -74,6 +75,7 @@ const TakeAttendance = ({ token, location }) => {
         didAttend: []
     });
     const [submitted, setSubmitted] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getTeam() {
@@ -125,7 +127,11 @@ const TakeAttendance = ({ token, location }) => {
                 
                 setAttendance({ teamMembers: teamMembers, didAttend: arr });
             }
-            getTeamMembers()
+            async function stopLoading() {
+                setIsLoading(false);
+            }
+            getTeamMembers();
+            stopLoading();
         }
     }, [teamData, token]);
 
@@ -175,7 +181,7 @@ const TakeAttendance = ({ token, location }) => {
 
 
     return (
-        attendance.teamMembers.length === 0 ? 
+        isLoading ? 
         <div className={classes.progress}>
             <CircularProgress />
         </div> :
@@ -196,7 +202,7 @@ const TakeAttendance = ({ token, location }) => {
                 {attendance.teamMembers.map((teamMember, index) => 
                     <Card variant='outlined' key={index} className={classes.meetingCard}>
                         <CardContent>
-                            <Typography>{`${teamMember.first_name}  ${teamMember.last_name}`}</Typography>
+                            <Typography>{teamMember.first_name} {teamMember.last_name}</Typography>
 
                             <FormControlLabel className={classes.checkBox}
                                 control={
@@ -243,6 +249,11 @@ const TakeAttendance = ({ token, location }) => {
             />}
         </Fragment>
     )
+}
+
+TakeAttendance.propTypes = {
+    token: PropTypes.string.isRequired,
+    location: PropTypes.object.isRequired
 }
 
 export default TakeAttendance;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import { FormControl, TextField } from '@material-ui/core';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -28,6 +29,7 @@ const NewFillBlank = ({ fillBlank }) => {
                     label="Correct Answer"
                     placeholder="Enter Correct Answer"
                     variant="outlined"
+                    required
                     onChange={handleTextFieldChange}
                 />
             </FormControl>
@@ -35,5 +37,8 @@ const NewFillBlank = ({ fillBlank }) => {
     );
 }
 
+NewFillBlank.propTypes = {
+    fillBlank: PropTypes.func.isRequired
+}
 
 export default NewFillBlank;

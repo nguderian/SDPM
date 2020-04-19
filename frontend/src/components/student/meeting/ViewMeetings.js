@@ -12,9 +12,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CompleteForm from '../../common/CompleteForm';
+import PropTypes from 'prop-types';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -64,7 +65,13 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'row',
         marginBottom: theme.spacing(2)
-    }
+    },
+    progress: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '25%'
+    },
 }));
 
 const ViewMeetings = ({ userId, token }) => {
@@ -77,9 +84,12 @@ const ViewMeetings = ({ userId, token }) => {
     const [inactiveStudentId, setInactiveStudentId] = useState('');
     const [meetingToShow, setMeetingToShow] = useState({
         showMeeting: false,
-        meetingAtIndex: {}
+        meetingAtIndex: {},
+        upcoming: false,
+        completed: false
     });
-
+    const [isLoading, setIsLoading] = useState(true);
+    
     useEffect(() => {
         async function getActiveClasses() {
             const options = {
@@ -157,8 +167,12 @@ const ViewMeetings = ({ userId, token }) => {
                 let result = await axios(options);
                 setCompletedMeetings(result.data);
             }
+            async function stopLoading() {
+                setIsLoading(false);
+            }
             getUpcomingMeetings();
             getCompletedMeetings();
+            stopLoading();
         }
     }, [activeStudentId, token]);
 
@@ -172,10 +186,10 @@ const ViewMeetings = ({ userId, token }) => {
 
     const handleMeetingCardClick = (index, type) => {
         if(type === 'upcoming') {
-            setMeetingToShow({ showMeeting: true, meetingAtIndex: upcomingMeetings[index] });
+            setMeetingToShow({ showMeeting: true, meetingAtIndex: upcomingMeetings[index], upcoming: true, completed: false });
         }
         else if(type === 'completed') {
-            setMeetingToShow({ showMeeting: true, meetingAtIndex: completedMeetings[index] });
+            setMeetingToShow({ showMeeting: true, meetingAtIndex: completedMeetings[index], upcoming: false, completed: true });
         }
     };
 
@@ -225,72 +239,86 @@ const ViewMeetings = ({ userId, token }) => {
             
             <Typography className={classes.detailText} variant='h5'>Upcoming</Typography>
             <div className={classes.meetingList}>
-                <List component='nav'>
-                    {upcomingMeetings.length === 0 &&
-                        <Card variant='elevation' className={classes.meetingCard}>
-                            <CardContent>
-                                <Typography>No upcoming meetings. Please select a class</Typography>
-                            </CardContent>
-                        </Card>
-                    }
-                    {upcomingMeetings.map((meeting, index) => 
-                        <Card variant='outlined' key={index} className={classes.meetingCard}>
-                            {/* <CardActionArea component={Link} to={{ pathname: `/student/Meeting/${meeting.title}`, state: { formId: meeting.form_id, instanceId: meeting.instance_id, studentId: studentId }}}> */}
-                            <CardActionArea onClick={() => handleMeetingCardClick(index, 'upcoming')}>
+                {activeStudentId && isLoading ? 
+                    <div className={classes.progress}>
+                        <CircularProgress />
+                    </div> :
+                    <List component='nav'>
+                        {upcomingMeetings.length === 0 &&
+                            <Card variant='elevation' className={classes.meetingCard}>
                                 <CardContent>
-                                    <Typography color='textSecondary' gutterBottom>
-                                        {meeting.title}
-                                    </Typography>
-                                    <Typography>{meeting.description}</Typography>
+                                    <Typography>No upcoming meetings. Please select a class</Typography>
                                 </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    )}
-                    
-                </List>
+                            </Card>
+                        }
+                        {upcomingMeetings.map((meeting, index) => 
+                            <Card variant='outlined' key={index} className={classes.meetingCard}>
+                                <CardActionArea onClick={() => handleMeetingCardClick(index, 'upcoming')}>
+                                    <CardContent>
+                                        <Typography color='textSecondary' gutterBottom>
+                                            {meeting.title}
+                                        </Typography>
+                                        <Typography>{meeting.description}</Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        )}
+                    </List>
+                }
             </div>
             
             <Typography className={classes.detailText} variant='h5'>Completed</Typography>
             <div className={classes.meetingList}>
-                <List component='nav'>
-                    {completedMeetings.length === 0 &&
-                        <Card variant='elevation' className={classes.meetingCard}>
-                            <CardContent>
-                                <Typography>No completed meetings. Please select a class</Typography>
-                            </CardContent>
-                        </Card>
-                    }
-                    {completedMeetings.map((meeting, index) => 
-                        <Card variant='outlined' key={index} className={classes.meetingCard}>
-                            <CardActionArea onClick={() => handleMeetingCardClick(index, 'completed')}>
+                {activeStudentId && isLoading ? 
+                    <div className={classes.progress}>
+                        <CircularProgress />
+                    </div> :
+                    <List component='nav'>
+                        {completedMeetings.length === 0 &&
+                            <Card variant='elevation' className={classes.meetingCard}>
                                 <CardContent>
-                                    <Typography color='textSecondary' gutterBottom>
-                                        {meeting.title}
-                                    </Typography>
-                                    <Typography>{meeting.description}</Typography>
+                                    <Typography>No completed meetings. Please select a class</Typography>
                                 </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    )}
-                </List>
+                            </Card>
+                        }
+                        {completedMeetings.map((meeting, index) => 
+                            <Card variant='outlined' key={index} className={classes.meetingCard}>
+                                <CardActionArea onClick={() => handleMeetingCardClick(index, 'completed')}>
+                                    <CardContent>
+                                        <Typography color='textSecondary' gutterBottom>
+                                            {meeting.title}
+                                        </Typography>
+                                        <Typography>{meeting.description}</Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        )}
+                    </List>
+                }
             </div>
 
             {meetingToShow['showMeeting'] && <CompleteForm 
                 open={meetingToShow['showMeeting']}
-                onClose={() => setMeetingToShow({ showMeeting: false, meetingAtIndex: {} })}
+                onClose={() => setMeetingToShow({ showMeeting: false, meetingAtIndex: {}, upcoming: false, completed: false })}
                 formTitle={meetingToShow['meetingAtIndex'].title}
                 formDescription={meetingToShow['meetingAtIndex'].description}
-                buttonText='Take Attendance'
+                buttonText={meetingToShow.upcoming ? 'Take Attendance' : 'View this submission'}
                 routeForward={{
-                    pathname: `/student/Meeting/${meetingToShow['meetingAtIndex'].title}`,
+                    pathname: meetingToShow.upcoming ? `/student/Meeting/${meetingToShow['meetingAtIndex'].title}` : `/viewSubmission/Meeting/${meetingToShow.meetingAtIndex.title}`,
                     state: {
                         meeting: meetingToShow['meetingAtIndex'],
-                        studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId
+                        studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId,
+                        instanceId: meetingToShow.meetingAtIndex.instance_id
                     }
                 }}
             />}
         </Fragment>
     )
+}
+
+ViewMeetings.propTypes = {
+    userId: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired,
 }
 
 export default ViewMeetings;

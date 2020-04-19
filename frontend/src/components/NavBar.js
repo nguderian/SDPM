@@ -20,8 +20,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import RateReviewIcon from '@material-ui/icons/RateReview';
 import AuthActions from '../storeConfig/actions/auth/AuthActions';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -190,6 +190,11 @@ const NavBar = ({ userType, loggedIn }) => {
           </StyledNav> 
       </div>
     )
+}
+
+NavBar.propTypes = {
+  userType: PropTypes.string.isRequired,
+  loggedIn: PropTypes.bool.isRequired
 }
 
 export default NavBar;

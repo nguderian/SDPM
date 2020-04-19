@@ -19,7 +19,8 @@ import {
     MuiPickersUtilsProvider,
     DateTimePicker
 } from '@material-ui/pickers/';
-
+import PropTypes from 'prop-types';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 
 const formatDate = dateTime => {
@@ -54,7 +55,6 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(2)
     }, 
     createButton: {
-        margin: theme.spacing(1),
         textAlign: 'center',
         marginTop: theme.spacing(2),
     },
@@ -78,24 +78,62 @@ const useStyles = makeStyles(theme => ({
         width: '15%',
         marginTop: theme.spacing(2),
         marginLeft: theme.spacing(1),
-    }
+    }, 
+    progress: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '25%'
+    },
 }));
 
-const NewSurvey = ({ userId, userType, token }) => {
+const NewSurvey = ({ userId, userType, token, location }) => {
     let formattedStart = new Date();
     formattedStart = formatDate(formattedStart);
     let formattedEnd = new Date();
     formattedEnd = formatDate(formattedEnd);
     const classes = useStyles();
+    const { formId } = location.state;
+    const [surveyInfo, setSurveyInfo] = useState({
+        title: '',
+        description: '', 
+        loadingInfo: formId === '' ? false : true
+    });
     const [classList, setClassList] = useState([]);
     const [selectedClass, setSelectedClass] = useState('');
-    const [surveyTitle, setSurveyTitle] = useState('');
-    const [surveyDescription, setSurveyDescription] = useState('');
     const [hasAlertValue, setHasAlertValue] = useState(false);
     const [alertValue, setAlertValue] = useState('');
     const [formCreated, setFormCreated] = useState(false);
     const [startDateTime, setStartDateTime] = useState(formattedStart);
     const [endDateTime, setEndDateTime] = useState(formattedEnd);
+
+    useEffect(() => {
+        if(formId !== '') {
+            async function getFormDetails() {
+                const options = {
+                    method: 'POST', 
+                    url: 'http://localhost:3001/api/getForm', 
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    }, 
+                    data: {
+                        'form_id': formId,
+                        'user_id': userId
+                    }
+                };
+
+                const result = await axios(options);
+                const survey = result.data.survey;
+                setSurveyInfo({ 
+                    title: survey.title, 
+                    description: survey.description,
+                    loadingInfo: false
+                });
+            }
+            getFormDetails();
+        }
+    }, [token, formId, userId]);
 
     useEffect(() => {
         // only get all active classes 
@@ -121,11 +159,11 @@ const NewSurvey = ({ userId, userType, token }) => {
     }, [token, userId]);
 
     const handleSurveyTitleChange = event => {
-        setSurveyTitle(event.target.value);
+        setSurveyInfo({ ...surveyInfo, title: event.target.value });
     };
 
     const handleSurveyDescriptionChange = event => {
-        setSurveyDescription(event.target.value);
+        setSurveyInfo({ ...surveyInfo, description: event.target.value });
     };
 
     const handleClassChange = event => {
@@ -159,8 +197,8 @@ const NewSurvey = ({ userId, userType, token }) => {
             'type': 'survey',
             'access_level': userType,
             'user_id': userId,
-            'title': surveyTitle,
-            'description': surveyDescription,
+            'title': surveyInfo.title,
+            'description': surveyInfo.description,
             'questions': [
                 {
                     'question_text': 'Participation grade: ',
@@ -223,15 +261,22 @@ const NewSurvey = ({ userId, userType, token }) => {
     };
 
     return (
+        surveyInfo.loadingInfo ? 
+        <div className={classes.progress}>
+            <CircularProgress />
+        </div>
+        :
         <Fragment>
             <Typography variant="h4" className={classes.pageTitle}>Create a New Peer Review</Typography>
             <form className={classes.surveyTitle} noValidate autoComplete="off">
                 <TextField
-                    error={surveyTitle === '' ? true : false} 
-                    helperText={surveyTitle === '' ? "Peer Review Title is required." : ''} 
+                    error={surveyInfo.title === '' ? true : false} 
+                    helperText={surveyInfo.title === '' ? "Peer Review Title is required." : ''} 
                     label="Peer Review Title" 
                     variant="outlined" 
-                    fullWidth={true} 
+                    fullWidth={true}
+                    required
+                    value={surveyInfo.title}
                     onChange={handleSurveyTitleChange}
                 />
             </form>
@@ -240,6 +285,7 @@ const NewSurvey = ({ userId, userType, token }) => {
                     label="Peer Review Description"
                     variant="outlined"
                     fullWidth={true}
+                    value={surveyInfo.description}
                     onChange={handleSurveyDescriptionChange}
                 />
             </form>
@@ -313,17 +359,20 @@ const NewSurvey = ({ userId, userType, token }) => {
                     </CardContent>
                 </Card>
             }
-            <Button 
-                variant='contained'
-                color='primary'
-                onClick={createSurvey}
-                className={classes.createButton}>
-                Create Peer Review
-            </Button>
+            <div className={classes.createButton}>
+                <Button 
+                    variant='contained'
+                    color='primary'
+                    onClick={createSurvey}
+                >
+                    Create Peer Review
+                </Button>
+            </div>
+            
             {formCreated && <FormCreated 
                 open={formCreated}
                 onClose={() => handleCloseFormCreateDialog()}
-                confirmationText={`${surveyTitle} created!`}
+                confirmationText={`${surveyInfo.title} created!`}
                 createdText='Peer Review Created'
                 start={startDateTime}
                 end={endDateTime}
@@ -333,6 +382,13 @@ const NewSurvey = ({ userId, userType, token }) => {
             />}
         </Fragment>
     )
+}
+
+NewSurvey.propTypes = {
+    userId: PropTypes.number.isRequired,
+    userType: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
+    location: PropTypes.object.isRequired
 }
 
 export default NewSurvey;

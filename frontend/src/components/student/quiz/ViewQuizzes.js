@@ -11,6 +11,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CompleteForm from '../../common/CompleteForm';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
@@ -53,7 +55,13 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'row',
         marginBottom: theme.spacing(2)
-    }
+    },
+    progress: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '25%'
+    },
 }))
 
 
@@ -71,6 +79,7 @@ const ViewQuizzes = ({ userId, token }) => {
         upcoming: false,
         completed: false
     });
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getActiveClasses() {
@@ -149,8 +158,12 @@ const ViewQuizzes = ({ userId, token }) => {
                 let result = await axios(options);
                 setCompletedQuizzes(result.data);
             }
+            async function stopLoading() {
+                setIsLoading(false);
+            }
             getUpcomingQuizzes();
             getCompletedQuizzes();
+            stopLoading();
         }
     }, [activeStudentId, token]);
 
@@ -209,60 +222,68 @@ const ViewQuizzes = ({ userId, token }) => {
             
             <Typography className={classes.detailText} variant='h5'>Upcoming</Typography>
             <div className={classes.quizList}>
-                <List component='nav'>
-                    {upcomingQuizzes.length === 0 &&
-                        <Card variant='elevation' className={classes.quizCard}>
-                            <CardContent>
-                                <Typography>No upcoming assignments. Please select a class</Typography>
-                            </CardContent>
-                        </Card>
-                    }
-                    {upcomingQuizzes.map((quiz, index) => 
-                        <Card variant='outlined' key={index} className={classes.quizCard}>
-                            <CardActionArea onClick={() => handleQuizCardClick(index, 'upcoming')}>
+                {activeStudentId && isLoading ? 
+                    <div className={classes.progress}>
+                        <CircularProgress />
+                    </div> :
+                    <List component='nav'>
+                        {upcomingQuizzes.length === 0 &&
+                            <Card variant='elevation' className={classes.quizCard}>
                                 <CardContent>
-                                    <Typography color='textSecondary' gutterBottom>
-                                        {quiz.title}
-                                    </Typography>
-                                    <Typography>{quiz.description}</Typography>
+                                    <Typography>No upcoming assignments. Please select a class</Typography>
                                 </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    )}
-                    
-                </List>
+                            </Card>
+                        }
+                        {upcomingQuizzes.map((quiz, index) => 
+                            <Card variant='outlined' key={index} className={classes.quizCard}>
+                                <CardActionArea onClick={() => handleQuizCardClick(index, 'upcoming')}>
+                                    <CardContent>
+                                        <Typography color='textSecondary' gutterBottom>
+                                            {quiz.title}
+                                        </Typography>
+                                        <Typography>{quiz.description}</Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        )}
+                    </List>
+                }
             </div>
             
             <Typography className={classes.detailText} variant='h5'>Completed</Typography>
             <div className={classes.quizList}>
-                <List component='nav'>
-                    {completedQuizzes.length === 0 &&
-                        <Card variant='elevation' className={classes.quizCard}>
-                            <CardContent>
-                                <Typography>No completed asignments. Please select a class</Typography>
-                            </CardContent>
-                        </Card>
-                    }
-                    {completedQuizzes.map((quiz, index) => 
-                        <Card variant='outlined' key={index} className={classes.quizCard}>
-                            <CardActionArea onClick={() => handleQuizCardClick(index, 'completed')}>
+                {activeStudentId && isLoading ? 
+                    <div className={classes.progress}>
+                        <CircularProgress />
+                    </div> :
+                    <List component='nav'>
+                        {completedQuizzes.length === 0 &&
+                            <Card variant='elevation' className={classes.quizCard}>
                                 <CardContent>
-                                    <Typography color='textSecondary' gutterBottom>
-                                        {quiz.title}
-                                    </Typography>
-                                    <Typography>{quiz.description}</Typography>
-                                    <Typography>Grade Received: {quiz.grade}</Typography>
+                                    <Typography>No completed asignments. Please select a class</Typography>
                                 </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    )}
-                    
-                </List>
+                            </Card>
+                        }
+                        {completedQuizzes.map((quiz, index) => 
+                            <Card variant='outlined' key={index} className={classes.quizCard}>
+                                <CardActionArea onClick={() => handleQuizCardClick(index, 'completed')}>
+                                    <CardContent>
+                                        <Typography color='textSecondary' gutterBottom>
+                                            {quiz.title}
+                                        </Typography>
+                                        <Typography>{quiz.description}</Typography>
+                                        <Typography>Grade Received: {quiz.grade}</Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        )}
+                    </List>
+                }
             </div>
 
             {quizToShow.showQuiz && <CompleteForm 
                 open={quizToShow.showQuiz}
-                onClose={() => setQuizToShow({ showQuiz: false, quizAtIndex: '' })}
+                onClose={() => setQuizToShow({ showQuiz: false, quizAtIndex: '', upcoming: false, completed: false })}
                 formTitle={quizToShow.quizAtIndex.title}
                 formDescription={quizToShow.quizAtIndex.description}
                 buttonText={quizToShow.upcoming ? 'Take this quiz' : 'View this submission'}
@@ -278,6 +299,11 @@ const ViewQuizzes = ({ userId, token }) => {
         </Fragment>
         
     );
+}
+
+ViewQuizzes.propTypes = {
+    userId: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired,
 }
 
 export default ViewQuizzes;

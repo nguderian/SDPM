@@ -8,6 +8,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -55,6 +56,7 @@ const useStyles = makeStyles(theme => ({
 const CreateQuiz = ({ userId, token }) => {
     const classes = useStyles();
     const [allQuizzes, setAllQuizzes] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getAllQuizzes() {
@@ -74,7 +76,11 @@ const CreateQuiz = ({ userId, token }) => {
             let result = await axios(options);
             setAllQuizzes(result.data);
         }
+        async function stopLoading() {
+            setIsLoading(false);
+        }
         getAllQuizzes();
+        stopLoading();
     }, [token, userId])
 
     return (
@@ -87,11 +93,18 @@ const CreateQuiz = ({ userId, token }) => {
             <Divider className={classes.templateContainer}/>
             
             <div className={classes.quizList}>
-                {allQuizzes.length === 0 ? 
+                {isLoading ? 
                     <div className={classes.progress}>
                         <CircularProgress />
                     </div> :
                     <List component='nav'>
+                        {allQuizzes.length === 0 && 
+                            <Card variant='elevation' className={classes.templateContainer}>
+                                <CardContent>
+                                    <Typography>No previous quizzes</Typography>
+                                </CardContent>
+                            </Card>
+                        }
                         {allQuizzes.map((quiz, index) =>
                             <Card variant='outlined' key={index} className={classes.templateContainer}>
                             <CardActionArea component={Link} to={{ pathname: `/coordinator/Quiz/${quiz.title}`, state: { formId: quiz.form_id }}}>
@@ -100,7 +113,6 @@ const CreateQuiz = ({ userId, token }) => {
                                         {quiz.title}
                                     </Typography>
                                     <Typography className={classes.quizDescription}>{quiz.description}</Typography>
-                                    <Typography>{quiz.form_id}</Typography>
                                 </CardContent>
                             </CardActionArea>
                                 
@@ -112,4 +124,10 @@ const CreateQuiz = ({ userId, token }) => {
         </div>
     );
 }
+
+CreateQuiz.propTypes = {
+    userId: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired
+}
+
 export default CreateQuiz;

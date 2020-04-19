@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
@@ -44,6 +45,15 @@ const CompleteForm = ({
             </Dialog>
         </Fragment>
     )
+}
+
+CompleteForm.propTypes = {
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    formTitle: PropTypes.string,
+    formDescription: PropTypes.string,
+    buttonText: PropTypes.string.isRequired,
+    routeForward: PropTypes.object.isRequired
 }
 
 export default CompleteForm; 

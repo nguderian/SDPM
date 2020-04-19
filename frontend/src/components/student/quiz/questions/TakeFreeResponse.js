@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
     answerField: {
@@ -38,6 +39,14 @@ const TakeFreeResponse = ({ question, handleChange, index, viewingSubmission, us
             />
         </form>
     )
+}
+
+TakeFreeResponse.propTypes = {
+    question: PropTypes.object.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    index: PropTypes.number.isRequired,
+    viewingSubmission: PropTypes.bool.isRequired,
+    userType: PropTypes.string.isRequired
 }
 
 export default TakeFreeResponse;

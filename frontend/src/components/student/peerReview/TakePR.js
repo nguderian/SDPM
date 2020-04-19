@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import FormSubmitted from '../../common/FormSubmitted';
 import Slider from '@material-ui/core/Slider';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
@@ -35,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     prCards: {
         justifyContent: 'center',
         alignItems: 'center',
-        width: '50%',
+        width: '40%',
         margin: '0 auto',
         border: '1px solid gray',
         borderRadius: '5px',
@@ -72,6 +73,7 @@ const TakePR = ({ userId, token, location }) => {
     const [teamMembers, setTeamMembers] = useState([]);
     const [quizAnswers, setQuizAnswers] = useState([]);
     const [submitted, setSubmitted] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getTeam() {
@@ -111,7 +113,11 @@ const TakePR = ({ userId, token, location }) => {
                 let result = await axios(options);
                 setTeamMembers(result.data.team_members);
             }
-            getTeamMembers()
+            async function stopLoading() {
+                setIsLoading(false);
+            }
+            getTeamMembers();
+            stopLoading();
         }
     }, [teamData, token]);
 
@@ -143,7 +149,6 @@ const TakePR = ({ userId, token, location }) => {
                     }
                     arr.push(obj);
                 });
-
                 setQuizAnswers(arr);
             }
             getQuiz();
@@ -152,7 +157,7 @@ const TakePR = ({ userId, token, location }) => {
     }, [teamMembers, token, userId, pr]);
 
     const handleParticipationGrade = (index, event, value) => {
-        quizAnswers[index].answer_text = value;
+        quizAnswers[index].answer_text = value.toString();
         setQuizAnswers({ ...quizAnswers })
     };
 
@@ -166,7 +171,6 @@ const TakePR = ({ userId, token, location }) => {
             'instance_id': pr.instance_id,
             'student_id': studentId,
             'results': quizAnswers, 
-            'user_id': userId
         };
         
         const options = {
@@ -193,7 +197,7 @@ const TakePR = ({ userId, token, location }) => {
     };
 
     return (
-        quizAnswers.length === 0 ? 
+        isLoading ? 
         <div className={classes.progress}>
             <CircularProgress />
         </div> :
@@ -249,6 +253,12 @@ const TakePR = ({ userId, token, location }) => {
             />}
         </Fragment>
     )
+}
+
+TakePR.propTypes = {
+    userId: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired,
+    location: PropTypes.object.isRequired
 }
 
 export default TakePR;

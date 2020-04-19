@@ -11,6 +11,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CompleteForm from '../../common/CompleteForm';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
@@ -53,7 +55,13 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'row',
         marginBottom: theme.spacing(2)
-    }
+    },
+    progress: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '25%'
+    },
 }));
 
 const ViewPRs = ({ userId, token }) => {
@@ -66,8 +74,11 @@ const ViewPRs = ({ userId, token }) => {
     const [inactiveStudentId, setInactiveStudentId] = useState('');
     const [prToShow, setPrToShow] = useState({
         showPr: false,
-        prAtIndex: {}
+        prAtIndex: {}, 
+        upcoming: false,
+        completed: false,
     });
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getActiveClasses() {
@@ -138,16 +149,20 @@ const ViewPRs = ({ userId, token }) => {
                     },
                     data: {
                         'student_id': activeStudentId,
-                        'type': 'meeting',
+                        'type': 'survey',
                         'is_complete': 1
                     }
                 };
-        
+                
                 let result = await axios(options);
                 setCompletedPrs(result.data);
             }
+            async function stopLoading() {
+                setIsLoading(false);
+            }
             getUpcomingPrs();
             getCompletedPrs();
+            stopLoading();
         }
     }, [activeStudentId, token]);
 
@@ -161,10 +176,10 @@ const ViewPRs = ({ userId, token }) => {
 
     const handlePrCardClick = (index, type) => {
         if(type === 'upcoming') {
-            setPrToShow({ showPr: true, prAtIndex: upcomingPrs[index] });
+            setPrToShow({ showPr: true, prAtIndex: upcomingPrs[index], upcoming: true, completed: false });
         }
         else if(type === 'completed') {
-            setPrToShow({ showPr: true, prAtIndex: completedPrs[index] });
+            setPrToShow({ showPr: true, prAtIndex: completedPrs[index], upcoming: false, completed: true });
         }
     };
 
@@ -205,72 +220,86 @@ const ViewPRs = ({ userId, token }) => {
 
             <Typography className={classes.detailText} variant='h5'>Upcoming</Typography>
             <div className={classes.prList}>
-                <List component='nav'>
-                    {upcomingPrs.length === 0 &&
-                        <Card variant='elevation' className={classes.prCard}>
-                            <CardContent>
-                                <Typography>No upcoming peer reviews. Please select a class</Typography>
-                            </CardContent>
-                        </Card>
-                    }
-                    {upcomingPrs.map((pr, index) => 
-                        <Card variant='outlined' key={index} className={classes.prCard}>
-                            <CardActionArea onClick={() => handlePrCardClick(index, 'upcoming')}>
+                {activeStudentId && isLoading ? 
+                    <div className={classes.progress}>
+                        <CircularProgress />
+                    </div> :
+                    <List component='nav'>
+                        {upcomingPrs.length === 0 &&
+                            <Card variant='elevation' className={classes.prCard}>
                                 <CardContent>
-                                    <Typography color='textSecondary' gutterBottom>
-                                        {pr.title}
-                                    </Typography>
-                                    <Typography>{pr.description}</Typography>
+                                    <Typography>No upcoming peer reviews. Please select a class</Typography>
                                 </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    )}
-                    
-                </List>
+                            </Card>
+                        }
+                        {upcomingPrs.map((pr, index) => 
+                            <Card variant='outlined' key={index} className={classes.prCard}>
+                                <CardActionArea onClick={() => handlePrCardClick(index, 'upcoming')}>
+                                    <CardContent>
+                                        <Typography color='textSecondary' gutterBottom>
+                                            {pr.title}
+                                        </Typography>
+                                        <Typography>{pr.description}</Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        )}
+                    </List>
+                }
             </div>
             
             <Typography className={classes.detailText} variant='h5'>Completed</Typography>
             <div className={classes.prList}>
-                <List component='nav'>
-                    {completedPrs.length === 0 &&
-                        <Card variant='elevation' className={classes.prCard}>
-                            <CardContent>
-                                <Typography>No completed peer reviews. Please select a class</Typography>
-                            </CardContent>
-                        </Card>
-                    }
-                    {completedPrs.map((pr, index) => 
-                        <Card variant='outlined' key={index} className={classes.prCard}>
-                            <CardActionArea onClick={() => handlePrCardClick(index, 'completed')}>
+                {activeStudentId && isLoading ? 
+                    <div className={classes.progress}>
+                        <CircularProgress />
+                    </div> :
+                    <List component='nav'>
+                        {completedPrs.length === 0 &&
+                            <Card variant='elevation' className={classes.prCard}>
                                 <CardContent>
-                                    <Typography color='textSecondary' gutterBottom>
-                                        {pr.title}
-                                    </Typography>
-                                    <Typography>{pr.description}</Typography>
+                                    <Typography>No completed peer reviews. Please select a class</Typography>
                                 </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    )}
-                    
-                </List>
+                            </Card>
+                        }
+                        {completedPrs.map((pr, index) => 
+                            <Card variant='outlined' key={index} className={classes.prCard}>
+                                <CardActionArea onClick={() => handlePrCardClick(index, 'completed')}>
+                                    <CardContent>
+                                        <Typography color='textSecondary' gutterBottom>
+                                            {pr.title}
+                                        </Typography>
+                                        <Typography>{pr.description}</Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        )}
+                    </List>
+                }
             </div>
             
             {prToShow.showPr && <CompleteForm 
                 open={prToShow.showPr}
-                onClose={() => setPrToShow({ showPr: false, prAtIndex: {} })}
+                onClose={() => setPrToShow({ showPr: false, prAtIndex: {}, upcoming: false, completed: false })}
                 formTitle={prToShow.prAtIndex.title}
                 formDescription={prToShow.prAtIndex.description}
-                buttonText='Complete Peer Review'
+                buttonText={prToShow.upcoming ? 'Complete Peer Review' : 'View this submission'}
                 routeForward={{
-                    pathname: `/student/PeerReview/${prToShow.prAtIndex.title}`,
+                    pathname: prToShow.upcoming ? `/student/PeerReview/${prToShow.prAtIndex.title}` : `/viewSubmission/PeerReview/${prToShow.prAtIndex.title}`,
                     state: {
                         pr: prToShow.prAtIndex,
-                        studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId
+                        studentId: activeStudentId === '' ? inactiveStudentId : activeStudentId,
+                        instanceId: prToShow.prAtIndex.instance_id
                     }
                 }}
             />}
         </Fragment>
     )
+}
+
+ViewPRs.propTypes = {
+    userId: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired
 }
 
 export default ViewPRs;

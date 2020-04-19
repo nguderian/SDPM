@@ -26,7 +26,8 @@ import {
     MuiPickersUtilsProvider,
     DateTimePicker
 } from '@material-ui/pickers/';
-
+import PropTypes from 'prop-types';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 
 const formatDate = dateTime => {
@@ -50,7 +51,6 @@ const useStyles = makeStyles(theme => ({
         marginLeft: theme.spacing(1),
     },
     createButton: {
-        margin: theme.spacing(1),
         textAlign: 'center',
         marginTop: theme.spacing(2),
     },
@@ -85,7 +85,13 @@ const useStyles = makeStyles(theme => ({
         width: '15%',
         marginTop: theme.spacing(2),
         marginLeft: theme.spacing(1),
-    }
+    },
+    progress: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '25%'
+    },
 }));
 
 const NewQuiz = ({ userId, userType, token, location }) => {
@@ -104,6 +110,7 @@ const NewQuiz = ({ userId, userType, token, location }) => {
             hasAlertValue: false,
             alertValue: '',
             questions: [],
+            isLoading: formId === '' ? false : true
         }
     );
     
@@ -194,6 +201,7 @@ const NewQuiz = ({ userId, userType, token, location }) => {
                     alertValue: quiz.threshold, 
                     hasAlertValue: quiz.threshold === '' ? false : true,
                     questions: arr,
+                    isLoading: false
                 });
             }
             getFormDetails();
@@ -451,6 +459,10 @@ const NewQuiz = ({ userId, userType, token, location }) => {
 
     
     return (
+        quiz.isLoading ? 
+        <div className={classes.progress}>
+            <CircularProgress />
+        </div> :
         <Fragment>
             <Typography variant="h4" className={classes.pageTitle}>Create a New Quiz</Typography>
             <form className={classes.quizTitle} noValidate autoComplete="off">
@@ -461,6 +473,7 @@ const NewQuiz = ({ userId, userType, token, location }) => {
                     variant="outlined" 
                     fullWidth={true}
                     value={quiz['title']}
+                    required
                     onChange={handleQuizTitleChange}
                 />
             </form>
@@ -556,14 +569,15 @@ const NewQuiz = ({ userId, userType, token, location }) => {
                     />
                 }
             </div>
-            <Button className={classes.createButton} variant="contained" color="primary" onClick={handleAddQuestion}>
-                Add Question 
-            </Button>
+            <div className={classes.createButton}>
+                <Button variant="contained" color="primary" onClick={handleAddQuestion}>
+                    Add Question 
+                </Button>
+            </div>
             {addQuestionOpen && <NewQuestion 
                 open={addQuestionOpen} 
                 onClose={() => setAddQuestionOpen(false)}
                 add={addQuestion}
-                formType='quiz'
                 />}
             <Divider className={classes.divider} variant="fullWidth"/>
             <div className={classes.questionList}>
@@ -599,13 +613,16 @@ const NewQuiz = ({ userId, userType, token, location }) => {
                     )}
                 </Grid>
             </div>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={createForm}
-                className={classes.createButton}>
-                Create Quiz
-            </Button>
+            <div className={classes.createButton}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={createForm}
+                >
+                    Create Quiz
+                </Button>
+            </div>
+            
             {modificationParameters.deleteQuestionOpen && <DeleteQuestion 
                 open={modificationParameters.deleteQuestionOpen}
                 onClose={() => handleModificationParameters(["deleteQuestionOpen"], [false])}
@@ -630,6 +647,13 @@ const NewQuiz = ({ userId, userType, token, location }) => {
             />}
         </Fragment>
     );
+}
+
+NewQuiz.propTypes = {
+    userId: PropTypes.number.isRequired,
+    userType: PropTypes.string.isRequired,
+    token: PropTypes.string.isRequired,
+    location: PropTypes.object.isRequired
 }
 
 export default NewQuiz;

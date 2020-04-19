@@ -23,7 +23,7 @@ class AuthActions {
         };
     
         let response = await axios(options);
-        let responseOK = response && response.status === 200 && response.statusText === 'OK';
+        let responseOK = response && response.status === 200 && response.statusText === 'OK' && response.data.status !== 'Failure' && response.data.status !== 'Failure: Incorrect Password';
         if(responseOK) {
             // Successful login
             dispatch({

@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import AuthActions from '../storeConfig/actions/auth/AuthActions';
+import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -119,6 +120,10 @@ const SignIn = ({ loggedIn }) => {
             </div>
         </Container>
     )
+}
+
+SignIn.propTypes = {
+    loggedIn: PropTypes.bool.isRequired
 }
 
 export default SignIn;

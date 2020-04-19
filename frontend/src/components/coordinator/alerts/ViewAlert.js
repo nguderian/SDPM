@@ -6,6 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
@@ -101,6 +102,10 @@ const ViewAlert = ({ location }) => {
             
         </Fragment>
     )
+}
+
+ViewAlert.propTypes = {
+    location: PropTypes.object.isRequired
 }
 
 export default ViewAlert;

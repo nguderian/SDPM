@@ -11,6 +11,7 @@ import FormSubmitted from '../../common/FormSubmitted';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import TakeFreeResponse from './questions/TakeFreeResponse';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme =>({
     pageTitle: {
@@ -65,6 +66,7 @@ const TakeQuiz = ({ userId, token, location }) => {
         answers: []
     });
     const [submitted, setSubmitted] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getQuiz() {
@@ -101,7 +103,11 @@ const TakeQuiz = ({ userId, token, location }) => {
                 answers: arr
             });
         }
-        getQuiz()
+        async function stopLoading() {
+            setIsLoading(false);
+        }
+        getQuiz();
+        stopLoading();
     }, [formId, token, userId])
 
     const captureAnswer = (answer, index) => {
@@ -146,7 +152,7 @@ const TakeQuiz = ({ userId, token, location }) => {
     }
 
     return(
-        quiz.questions.length === 0 ? 
+        isLoading ? 
         <div className={classes.progress}>
             <CircularProgress />
         </div> :
@@ -216,6 +222,12 @@ const TakeQuiz = ({ userId, token, location }) => {
         </Fragment>
         
     );
+}
+
+TakeQuiz.propTypes = {
+    userId: PropTypes.number.isRequired,
+    token: PropTypes.string.isRequired,
+    location: PropTypes.object.isRequired
 }
 
 export default TakeQuiz;
