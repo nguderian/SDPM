@@ -57,8 +57,9 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.secondary,
   },
   classSelector: {
-    marginLeft: theme.spacing(80), 
-    marginTop: theme.spacing(5),
+    marginLeft: '40%', 
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     minWidth: '20%'
 },
   updateRoster: {
