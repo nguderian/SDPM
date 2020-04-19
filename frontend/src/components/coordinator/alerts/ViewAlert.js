@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
 const ViewAlert = ({ location }) => {
     const classes = useStyles();
     const { alert } = location.state;
-    
+    console.log(location.state);
     return (
         <Fragment>
             <Typography className={classes.pageTitle} variant='h4'>

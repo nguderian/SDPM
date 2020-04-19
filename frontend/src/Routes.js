@@ -6,8 +6,10 @@ import HomeContainer from './components/containers/HomeContainer';
 import CreateQuizContainer from './components/containers/coordinator/forms/quiz/CreateQuizContainer';
 import NewQuizContainer from './components/containers/coordinator/forms/quiz/NewQuizContainer';
 import ViewQuizzesContainer from './components/containers/student/quiz/ViewQuizzesContainer';
+import CoordinatorClassPageContainer from './components/containers/coordinator/class/CoordinatorClassPageContainer';
+import CoordinatorClassPage from './components/coordinator/class/CoordinatorClassPage';
 import TakeQuizContainer from './components/containers/student/quiz/TakeQuizContainer';
-import AdminClassPage from './components/AdminClassPage';
+import Home from './components/Home';
 import ViewMeetingsContainer from './components/containers/student/meeting/ViewMeetingsContainer';
 import NewMeetingContainer from './components/containers/student/meeting/NewMeetingContainer';
 import TakeAttendanceContainer from './components/containers/student/meeting/TakeAttendanceContainer';
@@ -35,7 +37,7 @@ const routes = () => {
                     <Route path='/coordinator/Alert/ViewAlert/:title' render={(props) => <ViewAlertContainer {...props} />} />
                     
                     {/* classes */}
-                    <Route path='/AdminClassPage' exact component={AdminClassPage} />
+                    <Route path='/coordinator/CoordinatorClassPage' exact component={CoordinatorClassPageContainer} />
 
                     {/* quiz creation */}
                     <Route path='/coordinator/Quiz/CreateQuiz' exact component={CreateQuizContainer} />
