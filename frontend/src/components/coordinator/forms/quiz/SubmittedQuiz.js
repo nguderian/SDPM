@@ -84,6 +84,7 @@ const SubmittedQuiz = ({ userId, userType, token, location }) => {
         grade: '',
         questions: []
     });
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getSubmission() {
@@ -109,11 +110,15 @@ const SubmittedQuiz = ({ userId, userType, token, location }) => {
                 questions: quiz.questions
             });
         }
-        getSubmission()
+        async function stopLoading() {
+            setIsLoading(false);
+        }
+        getSubmission();
+        stopLoading():
     }, [token, instanceId, userId]);
 
     return (
-        quiz.questions.length === 0 ? 
+        isLoading ? 
         <div className={classes.progress}>
             <CircularProgress />
         </div> :

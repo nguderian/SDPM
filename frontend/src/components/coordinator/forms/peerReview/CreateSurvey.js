@@ -51,7 +51,8 @@ const useStyles = makeStyles(theme => ({
 const CreateSurvey = ({ userId, token }) => {
     const classes = useStyles();
     const [allSurveys, setAllSurveys] = useState([]);
-
+    const [isLoading, setIsLoading] = useState(true);
+    
     useEffect(() => {
         async function getAllSurveys() {
             const options = {
@@ -70,7 +71,11 @@ const CreateSurvey = ({ userId, token }) => {
             let result = await axios(options);
             setAllSurveys(result.data);
         }
+        async function stopLoading() {
+            setIsLoading(false);
+        }
         getAllSurveys();
+        stopLoading();
     }, [token, userId]);
     
     return (
@@ -83,7 +88,7 @@ const CreateSurvey = ({ userId, token }) => {
             <Divider className={classes.templateContainer}/>
 
             <div className={classes.surveyList}>
-                {allSurveys.length === 0 ?
+                {isLoading ?
                     <div className={classes.progress}>
                         <CircularProgress />
                     </div> :

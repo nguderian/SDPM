@@ -74,6 +74,7 @@ const SubmittedMeeting = ({ token, location }) => {
         endDate: '',
         users: []
     });
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getAttendance() {
@@ -99,11 +100,15 @@ const SubmittedMeeting = ({ token, location }) => {
                 users: result.data.users
             });
         }
-        getAttendance()
+        async function stopLoading() {
+            setIsLoading(false);
+        }
+        getAttendance();
+        stopLoading();
     }, [token, instanceId]);
 
     return (
-        meeting.users.length === 0 ?
+        isLoading ?
         <div className={classes.progress}>
             <CircularProgress />
         </div> : 

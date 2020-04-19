@@ -56,6 +56,7 @@ const useStyles = makeStyles(theme => ({
 const CreateQuiz = ({ userId, token }) => {
     const classes = useStyles();
     const [allQuizzes, setAllQuizzes] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getAllQuizzes() {
@@ -75,7 +76,11 @@ const CreateQuiz = ({ userId, token }) => {
             let result = await axios(options);
             setAllQuizzes(result.data);
         }
+        async function stopLoading() {
+            setIsLoading(false);
+        }
         getAllQuizzes();
+        stopLoading();
     }, [token, userId])
 
     return (
@@ -88,7 +93,7 @@ const CreateQuiz = ({ userId, token }) => {
             <Divider className={classes.templateContainer}/>
             
             <div className={classes.quizList}>
-                {allQuizzes.length === 0 ? 
+                {isLoading ? 
                     <div className={classes.progress}>
                         <CircularProgress />
                     </div> :

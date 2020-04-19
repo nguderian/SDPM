@@ -66,6 +66,7 @@ const TakeQuiz = ({ userId, token, location }) => {
         answers: []
     });
     const [submitted, setSubmitted] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getQuiz() {
@@ -102,7 +103,11 @@ const TakeQuiz = ({ userId, token, location }) => {
                 answers: arr
             });
         }
-        getQuiz()
+        async function stopLoading() {
+            setIsLoading(false);
+        }
+        getQuiz();
+        stopLoading();
     }, [formId, token, userId])
 
     const captureAnswer = (answer, index) => {
@@ -147,7 +152,7 @@ const TakeQuiz = ({ userId, token, location }) => {
     }
 
     return(
-        quiz.questions.length === 0 ? 
+        isLoading ? 
         <div className={classes.progress}>
             <CircularProgress />
         </div> :

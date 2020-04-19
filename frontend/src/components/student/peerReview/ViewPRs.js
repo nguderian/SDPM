@@ -11,6 +11,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CompleteForm from '../../common/CompleteForm';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
@@ -54,7 +55,13 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'row',
         marginBottom: theme.spacing(2)
-    }
+    },
+    progress: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: '25%'
+    },
 }));
 
 const ViewPRs = ({ userId, token }) => {
@@ -71,6 +78,7 @@ const ViewPRs = ({ userId, token }) => {
         upcoming: false,
         completed: false,
     });
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getActiveClasses() {
@@ -149,8 +157,12 @@ const ViewPRs = ({ userId, token }) => {
                 let result = await axios(options);
                 setCompletedPrs(result.data);
             }
+            async function stopLoading() {
+                setIsLoading(false);
+            }
             getUpcomingPrs();
             getCompletedPrs();
+            stopLoading();
         }
     }, [activeStudentId, token]);
 
@@ -208,54 +220,62 @@ const ViewPRs = ({ userId, token }) => {
 
             <Typography className={classes.detailText} variant='h5'>Upcoming</Typography>
             <div className={classes.prList}>
-                <List component='nav'>
-                    {upcomingPrs.length === 0 &&
-                        <Card variant='elevation' className={classes.prCard}>
-                            <CardContent>
-                                <Typography>No upcoming peer reviews. Please select a class</Typography>
-                            </CardContent>
-                        </Card>
-                    }
-                    {upcomingPrs.map((pr, index) => 
-                        <Card variant='outlined' key={index} className={classes.prCard}>
-                            <CardActionArea onClick={() => handlePrCardClick(index, 'upcoming')}>
+                {isLoading ? 
+                    <div className={classes.progress}>
+                        <CircularProgress />
+                    </div> :
+                    <List component='nav'>
+                        {upcomingPrs.length === 0 &&
+                            <Card variant='elevation' className={classes.prCard}>
                                 <CardContent>
-                                    <Typography color='textSecondary' gutterBottom>
-                                        {pr.title}
-                                    </Typography>
-                                    <Typography>{pr.description}</Typography>
+                                    <Typography>No upcoming peer reviews. Please select a class</Typography>
                                 </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    )}
-                    
-                </List>
+                            </Card>
+                        }
+                        {upcomingPrs.map((pr, index) => 
+                            <Card variant='outlined' key={index} className={classes.prCard}>
+                                <CardActionArea onClick={() => handlePrCardClick(index, 'upcoming')}>
+                                    <CardContent>
+                                        <Typography color='textSecondary' gutterBottom>
+                                            {pr.title}
+                                        </Typography>
+                                        <Typography>{pr.description}</Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        )}
+                    </List>
+                }
             </div>
             
             <Typography className={classes.detailText} variant='h5'>Completed</Typography>
             <div className={classes.prList}>
-                <List component='nav'>
-                    {completedPrs.length === 0 &&
-                        <Card variant='elevation' className={classes.prCard}>
-                            <CardContent>
-                                <Typography>No completed peer reviews. Please select a class</Typography>
-                            </CardContent>
-                        </Card>
-                    }
-                    {completedPrs.map((pr, index) => 
-                        <Card variant='outlined' key={index} className={classes.prCard}>
-                            <CardActionArea onClick={() => handlePrCardClick(index, 'completed')}>
+                {isLoading ? 
+                    <div className={classes.progress}>
+                        <CircularProgress />
+                    </div> :
+                    <List component='nav'>
+                        {completedPrs.length === 0 &&
+                            <Card variant='elevation' className={classes.prCard}>
                                 <CardContent>
-                                    <Typography color='textSecondary' gutterBottom>
-                                        {pr.title}
-                                    </Typography>
-                                    <Typography>{pr.description}</Typography>
+                                    <Typography>No completed peer reviews. Please select a class</Typography>
                                 </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    )}
-                    
-                </List>
+                            </Card>
+                        }
+                        {completedPrs.map((pr, index) => 
+                            <Card variant='outlined' key={index} className={classes.prCard}>
+                                <CardActionArea onClick={() => handlePrCardClick(index, 'completed')}>
+                                    <CardContent>
+                                        <Typography color='textSecondary' gutterBottom>
+                                            {pr.title}
+                                        </Typography>
+                                        <Typography>{pr.description}</Typography>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        )}
+                    </List>
+                }
             </div>
             
             {prToShow.showPr && <CompleteForm 

@@ -75,6 +75,7 @@ const TakeAttendance = ({ token, location }) => {
         didAttend: []
     });
     const [submitted, setSubmitted] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getTeam() {
@@ -126,7 +127,11 @@ const TakeAttendance = ({ token, location }) => {
                 
                 setAttendance({ teamMembers: teamMembers, didAttend: arr });
             }
-            getTeamMembers()
+            async function stopLoading() {
+                setIsLoading(false);
+            }
+            getTeamMembers();
+            stopLoading();
         }
     }, [teamData, token]);
 
@@ -176,7 +181,7 @@ const TakeAttendance = ({ token, location }) => {
 
 
     return (
-        attendance.teamMembers.length === 0 ? 
+        isLoading ? 
         <div className={classes.progress}>
             <CircularProgress />
         </div> :

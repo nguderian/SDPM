@@ -73,6 +73,7 @@ const TakePR = ({ userId, token, location }) => {
     const [teamMembers, setTeamMembers] = useState([]);
     const [quizAnswers, setQuizAnswers] = useState([]);
     const [submitted, setSubmitted] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getTeam() {
@@ -112,7 +113,11 @@ const TakePR = ({ userId, token, location }) => {
                 let result = await axios(options);
                 setTeamMembers(result.data.team_members);
             }
-            getTeamMembers()
+            async function stopLoading() {
+                setIsLoading(false);
+            }
+            getTeamMembers();
+            stopLoading();
         }
     }, [teamData, token]);
 
@@ -192,7 +197,7 @@ const TakePR = ({ userId, token, location }) => {
     };
 
     return (
-        quizAnswers.length === 0 ? 
+        isLoading ? 
         <div className={classes.progress}>
             <CircularProgress />
         </div> :

@@ -261,7 +261,7 @@ const NewSurvey = ({ userId, userType, token, location }) => {
     };
 
     return (
-        (surveyInfo.loadingInfo) ? 
+        surveyInfo.loadingInfo ? 
         <div className={classes.progress}>
             <CircularProgress />
         </div>

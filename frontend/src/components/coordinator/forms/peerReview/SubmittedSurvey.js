@@ -65,6 +65,7 @@ const SubmittedSurvey = ({ userId, token, location }) => {
         description: '',
         questions: []
     });
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function getInstance() {
@@ -90,11 +91,14 @@ const SubmittedSurvey = ({ userId, token, location }) => {
                 questions: survey.questions
             });
         }
+        async function stopLoading() {
+            setIsLoading(false);
+        }
         getInstance();
     }, [token, instanceId, userId]);
 
     return (
-        pr.questions.length === 0 ? 
+        isLoading ? 
         <div className={classes.progress}>
             <CircularProgress />
         </div> :
