@@ -57,10 +57,15 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.secondary,
   },
   classSelector: {
-    marginLeft: theme.spacing(0),
-    marginBottom: theme.spacing(0), 
-    minWidth: '30%'
+    marginLeft: theme.spacing(80), 
+    marginTop: theme.spacing(5),
+    minWidth: '20%'
 },
+  updateRoster: {
+    marginLeft: theme.spacing(0),
+    marginTop: theme.spacing(5),
+  },
+
 }));
 
 export default function MaterialTableDemo({ userId, userType, token, loggedIn }) {
@@ -182,11 +187,6 @@ useEffect(() => {
         )}
         </Select>
     </FormControl>
-    <Button
-      variant="contained"
-      color="secondary">
-      Upload Roster
-    </Button> 
     </div>
 
     <div>
@@ -197,7 +197,9 @@ useEffect(() => {
       title="Student/Group Roster"
       columns={columns}
       data={studentList}
-
+      options={{
+        pageSize:10
+      }}
     /></Grid>
 
 
@@ -208,6 +210,9 @@ useEffect(() => {
       columns={alertColumns}
       data={classAlerts}
       onRowClick={handleRowClick}
+      options={{
+        pageSize:10
+      }}
     /></Grid>
     </Grid>
     </div>
