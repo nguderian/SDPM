@@ -116,7 +116,7 @@ class alerts {
                     message = message + ("Grade: " + alertList[j].grade + "\n\n");
                 }
                 console.log(message);
-                let subjectLine = "View Alerts for Senior Design Students EMMANUEL";
+                let subjectLine = "View Alerts for Senior Design Students";
                 mailer.sendEmail(userList[i].email, subjectLine, message);
 
                 for (var j in alertList) {

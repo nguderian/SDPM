@@ -26,8 +26,8 @@ async function insertStudents(NID, last_name, first_name, email, class_id, res) 
 
         let check = await sequelize.query(`CALL get_username(?);`,
             { replacements: [NID], type: sequelize.QueryTypes.CALL });
-
-        if (check !== undefined) {
+        
+        if (check != '') {
             new_user_id = check[0].user_id;
         } else {
             let result = await sequelize.query(`CALL insert_user(?,?,?,?,?,?);`,
