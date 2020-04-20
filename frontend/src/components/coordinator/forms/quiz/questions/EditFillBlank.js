@@ -33,6 +33,7 @@ const EditFillBlank = ({ fillBlank, question }) => {
                     placeholder="Enter Correct Answer"
                     variant="outlined"
                     defaultValue={previousAnswer}
+                    multiline={true}
                     onChange={handleTextFieldChange}
                 />
             </FormControl>

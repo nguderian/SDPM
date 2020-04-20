@@ -30,6 +30,7 @@ const NewFillBlank = ({ fillBlank }) => {
                     placeholder="Enter Correct Answer"
                     variant="outlined"
                     required
+                    multiline={true}
                     onChange={handleTextFieldChange}
                 />
             </FormControl>

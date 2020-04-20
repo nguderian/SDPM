@@ -68,7 +68,7 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer1" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer1')}/>
+                    <TextField autoFocus id="answer1" label="Enter Answer" variant="outlined" fullWidth multiline={true} onChange={handleTextFieldChange('answer1')}/>
                 </Grid>
 
                 <Grid item xs={1}>
@@ -79,7 +79,7 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer2" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer2')}/>
+                    <TextField autoFocus id="answer2" label="Enter Answer" variant="outlined" fullWidth multiline={true} onChange={handleTextFieldChange('answer2')}/>
                 </Grid>
                 
                 <Grid item xs={1}>
@@ -90,7 +90,7 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer3" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer3')}/>
+                    <TextField autoFocus id="answer3" label="Enter Answer" variant="outlined" fullWidth multiline={true} onChange={handleTextFieldChange('answer3')}/>
                 </Grid>
 
                 <Grid item xs={1}>
@@ -101,7 +101,7 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer4" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer4')}/>
+                    <TextField autoFocus id="answer4" label="Enter Answer" variant="outlined" fullWidth multiline={true} onChange={handleTextFieldChange('answer4')}/>
                 </Grid>
 
                 <Grid item xs={1}>
@@ -112,7 +112,7 @@ const NewMultipleChoice = ({ possibleAnswers, correctAnswers }) => {
                     </FormGroup>
                 </Grid>
                 <Grid item xs={11}>
-                    <TextField autoFocus id="answer5" label="Enter Answer" variant="outlined" fullWidth onChange={handleTextFieldChange('answer5')}/>
+                    <TextField autoFocus id="answer5" label="Enter Answer" variant="outlined" fullWidth multiline={true} onChange={handleTextFieldChange('answer5')}/>
                 </Grid>
             </Grid>
         </div>

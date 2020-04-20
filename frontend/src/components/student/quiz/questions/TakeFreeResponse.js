@@ -35,6 +35,7 @@ const TakeFreeResponse = ({ question, handleChange, index, viewingSubmission, us
                 label='Enter Answer'
                 onChange={handleAnswerChange}
                 disabled={viewingSubmission}
+                multiline={true}
                 value={viewingSubmission ? answer : null}
             />
         </form>

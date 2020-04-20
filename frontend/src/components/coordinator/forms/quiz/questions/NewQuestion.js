@@ -105,7 +105,8 @@ const NewQuestion = ({ open, onClose, add }) => {
                         label="Enter Question Text"
                         fullWidth
                         error={questionText === '' ? true : false} 
-                        helperText={questionText === '' ? "Question text is required" : ''} 
+                        helperText={questionText === '' ? "Question text is required" : ''}
+                        multiline={true}
                         onChange={handleQuestionTextChange}
                     />
                     {questionType === 'multiple_choice' && <NewMultipleChoice possibleAnswers={storeMCAnswers} correctAnswers={storeCorrectMCAnswers} />}
