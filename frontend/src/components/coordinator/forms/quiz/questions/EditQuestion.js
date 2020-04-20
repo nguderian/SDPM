@@ -109,6 +109,7 @@ const EditQuestion = ({ open, onClose, editQuestion, question }) => {
                         id="name"
                         label="Enter Question Text"
                         fullWidth
+                        multiline={true}
                         defaultValue={questionText}
                         onChange={handleQuestionTextChange}
                     />
