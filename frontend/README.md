@@ -23,6 +23,7 @@ After node is installed, when you download the repository, make sure you do `npm
 * routing `npm install react-router-dom`
 * http requests `npm install axios`
 
+If you just `npm install` in your /frontend directory these packages should all be downloaded.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
