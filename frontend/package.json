@@ -8,7 +8,7 @@
     "@material-ui/styles": "^4.9.10",
     "@material-ui/system": "^4.9.10",
     "@material-ui/types": "^5.0.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "material-table": "^1.57.2",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
